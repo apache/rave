@@ -691,28 +691,36 @@ define(["jquery", "underscore", "rave",
                 self.$cogIcon.click(addIframeOverlays);
                 self.$cogIcon.dropdown();
                 if (!self.$menuItemMove.hasClass("menu-item-disabled")) {
-                    self.$menuItemMove.click(showMovePageDialog);
+                    self.$menuItemMove.click(getLaunchClosure(showMovePageDialog));
                 }
                 if (!self.$menuItemDelete.hasClass("menu-item-disabled")) {
-                    self.$menuItemDelete.click(deleteWidget);
+                    self.$menuItemDelete.click(getLaunchClosure(deleteWidget));
                 }
                 if (!self.$menuItemMaximize.hasClass("menu-item-disabled")) {
-                    self.$menuItemMaximize.click(maximize);
+                    self.$menuItemMaximize.click(getLaunchClosure(maximize));
                 }
                 if (!self.$menuItemAbout.hasClass("menu-item-disabled")) {
-                    self.$menuItemAbout.click(aboutWidget)
+                    self.$menuItemAbout.click(getLaunchClosure(aboutWidget));
                 }
                 if (!self.$menuItemComment.hasClass("menu-item-disabled")) {
-                    self.$menuItemComment.click(commentOnWidget);
+                    self.$menuItemComment.click(getLaunchClosure(commentOnWidget));
                 }
                 if (!self.$menuItemRate.hasClass("menu-item-disabled")) {
-                    self.$menuItemRate.click(rateWidget);
+                    self.$menuItemRate.click(getLaunchClosure(rateWidget));
                 }
                 var metadata = self.widget.metadata;
                 if (metadata && (metadata.hasPrefsToEdit || (metadata.views && metadata.views.preferences))) {
                     self.$menuItemEditPrefs.removeClass("menu-item-disabled");
-                    self.$menuItemEditPrefs.click(showPrefsPane);
+                    self.$menuItemEditPrefs.click(getLaunchClosure(showPrefsPane));
                 }
+
+                function getLaunchClosure(fn) {
+                    return function(evt) {
+                        self.$cogIcon.dropdown();
+                        fn(evt);
+                    }
+                }
+
             }
             HomeView.prototype.getWidgetSite = function () {
                 return this.$widgetSite[0];
