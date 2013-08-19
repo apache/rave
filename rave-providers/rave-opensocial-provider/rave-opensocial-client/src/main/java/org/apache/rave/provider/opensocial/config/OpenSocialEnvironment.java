@@ -45,7 +45,7 @@ public class OpenSocialEnvironment implements PortalPreferenceJavascriptDebugMod
 
     private static final String CONTAINER_JS_KEY = "containerJs";
     private static final String SCRIPT_RENDER_DEBUG_ON = "1";
-    private final static String SCRIPT_TEMPLATE = "<script>requirejs.config({paths: {\"osapi\":\"%1$s://%2$s%3$s/js/%4$s.js?c=1&amp;container=default&amp;debug=%5$s\"}});</script>";
+    private final static String SCRIPT_TEMPLATE = "<script>requirejs.config({paths: {\"osapi\":\"%1$s://%2$s%3$s/js/%4$s.js?c=1&container=default&debug=%5$s\"}});</script>";
 
     private String currentDebugMode;
 

@@ -200,10 +200,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             var renderParams = {};
             renderParams[osapi.container.RenderParam.VIEW] = opts.view || stateManager.getDefaultView();
             renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
-            renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
+            renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug || stateManager.getDebugMode();
             renderParams[osapi.container.RenderParam.HEIGHT ] = getHeightFromParams(opts);
-            renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
-            renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
+            renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache || stateManager.getDebugMode();
+            renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode || stateManager.getDebugMode();
             renderParams[osapi.container.RenderParam.WIDTH ] = getWidthFromParams(opts);
             renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
             container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
