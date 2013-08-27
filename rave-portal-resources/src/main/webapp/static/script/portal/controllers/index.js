@@ -17,16 +17,17 @@
  * under the License.
  */
 
-define(['angular', './MainCtrl', './TabsCtrl', './CurrentPageCtrl', './AddOrEditNewPageModalCtrl', './MovePageModalCtrl', 'angularUIBootstrap'],
-  function (angular, MainCtrl, TabsCtrl, CurrentPageCtrl, AddOrEditNewPageModalCtrl, MovePageModalCtrl) {
+define(['angular', './MainCtrl', './TabsCtrl', './CurrentPageCtrl', './AddOrEditNewPageModalCtrl',
+    './MovePageModalCtrl', 'common/controllers/NavBarCtrl', 'angularUIBootstrap'],
+    function (angular, MainCtrl, TabsCtrl, CurrentPageCtrl, AddOrEditNewPageModalCtrl, MovePageModalCtrl, NavBarCtrl) {
+        var controllers = angular.module('portal.controllers', ['ui.bootstrap']);
 
-    var controllers = angular.module('portal.controllers', ['ui.bootstrap']);
+        controllers.controller('MainCtrl', MainCtrl);
+        controllers.controller('NavBarCtrl', NavBarCtrl);
+        controllers.controller('TabsCtrl', TabsCtrl);
+        controllers.controller('CurrentPageCtrl', CurrentPageCtrl);
+        controllers.controller('AddOrEditNewPageModalCtrl', AddOrEditNewPageModalCtrl);
+        controllers.controller('MovePageModalCtrl', MovePageModalCtrl);
 
-    controllers.controller('MainCtrl', MainCtrl);
-    controllers.controller('TabsCtrl', TabsCtrl);
-    controllers.controller('CurrentPageCtrl', CurrentPageCtrl);
-    controllers.controller('AddOrEditNewPageModalCtrl', AddOrEditNewPageModalCtrl);
-    controllers.controller('MovePageModalCtrl', MovePageModalCtrl);
-
-    return controllers;
-});
+        return controllers;
+    });

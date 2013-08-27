@@ -59,6 +59,18 @@
 
 </div>
 
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="span12 version">
+                <span>Apache Rave</span>
+                <a href="http://rave.apache.org"><img src="/portal/static/images/rave-logo-sm.png" title="Apache Rave"
+                                                      alt="Apache Rave" class="footer-logo"></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
 <%--<div ng-view></div>--%>
 
 </body>
