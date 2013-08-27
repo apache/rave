@@ -16,17 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ define([], function() {
+    return ['$scope', 'dialog', function($scope, dialog) {
 
-define(['angular', './MainCtrl', './TabsCtrl', './CurrentPageCtrl', './AddOrEditNewPageModalCtrl', './MovePageModalCtrl', 'angularUIBootstrap'],
-  function (angular, MainCtrl, TabsCtrl, CurrentPageCtrl, AddOrEditNewPageModalCtrl, MovePageModalCtrl) {
+        $scope.movePage = function() {
+            console.log("move page");
+        }
 
-    var controllers = angular.module('portal.controllers', ['ui.bootstrap']);
+        $scope.close = function() {
+            dialog.close();
+        }
+    }];
 
-    controllers.controller('MainCtrl', MainCtrl);
-    controllers.controller('TabsCtrl', TabsCtrl);
-    controllers.controller('CurrentPageCtrl', CurrentPageCtrl);
-    controllers.controller('AddOrEditNewPageModalCtrl', AddOrEditNewPageModalCtrl);
-    controllers.controller('MovePageModalCtrl', MovePageModalCtrl);
-
-    return controllers;
-});
+ });

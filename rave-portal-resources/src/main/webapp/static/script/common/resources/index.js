@@ -18,9 +18,9 @@
  */
 
 define(['angular', './CategoriesResource', './PagesResource', './PagesForRenderResource',
-    './PeopleResource', './RegionsResource', './RegionWidgetsResource', './UsersResource',
-    '../services/index', 'underscore', 'angularResource'],
-    function (angular, categories, pages, pagesForRender, people, regions, regionWidgets, users, _) {
+    './PeopleResource', './RegionsResource', './RegionWidgetsResource', './UsersResource', './PageLayoutsResource',
+    'underscore', '../services/index', 'angularResource'],
+    function (angular, categories, pages, pagesForRender, people, regions, regionWidgets, users, pageLayouts, _) {
 
         var resources = angular.module('common.resources', ['ngResource', 'common.services'])
 
@@ -46,6 +46,8 @@ define(['angular', './CategoriesResource', './PagesResource', './PagesForRenderR
         resources.factory('RegionWidgets', regionWidgets);
         resources.factory('Users', users);
         resources.factory('PagesForRender', pagesForRender);
+        resources.factory('PageLayouts', pageLayouts);
+
 
         return resources;
     });

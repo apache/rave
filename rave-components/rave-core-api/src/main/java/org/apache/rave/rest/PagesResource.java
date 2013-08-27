@@ -90,6 +90,12 @@ public interface PagesResource {
     @Consumes(MediaType.APPLICATION_JSON)
     Page updatePage(@PathParam("pageId") String pageId, Page page);
 
+    @POST
+    @Path("/{pageId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    Page updatePagePost(@PathParam("pageId") String pageId, Page page);
+
     /**
      * Returns the OMDL representation of the page
      *

@@ -108,6 +108,11 @@ public class DefaultPageResource implements PagesResource {
     }
 
     @Override
+    public Page updatePagePost(String id, Page page) {
+        return updatePage(id, page);
+    }
+
+    @Override
     public Page deletePage(String id) {
         //TODO: this cannot return a 404
         logger.debug("Deleting page " + id);

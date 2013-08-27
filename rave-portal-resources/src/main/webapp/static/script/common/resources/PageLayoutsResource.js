@@ -17,16 +17,8 @@
  * under the License.
  */
 
-define(['angular', './MainCtrl', './TabsCtrl', './CurrentPageCtrl', './AddOrEditNewPageModalCtrl', './MovePageModalCtrl', 'angularUIBootstrap'],
-  function (angular, MainCtrl, TabsCtrl, CurrentPageCtrl, AddOrEditNewPageModalCtrl, MovePageModalCtrl) {
-
-    var controllers = angular.module('portal.controllers', ['ui.bootstrap']);
-
-    controllers.controller('MainCtrl', MainCtrl);
-    controllers.controller('TabsCtrl', TabsCtrl);
-    controllers.controller('CurrentPageCtrl', CurrentPageCtrl);
-    controllers.controller('AddOrEditNewPageModalCtrl', AddOrEditNewPageModalCtrl);
-    controllers.controller('MovePageModalCtrl', MovePageModalCtrl);
-
-    return controllers;
-});
+ define([], function() {
+    return ['$resource', 'constants', function($resource, constants) {
+        return $resource(constants.hostedPath + '/api/rest/pageLayouts/:code', {code : '@code'});
+    }]
+ });
