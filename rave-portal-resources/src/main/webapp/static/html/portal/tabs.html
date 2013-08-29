@@ -1,5 +1,5 @@
 <nav ng-controller="TabsCtrl">
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs container-fluid">
         <li ng-repeat="page in pages"
             ng-class="{active:page.id == currentPageId, dropdown:page.id == currentPageId}"
             ng-include=" page.id == currentPageId && 'currentTab'|| 'otherTab' ">

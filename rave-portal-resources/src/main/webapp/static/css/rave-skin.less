@@ -29,7 +29,7 @@
 ----------------------------------------------------*/
 @imageDirPath:"../images";
 
-@lightestGray: #e3e3e3;
+@lightestGray: #EEEEEE;
 @lighterGray: #DDD;
 @lightGray: mix(@lighterGray, @gray, 50%);
 @gray: #999;
@@ -47,16 +47,9 @@
 
 @defaultBoxShadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
 
-
 body{
 	background-color: @lightestGray;
-	background-image: -moz-linear-gradient(top, @white 100px, @lightestGray 700px); // FF 3.6+
-    background-image: -ms-linear-gradient(top, @white 100px, @lightestGray 700px); // IE10
-    background-image: -webkit-linear-gradient(top, @white 100px, @lightestGray 700px); // Safari 5.1+, Chrome 10+
-    background-image: -o-linear-gradient(top, @white 100px, @lightestGray 700px); // Opera 11.10
-    background-image: linear-gradient(top, @white 100px, @lightestGray 700px); // The standard
-    background-repeat: repeat-x;
-    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@white, @lightestGray)); // IE9 and down
+	padding-top: @navbarHeight+10;
 }
 input, textarea, select, .uneditable-input{
 	color: @darkerGray;
@@ -68,8 +61,8 @@ input, textarea, select, .uneditable-input{
 	background: url("@{imageDirPath}/rave-logo-sm.png") no-repeat 15px 0;
 }
 .navbar .brand {
-    background: url("@{imageDirPath}/rave-dark-sm.png") no-repeat scroll 0 5px transparent;
-    padding: 8px 70px 12px;
+    background: url("@{imageDirPath}/rave-dark-sm.png") no-repeat scroll 25px 5px transparent;
+    padding: 8px 80px 12px;
     text-indent: -9999px;
 }
 .well{
@@ -204,43 +197,20 @@ a{ color: @redLight; }
 }
 /* Tabs
 ----------------------------------------------------*/
-.nav-tabs{
-	margin-bottom: 0;
-	margin-right: 10px; // to prevent overlap over border radius
-}
-.nav-tabs > li{
-	margin-bottom: 0;
 
-	& > a, 
-	& > a:hover{
-		border: 1px solid @lighterGray;
-		border-bottom-color: transparent;
-		margin-right: 6px;
-		color: @darkGray;
-		background: @white;
-	}
-}
-
-.nav-tabs > .active > a, 
-.nav-tabs > .active > a:hover,
-.nav-tabs > li > a:hover,
-.tab-content{
-	background:@lightestGray;
-	color: @darkerGray;
-}
 .tab-padding{
 	padding: 1em 2em;
 }
 .nav-tabs .open .dropdown-toggle, 
 .nav-pills .open .dropdown-toggle, 
 .nav > li.dropdown.open.active > a:hover{
-	background:@lightestGray;
+	background: @lighterGray;
+	border-color: @lightGray;
 }
 .tab-content{
 	border: 1px solid @lightestGray;
 	margin-top: -1px;
 	padding-top: 18px;
-	.border-radius(0 10px);
 }
 
 /* Outlined
@@ -249,17 +219,14 @@ a{ color: @redLight; }
 .nav-tabs.outlined > li{
 	margin-bottom: -1px;
 }
-
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover {
+    background: @lightestGray;
+}
 
 .nav-tabs.outlined > li > a, 
 .nav-tabs.outlined > li > a:hover,
 .tab-content.outlined{
-	border-color: @lightGray;
-	border-bottom: 1px solid @lightGray;
 	background: @lighterGray;
-	color: @black;
-	.box-shadow(3px 1px 4px -3px rgba(0,0,0,0.25));
-
 }
 .nav-tabs.outlined > .active > a, 
 .nav-tabs.outlined > .active > a:hover{
@@ -275,7 +242,7 @@ a{ color: @redLight; }
 /* Left */
 
 .tabs-left > .nav-tabs > li > a{
-	border-color:@lightGray;
+	border-color: @lightestGray;
 	border-right: none;
 	margin-right: 0;
 	color:@gray;
