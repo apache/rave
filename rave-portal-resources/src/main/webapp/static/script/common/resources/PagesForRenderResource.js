@@ -46,18 +46,27 @@ define(['underscore', 'rave'], function (_, rave) {
                         decomposePage(page);
                     });
 
-                    return onSuccess(pages);
+                    if(onSuccess){
+                        return onSuccess(pages);
+                    }else{
+                        return pages
+                    }
                 });
             }
 
             res.get = function (args, onSuccess, onError) {
-                return res.get.call(null, args).$then(function (res) {
+                return res._get.call(null, args).$then(function (res) {
                     //TODO: check for error
                     var page = res.data;
 
                     decomposePage(page);
 
-                    return onSuccess(page);
+                    if(onSuccess){
+                        return onSuccess(page);
+                    }else{
+                        return page
+                    }
+
                 });
             }
 
