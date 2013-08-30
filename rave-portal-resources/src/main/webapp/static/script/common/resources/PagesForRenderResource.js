@@ -18,57 +18,8 @@
  */
 
 define(['underscore', 'rave'], function (_, rave) {
-    return ['$resource', 'Pages', 'Regions', 'RegionWidgets', 'constants',
-        function ($resource, Pages, Regions, RegionWidgets, constants) {
-            var res = $resource(constants.hostedPath + '/api/rest/pages/render/:context/:identifier/:id', {},
-                {
-                    _query: { method: 'GET', isArray: true },
-                    _get: {method: 'GET'}
-                });
-
-            /**
-             * Overwriting the pagesForRender query / get methods to decompose the responses into their subordinate
-             * $resource types. This guarantees that the PagesForRender resource gets us objects on the scope that
-             * we can individually manipulate and update.
-             */
-            /*
-            TODO: One issue with this approach is that currently on a save to a page, the entire page AND all sub-objects
-            are getting posted to the server on $save() - same for regions
-             */
-            res.query = function (args, onSuccess, onError) {
-                return res._query.call(null, args).$then(function (res) {
-                    //TODO: check for error
-                    var pages = res.data;
-
-                    _.each(pages, function (page, k) {
-                        page = pages[k] = new Pages(page);
-
-                        decomposePage(page);
-                    });
-
-                    if(onSuccess){
-                        return onSuccess(pages);
-                    }else{
-                        return pages
-                    }
-                });
-            }
-
-            res.get = function (args, onSuccess, onError) {
-                return res._get.call(null, args).$then(function (res) {
-                    //TODO: check for error
-                    var page = res.data;
-
-                    decomposePage(page);
-
-                    if(onSuccess){
-                        return onSuccess(page);
-                    }else{
-                        return page
-                    }
-
-                });
-            }
+    return ['RaveResource', 'Pages', 'Regions', 'RegionWidgets',
+        function (RaveResource, Pages, Regions, RegionWidgets) {
 
             function decomposePage(page) {
                 _.each(page.regions, function (region, j) {
@@ -79,9 +30,29 @@ define(['underscore', 'rave'], function (_, rave) {
                         region.regionWidgets[i] = new RegionWidgets(regionWidget);
                     });
                 });
+
+                return page;
             }
 
-            return res;
+            return RaveResource('pages/render/:context/:identifier/:id', {},
+                {
+                    query: {
+                        transformResponse: function (data) {
+                            var pages = data;
+
+                            _.each(pages, function (page, k) {
+                                page = pages[k] = new Pages(page);
+
+                                decomposePage(page);
+                            });
+
+                            return pages;
+                        }
+                    },
+                    get: {
+                        transformResponse: decomposePage
+                    }
+                });
         }
     ];
 })

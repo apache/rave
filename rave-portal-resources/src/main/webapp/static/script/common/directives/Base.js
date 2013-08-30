@@ -23,8 +23,8 @@
  * service, etc that needs to build a url (see all common resources for example).
  */
 define([], function () {
-    return [ 'constants',
-        function (constants) {
+    return [ 'constants', '$rootScope',
+        function (constants, $rootScope) {
             return {
                 restrict: 'E',
                 link: function link(scope, el, attrs) {
@@ -36,6 +36,7 @@ define([], function () {
                     href = href.join('/');
 
                     constants.hostedPath = href;
+                    $rootScope.hostedPath = href;
                 }
             }
         }

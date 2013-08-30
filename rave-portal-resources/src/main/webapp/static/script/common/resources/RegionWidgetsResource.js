@@ -18,9 +18,9 @@
  */
 
 define([], function(){
-    return ['$resource', 'constants', function($resource, constants){
-        return $resource(constants.hostedPath + '/api/rest/pages/:pageId/regions/:regionId/regionWidgets/:id',
-            {id: '@id', regionId: '@regionId'});
+    return ['RaveResource', function(RaveResource){
+        return RaveResource('pages/:pageId/regions/:regionId/regionWidgets/:id',
+            {pageId: '@pageId', id: '@id', regionId: '@regionId'});
     }];
 });
 

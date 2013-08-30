@@ -18,8 +18,8 @@
  */
 
 define([], function(){
-    return ['$resource', 'constants', function($resource, constants){
-        return $resource(constants.hostedPath + '/api/rest/categories/:id', {id: '@id'});
+    return ['RaveResource', function(RaveResource){
+        return RaveResource('categories/:id', {id: '@id'});
     }];
 });
 

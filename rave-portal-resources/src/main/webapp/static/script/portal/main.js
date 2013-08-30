@@ -28,12 +28,11 @@ requirejs.config({
         "jqueryValidate":"//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min",
         "jqueryHashChange":'//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min',
         "jqueryTouchPouch": '//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min',
-        "angular": '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min',
+        "angular": 'http://code.angularjs.org/1.1.5/angular',
+        "angularResource": 'http://code.angularjs.org/1.1.5/angular-resource',
         "angularUIBootstrap" : "//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.5.0/ui-bootstrap-tpls.min",
-        "angularResource": '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular-resource.min',
         //TODO: We need to get this url from the server either via an endpoint or jsp
         "osapi":"/gadgets/js/container:pubsub-2:open-views.js?c=1&amp;container=default&amp;debug=1",
-//        "osapi":"//placeholder.url.will.be.replaced.by.opensocial.environment",
         "rave": "core/main",
         "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min"
     },
@@ -71,6 +70,9 @@ requirejs.config({
             exports: 'angular'
         },
         angularResource:{
+            deps: ['angular']
+        },
+        angularRouter:{
             deps: ['angular']
         },
         angularUIBootstrap : {

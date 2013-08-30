@@ -17,11 +17,11 @@
  * under the License.
  */
 
-define(['angular', 'common/resources/index'], function (angular) {
-    var router = angular.module('portal.routes', ['common.resources']);
+define(['angular', 'common/resources/index', 'common/services/index'], function (angular) {
+    var router = angular.module('portal.routes', ['common.resources', 'common.services']);
 
-    router.config(['$routeProvider', '$locationProvider', '$httpProvider',
-        function ($routeProvider, $locationProvider, $httpProvider) {
+    router.config(['constants', '$routeProvider', '$locationProvider', '$httpProvider',
+        function (constants, $routeProvider, $locationProvider, $httpProvider) {
 
             /**
              * The resolve functions guarantee that needed data is requested and resolved from the server BEFORE route
@@ -29,38 +29,31 @@ define(['angular', 'common/resources/index'], function (angular) {
              * resource request. This is to prevent a new request on every change in navigation - it will only happen
              * on initial load.
              */
+            //TODO: once angular 1.2 is released, the resources will expose a $promise property
             var resolve = {
-                pages: ['PagesForRender', '$q', '$rootScope',
-                    function (PagesForRender, $q, $rootScope) {
+                pages: ['PagesForRender', '$q',
+                    function (PagesForRender, $q) {
                         var deferred = $q.defer();
 
-                        if ($rootScope.pages) {
-                            deferred.resolve($rootScope.pages);
-                        } else {
-                            PagesForRender.query({
-                                context: 'portal',
-                                identifier: '@self'
-                            }, function (data) {
-                                deferred.resolve(data);
+                        PagesForRender.query({
+                            context: 'portal',
+                            identifier: '@self'
+                        }).$then(function (response) {
+                                deferred.resolve(response.resource)
                             });
-                        }
 
                         return deferred.promise;
                     }
                 ],
-                user: [ 'Users', '$q', '$rootScope',
-                    function (Users, $q, $rootScope) {
+                user: [ 'Users', '$q',
+                    function (Users, $q) {
                         var deferred = $q.defer();
 
-                        if ($rootScope.user) {
-                            deferred.resolve($rootScope.user);
-                        } else {
-                            Users.get({
-                                id: '@self'
-                            }, function (data) {
-                                deferred.resolve(data);
+                        Users.get({
+                            id: '@self'
+                        }).$then(function (response) {
+                                deferred.resolve(response.resource)
                             });
-                        }
 
                         return deferred.promise;
                     }
@@ -73,12 +66,20 @@ define(['angular', 'common/resources/index'], function (angular) {
              */
             $routeProvider
                 .when('/', {
-                    resolve: resolve
+                    resolve: resolve,
+                    templateUrl: function () {
+                        return constants.hostedPath + '/static/html/portal/portal.html'
+                    }
                 })
                 .when('/:tabId', {
-                    resolve: resolve
+                    resolve: resolve,
+                    templateUrl: function () {
+                        return constants.hostedPath + '/static/html/portal/portal.html'
+                    }
                 })
-                .otherwise({ templateUrl: '/portal/static/html/portal/404.html'});
+                .otherwise({ templateUrl: function () {
+                    return constants.hostedPath + '/static/html/portal/404.html'
+                }});
 
             $locationProvider.html5Mode(true);
         }

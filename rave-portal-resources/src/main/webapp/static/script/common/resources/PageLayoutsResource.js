@@ -18,7 +18,7 @@
  */
 
  define([], function() {
-    return ['$resource', 'constants', function($resource, constants) {
-        return $resource(constants.hostedPath + '/api/rest/pageLayouts/:code', {code : '@code'});
+    return ['RaveResource', function(RaveResource) {
+        return RaveResource('pageLayouts/:code', {code : '@code'});
     }]
  });

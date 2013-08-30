@@ -12,14 +12,12 @@
             <div class="nav-collapse">
                 <ul class="nav pull-right">
 
-
-                    <li ng-show="user.username"><a href="/portal/app/person/id/{{user.id}}">Profile</a></li>
-                    <li ng-show="user.username"><a href="/portal/app/store">Store</a></li>
-                    <li ng-show="user.admin"><a href="/portal/app/admin">Admin</a></li>
+                    <li ng-show="user.username"><a ng-href="{{ hostedPath }}/app/person/id/{{user.id}}">Profile</a></li>
+                    <li ng-show="user.username"><a ng-href="{{ hostedPath }}/app/store">Store</a></li>
+                    <li ng-show="user.admin"><a ng-href="{{ hostedPath }}/app/admin">Admin</a></li>
 
                     <li ng-show="user.username"><a ng-click="logout()" href="#">Logout</a></li>
                     <li ng-hide="user.username"><a ng-click="login()" href="#">Login/Register</a></li>
-
 
                 </ul>
             </div>

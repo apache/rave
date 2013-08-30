@@ -17,28 +17,21 @@
  * under the License.
  */
 
-define(['angular', './CategoriesResource', './PagesResource', './PagesForRenderResource',
+define(['angular', './RaveResource', './CategoriesResource', './PagesResource', './PagesForRenderResource',
     './PeopleResource', './RegionsResource', './RegionWidgetsResource', './UsersResource', './PageLayoutsResource',
     'underscore', '../services/index', 'angularResource'],
-    function (angular, categories, pages, pagesForRender, people, regions, regionWidgets, users, pageLayouts, _) {
+    function (angular, Resource, categories, pages, pagesForRender, people, regions, regionWidgets, users, pageLayouts, _) {
 
         var resources = angular.module('common.resources', ['ngResource', 'common.services'])
 
         /**
-         * For all ajax requests, if the request returns json data and has a .data property, return that.
-         * This lets us unwrap our api responses for $resources.
+         The base $resource class for rave models.
          */
-        resources.config(['$httpProvider', function ($httpProvider) {
-            $httpProvider.defaults.transformResponse.push(function (data, headers) {
-                if (headers('CONTENT-TYPE') === 'application/json' && data.data) {
-                    return data.data;
-                }
-                else {
-                    return data;
-                }
-            });
-        }]);
+        resources.factory('RaveResource', Resource);
 
+        /**
+         The rave models.
+         */
         resources.factory('Categories', categories);
         resources.factory('Pages', pages);
         resources.factory('People', people);
