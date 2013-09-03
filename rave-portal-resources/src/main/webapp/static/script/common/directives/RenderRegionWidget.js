@@ -27,7 +27,7 @@ define(['angular'], function(angular){
             restrict: 'EA',
             replace: true,
             scope:{
-                regionWidget: '='
+                regionWidget: '=renderRegionWidget'
             },
             link: function (scope, element, attrs){
                 scope.$watch('regionWidget', function(){

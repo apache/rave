@@ -21,7 +21,7 @@
     /* Controller Definition */
     return ['$scope', '$dialog', '$location', 'Pages', 'PageLayouts', function($scope, $dialog, $location, Pages, PageLayouts) {
 
-        $scope.page = Pages.get({ id : $scope.currentPageId });
+        $scope.page = _.findWhere($scope.pages, {id: $scope.currentPageId});
 
         $scope.$watch('pages.length', function(val){
             if(val === 1) {
