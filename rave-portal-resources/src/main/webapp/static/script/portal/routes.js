@@ -31,16 +31,20 @@ define(['angular', 'common/resources/index', 'common/services/index'], function 
              */
             //TODO: once angular 1.2 is released, the resources will expose a $promise property
             var resolve = {
-                pages: ['PagesForRender', '$q',
-                    function (PagesForRender, $q) {
+                pages: ['PagesForRender', '$q', '$rootScope',
+                    function (PagesForRender, $q, $rootScope) {
                         var deferred = $q.defer();
 
-                        PagesForRender.query({
-                            context: 'portal',
-                            identifier: '@self'
-                        }).$then(function (response) {
-                                deferred.resolve(response.resource)
-                            });
+                        if ($rootScope.pages) {
+                            deferred.resolve($rootScope.pages)
+                        } else {
+                            PagesForRender.query({
+                                context: 'portal',
+                                identifier: '@self'
+                            }).$then(function (response) {
+                                    deferred.resolve(response.resource)
+                                });
+                        }
 
                         return deferred.promise;
                     }

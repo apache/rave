@@ -75,7 +75,7 @@ public class DefaultPageResource implements PagesResource {
     @Override
     public Page createPage(Page page) {
         //TODO: RAVE-977 - when Page type enum is deprecated escape from this logic
-        if (page.getPageType().equals("user")) {
+        if (page.getPageType() != null && page.getPageType().equals("user")) {
             if (page.getName() == null) {
                 throw new BadRequestException("Page name property must be defined.");
             }

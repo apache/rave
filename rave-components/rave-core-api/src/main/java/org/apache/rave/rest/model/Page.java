@@ -19,6 +19,8 @@
 
 package org.apache.rave.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;

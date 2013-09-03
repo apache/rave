@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['underscore'], function(_) {
+define(['underscore'], function (_) {
     /* Local Variables */
     var addNewPageTitle = "ADD A NEW PAGE",
         updatePageTitle = "UPDATE PAGE";
@@ -24,46 +24,59 @@ define(['underscore'], function(_) {
     /* Controller Definition */
     return ['$scope', 'dialog', 'page', 'pageLayouts', 'Pages', function ($scope, dialog, page, pageLayouts, Pages) {
 
-        $scope.page = angular.copy(page);
+        if(page) {
+            $scope.page = angular.copy(page);
+        }                                    else {
+            $scope.page = new Pages({
+                pageType: 'user'
+            });
+        }
 
         $scope.title = resolveModalTitle($scope.page);
 
         $scope.layouts = pageLayouts;
 
-        $scope.isUserSelectable = function(pageLayout) {
+        $scope.isUserSelectable = function (pageLayout) {
             return pageLayout.userSelectable;
         }
 
-        $scope.close = function() {
+        $scope.close = function () {
             dialog.close();
         }
 
-        $scope.savePage = function() {
+        $scope.savePage = function () {
             $scope.error = null;
-            Pages.save($scope.page).$then(function(page) {
-                $scope.page = page;
-                addNewPageToOrUpdatePageInPagesArray($scope);
+
+            if ($scope.page.id) {
+                $scope.page.$update(onSuccess, onError)
+            } else {
+                $scope.page.$save(onSuccess, onError)
+            }
+
+            function onSuccess(page) {
+                addOrUpdatePageInPagesArray($scope);
                 dialog.close();
-            }, function(response) {
-                //TODO: When REST API is fully implemented, set error msg to custom response from server
+            }
+
+            function onError(response) {
                 $scope.error = "Server-side ERROR";
-            });
+            }
         }
     }];
 
     /* Helpers */
     function resolveModalTitle(page) {
-       if(page) {
-        return updatePageTitle;
-       } else {
-        return addNewPageTitle;
-       }
+        if (page) {
+            return updatePageTitle;
+        } else {
+            return addNewPageTitle;
+        }
     }
 
-    function addNewPageToOrUpdatePageInPagesArray($scope) {
-        var pageEntry = _.findWhere($scope.pages, $scope.page);
-        if(pageEntry) {
-             _.extend(pageEntry, $scope.page);
+    function addOrUpdatePageInPagesArray($scope) {
+        var pageEntry = _.findWhere($scope.pages, {id: $scope.page.id});
+        if (pageEntry) {
+            _.extend(pageEntry, $scope.page);
         } else {
             $scope.pages.push($scope.page);
         }

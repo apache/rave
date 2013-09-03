@@ -20,23 +20,42 @@
 define(['underscore', 'angular'], function (_, angular) {
     return ['$resource', '$http', 'constants', function ($resource, $http, constants) {
         var baseUrl = constants.hostedPath + '/api/rest/',
-            transform = $http.defaults.transformResponse.concat([
+            /**
+             * For all requests that return data, unwrap the json response
+             */
+            transformResponse = $http.defaults.transformResponse.concat([
                 function (data) {
                     return data.data || data;
                 }
             ]),
+            /**
+             * For all requests that save data, flatten the data object and do not include arrays or nested objects
+             * in the request body
+             */
+            transformRequest = ([
+                function (data) {
+                    data = angular.copy(data);
+                    _.each(data, function(val, key) {
+                        if(_.isArray(val) || _.isObject(val)) {
+                            data[key] = undefined;
+                        }
+                    });
+
+                    return data;
+                }
+            ]).concat($http.defaults.transformRequest),
             defaultActions = {
-                get: {method: 'GET', cache: true, transformResponse: transform},
-                save: {method: 'POST', transformResponse: transform},
-                update: {method: 'PUT', transformResponse: transform},
-                query: {method: 'GET', cache: true, isArray: true, transformResponse: transform},
-                remove: {method: 'DELETE', transformResponse: transform},
-                delete: {method: 'DELETE', transformResponse: transform}
+                get: {method: 'GET', cache: true, transformResponse: transformResponse},
+                save: {method: 'POST', transformRequest:transformRequest, transformResponse: transformResponse},
+                update: {method: 'PUT', transformRequest:transformRequest, transformResponse: transformResponse},
+                query: {method: 'GET', cache: true, isArray: true, transformResponse: transformResponse},
+                remove: {method: 'DELETE', transformResponse: transformResponse},
+                delete: {method: 'DELETE', transformResponse: transformResponse}
             };
 
         return function RaveResource(url, paramDefaults, actions) {
             var acts = angular.copy(defaultActions),
-                trans = transform;
+                trans = transformResponse;
             url = baseUrl + url;
 
             _.each(actions, function (action, key) {

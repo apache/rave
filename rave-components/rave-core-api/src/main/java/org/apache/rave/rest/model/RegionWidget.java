@@ -19,6 +19,7 @@
 
 package org.apache.rave.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.rave.model.RegionWidgetPreference;
 
 import javax.xml.bind.annotation.*;
@@ -30,6 +31,7 @@ import java.util.List;
         "id", "type", "widgetId", "widgetUrl", "regionId", "collapsed", "locked", "hideChrome", "ownerId", "userPrefs"
 })
 @XmlRootElement(name = "RegionWidget")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RegionWidget  implements RestEntity{
 
     @XmlAttribute(name="id")
