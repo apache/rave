@@ -8,7 +8,7 @@
  * with the License.  You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
- *                         registerView
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,32 +17,33 @@
  * under the License.
  */
 
-/**
- * The RenderRegionWidget directive takes a regionWidget to be rendered in the region-widget="" attribute
- * and renders that regionWidget at the location of the directive.
- */
-
 define(['rave'], function(rave){
-    return ['$compile',
-        function ($compile) {
+    return [function () {
             var directive = {
-                restrict: 'A',
-                link: function (scope, el, attrs) {
-                    var regionWidget = scope.$eval(attrs.renderRegionWidget);
-
-                    scope.$watch(function () {
-                        return regionWidget._surface;
-                    }, doRender)
-
-                    function doRender() {
-                        var template = rave.renderView(regionWidget._surface);
-
-                        if (template) {
-                            el.html(template);
-                            $compile(el.contents())(scope);
-                        }
+                restrict: 'AE',
+                scope: {},
+                terminal: true,
+                priority: -1,
+                controller: ['$scope', '$element',
+                    function ($scope, $element) {
+                        this.customRender = function () {
+                        };
+                        this.customDestroy = function () {
+                        };
                     }
+                ],
+                link: function (scope, el, attrs, controller) {
 
+                    var viewName = attrs.registerView;
+
+                    var template = el.html();
+                    el.remove();
+
+                    rave.registerView(viewName, {
+                        render: function () {
+                            return template;
+                        }
+                    });
                 }
             }
 
@@ -50,4 +51,3 @@ define(['rave'], function(rave){
         }
     ]
 })
-

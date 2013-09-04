@@ -17,12 +17,14 @@
  * under the License.
  */
 
-define(['angular', './Base', './RenderRegionWidget'],
-    function (angular, base, renderRegionWidget) {
+define(['angular', './Base', './RenderRegionWidget', './RenderIframe', './RegisterView'],
+    function (angular, base, renderRegionWidget, renderIframe, registerView) {
         var directives = angular.module('common.directives', []);
 
         directives.directive('base', base);
+        directives.directive('registerView', registerView);
         directives.directive('renderRegionWidget', renderRegionWidget);
+        directives.directive('renderIframe', renderIframe);
 
         return directives;
     }

@@ -22,32 +22,27 @@
  * and renders that regionWidget at the location of the directive.
  */
 
-define(['rave'], function(rave){
-    return ['$compile',
-        function ($compile) {
-            var directive = {
-                restrict: 'A',
-                link: function (scope, el, attrs) {
-                    var regionWidget = scope.$eval(attrs.renderRegionWidget);
+define(['angular'], function(angular){
+    return [function(){
+        var directive = {
+            restrict: 'EA',
+            replace: true,
+            scope:{
+                regionWidget: '='
+            },
+            link: function (scope, element, attrs){
+                scope.$watch('regionWidget', function(){
+                    if(scope.regionWidget){
+                        //Make clone so watch does not cycle too many times
+                        var regionWidgetClone = angular.copy(scope.regionWidget);
 
-                    scope.$watch(function () {
-                        return regionWidget._surface;
-                    }, doRender)
-
-                    function doRender() {
-                        var template = rave.renderView(regionWidget._surface);
-
-                        if (template) {
-                            el.html(template);
-                            $compile(el.contents())(scope);
-                        }
+                        //Render the widget
+                        regionWidgetClone.render(element[0]);
                     }
-
-                }
+                }, true);
             }
-
-            return directive;
         }
-    ]
+        return directive;
+    }]
 })
 
