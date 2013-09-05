@@ -83,7 +83,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
                             "metadata": opt_gadgetInfo
                         },
                         height = getHeightFromParams(gadget.metadata.modulePrefs),
-                        width  = getWidthFromParams(gadget.metadata.modulePrefs);
+                        width = getWidthFromParams(gadget.metadata.modulePrefs);
 
                     preloadMetadata(gadget);
 
@@ -115,11 +115,11 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
         function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
             var widget = args.gs._widget,
-                viewSurface = viewName.split('.')[0],
-                renderInto = viewManager.getView(viewSurface) ? viewSurface : widget._el;
-            //If the element has no ID then it was launched in some secondary location.  Destroy the view.
-            if(widget._el.id === "") viewManager.destroyView(widget._view);
-            widget.render(renderInto, {view: viewName, view_params: opt_params, ownerId: opt_ownerId});
+                viewSurface = viewName || stateManager.getDefaultView();
+
+            viewSurface = viewSurface.split('.')[0];
+
+            widget.navigate(viewSurface, {view: viewName, view_params: opt_params, ownerId: opt_ownerId});
         }
 
         function setPref(args, editToken, prefName, prefValue) {
@@ -161,10 +161,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
         function getHeightFromParams(opts) {
             var height;
-            if(opts.height) {
+            if (opts.height) {
                 height = opts.height;
             }
-            else if(opts.preferredHeight) {
+            else if (opts.preferredHeight) {
                 height = opts.preferredHeight;
             }
             else {
@@ -175,10 +175,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
         function getWidthFromParams(opts) {
             var width;
-            if(opts.width) {
+            if (opts.width) {
                 width = opts.width;
             }
-            else if(opts.preferredWidth) {
+            else if (opts.preferredWidth) {
                 width = opts.preferredWidth;
             }
             else {
@@ -187,26 +187,33 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             return width;
         }
 
-        exports.renderWidget = function (widget, el, opts) {
+        exports.renderWidget = function (widget, opts) {
             if (widget.error) {
-                widget.renderError(el, widget.error.message);
+                widget.renderError(widget.error.message);
                 return;
             }
             opts = opts || {};
-            var site = container.newGadgetSite(el);
-            site._widget = widget;
-            widget._site = site;
+            if (!widget._site) {
+                widget._site = container.newGadgetSite(widget._el);
+                widget._site._widget = widget;
+            }
 
             var renderParams = {};
-            renderParams[osapi.container.RenderParam.VIEW] = opts.view || stateManager.getDefaultView();
+            renderParams[osapi.container.RenderParam.VIEW] = opts.view || widget.constructor.defaultView;
             renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
             renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
-            renderParams[osapi.container.RenderParam.HEIGHT ] = getHeightFromParams(opts);
+            renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || widget.constructor.defaultHeight;
             renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
             renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
-            renderParams[osapi.container.RenderParam.WIDTH ] = getWidthFromParams(opts);
+            renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || widget.constructor.defaultWidth;
             renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
-            container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
+            container.navigateGadget(widget._site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
+        }
+
+        exports.unrenderWidget = function (widget) {
+            if (widget._site) {
+                container.closeGadget(widget._site);
+            }
         }
 
         /**

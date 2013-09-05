@@ -47,8 +47,8 @@ define(['underscore', 'core/rave_widget'], function (_, regionWidget) {
             //TODO: until api can be updated, attach regionid as an attribute on the widget so that we can filter on this
             definition.regionId = regionId;
         }
-        regionWidgets[definition.regionWidgetId] = new regionWidget(definition)
-        return regionWidgets[definition.regionWidgetId];
+        regionWidgets[definition.id] = new regionWidget(definition)
+        return regionWidgets[definition.id];
     }
 
     //uregister a regionwidget, identified by a RegionWidget object, a widget definition, or just an id
@@ -58,7 +58,7 @@ define(['underscore', 'core/rave_widget'], function (_, regionWidget) {
      * RegionWidget object, or a valid id of a registered regionWidget.
      */
     exports.unregisterWidget = function (widget) {
-        var regionWidgetId = widget.regionWidgetId || widget;
+        var regionWidgetId = widget.id || widget;
 
         delete regionWidgets[regionWidgetId];
     }

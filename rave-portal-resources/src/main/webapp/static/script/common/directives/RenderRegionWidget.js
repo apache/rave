@@ -22,25 +22,31 @@
  * and renders that regionWidget at the location of the directive.
  */
 
-define(['rave'], function(rave){
-    return ['$compile',
-        function ($compile) {
+define(['rave'], function (rave) {
+    return ['$compile', '$rootScope',
+        function ($compile, $rootScope) {
             var directive = {
                 restrict: 'A',
                 link: function (scope, el, attrs) {
                     var regionWidget = scope.$eval(attrs.renderRegionWidget);
+                    regionWidget = rave.getWidget(regionWidget.id);
 
                     scope.$watch(function () {
                         return regionWidget._surface;
                     }, doRender)
 
-                    function doRender() {
-                        var template = rave.renderView(regionWidget._surface);
-
-                        if (template) {
-                            el.html(template);
-                            $compile(el.contents())(scope);
+                    regionWidget.on('navigate', function () {
+                        //conditionally apply if not already in a digest cycle
+                        if ($rootScope.$$phase != '$apply') {
+                            scope.$apply();
                         }
+                    });
+
+                    function doRender() {
+                        var template = rave.getView(regionWidget._surface);
+
+                        el.html(template);
+                        $compile(el.contents())(scope);
                     }
 
                 }

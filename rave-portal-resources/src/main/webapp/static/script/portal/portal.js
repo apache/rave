@@ -17,6 +17,9 @@
  * under the License.
  */
 
-define(['angular', 'portal/routes', 'portal/controllers/index'], function (angular) {
-    return angular.module('portal', ['portal.routes', 'portal.controllers']);
+define(['angular', 'rave', 'portal/routes', 'portal/controllers/index'], function (angular, rave) {
+    return angular.module('portal', ['portal.routes', 'portal.controllers'])
+        .config(function(){
+            rave.setDefaultView('home');
+        });
 });

@@ -39,11 +39,7 @@ define(['rave'], function(rave){
                     var template = el.html();
                     el.remove();
 
-                    rave.registerView(viewName, {
-                        render: function () {
-                            return template;
-                        }
-                    });
+                    rave.registerView(viewName, template);
                 }
             }
 

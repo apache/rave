@@ -110,7 +110,8 @@ define(['underscore'], function(_){
             //TODO: this makes sure that the constructor gets a widget object, but it's cheesy. Should clean it up.
             view = new view(args[0]);
         }
-        view.render.apply(view, args);
+
+        return view.render.apply(view, args);
         view._uid = _.uniqueId('rave_view_');
         renderedViews[view._uid] = view;
         return view;

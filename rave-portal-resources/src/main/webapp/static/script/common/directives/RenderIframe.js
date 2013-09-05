@@ -22,22 +22,22 @@
  * and renders that regionWidget at the location of the directive.
  */
 
-define(['angular'], function(angular){
+define(['angular', 'rave'], function(angular, rave){
     return [function(){
         var directive = {
             restrict: 'EA',
             replace: true,
             scope:{
-                regionWidget: '='
+                regionWidget: '=renderIframe'
             },
             link: function (scope, element, attrs){
                 scope.$watch('regionWidget', function(){
+
                     if(scope.regionWidget){
-                        //Make clone so watch does not cycle too many times
-                        var regionWidgetClone = angular.copy(scope.regionWidget);
+                        var regionWidget = rave.getWidget(scope.regionWidget.id);
 
                         //Render the widget
-                        regionWidgetClone.render(element[0]);
+                        regionWidget.render(element[0]);
                     }
                 }, true);
             }

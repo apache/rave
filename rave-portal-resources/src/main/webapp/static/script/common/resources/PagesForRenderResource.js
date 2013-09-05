@@ -26,7 +26,7 @@ define(['underscore', 'rave'], function (_, rave) {
                     region = page.regions[j] = new Regions(region);
 
                     _.each(region.regionWidgets, function (regionWidget, i) {
-                        regionWidget = rave.registerWidget(regionWidget.regionId, regionWidget);
+                        rave.registerWidget(regionWidget.regionId, regionWidget);
                         region.regionWidgets[i] = new RegionWidgets(regionWidget);
                     });
                 });
