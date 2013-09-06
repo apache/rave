@@ -26,7 +26,7 @@ define(['underscore'], function (_) {
 
         if(page) {
             $scope.page = angular.copy(page);
-        }                                    else {
+        } else {
             $scope.page = new Pages({
                 pageType: 'user'
             });
@@ -66,7 +66,7 @@ define(['underscore'], function (_) {
 
     /* Helpers */
     function resolveModalTitle(page) {
-        if (page) {
+        if (page.id) {
             return updatePageTitle;
         } else {
             return addNewPageTitle;
