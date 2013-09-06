@@ -17,8 +17,9 @@
  * under the License.
  */
 
-define(['rave'], function(rave){
-    return [function () {
+define(['rave'], function (rave) {
+    return ['$http',
+        function ($http) {
             var directive = {
                 restrict: 'AE',
                 scope: {},
@@ -34,12 +35,23 @@ define(['rave'], function(rave){
                 ],
                 link: function (scope, el, attrs, controller) {
 
-                    var viewName = attrs.registerView;
+                    var viewName = attrs.registerView || attrs.view;
+                    //Because this directive has an isolate scope, need to eval expressions with the parent scope
+                    var template = scope.$parent.$eval(attrs.template);
 
-                    var template = el.html();
+                    if (template) {
+                        $http.get(template).success(function (data) {
+                            template = data;
+                            rave.registerView(viewName, template);
+                        });
+                    } else {
+                        template = el.html();
+                        rave.registerView(viewName, template);
+
+                    }
                     el.remove();
 
-                    rave.registerView(viewName, template);
+
                 }
             }
 

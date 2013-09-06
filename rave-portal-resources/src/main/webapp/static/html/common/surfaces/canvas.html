@@ -1,0 +1,16 @@
+<div class="modal-backdrop fade in"></div>
+<div class="widget-wrapper-canvas">
+    <div class="widget-title-bar widget-title-bar-draggable">
+        <div class="widget-title">
+            {{regionWidget.widgetUrl}}
+        </div>
+        <div class="widget-toolbar ">
+                <span class="widget-toolbar-btn" ng-click="minimize()">
+                <i class="icon-resize-small"></i>
+                </span>
+        </div>
+    </div>
+    <div class="widget">
+        <div render-iframe="regionWidget"></div>
+    </div>
+</div>
