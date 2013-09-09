@@ -62,6 +62,7 @@ public class JpaPageConverterTest {
         page.setMembers(new ArrayList<PageUser>());
         page.setName("name");
         page.setOwnerId("");
+        page.setContextId("context");
         page.setPageLayout(new PageLayoutImpl());
         page.setPageType(PageType.USER.toString());
         page.setParentPage(new PageImpl("1"));
@@ -77,6 +78,7 @@ public class JpaPageConverterTest {
         assertThat(converted.getMembers(), is(equalTo(page.getMembers())));
         assertThat(converted.getName(), is(equalTo(page.getName())));
         assertThat(converted.getOwnerId(), is(equalTo(page.getOwnerId())));
+        assertThat(converted.getContextId(), is(equalTo(page.getContextId())));
         assertThat(converted.getPageLayout().getCode(), is(equalTo(page.getPageLayout().getCode())));
         assertThat(converted.getPageType(), is(equalTo(page.getPageType())));
         assertThat(converted.getSubPages(), is(equalTo(page.getSubPages())));
