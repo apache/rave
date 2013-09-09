@@ -23,14 +23,28 @@ import java.util.List;
 
 @XmlTransient
 public interface Page {
+
     String getId();
     void setId(String id);
 
     String getName();
     void setName(String name);
 
+    /**
+     * Represents the individual who is responsible for the page
+     *
+     * NOTE: This should be eventually deprecated in favor of context id
+     * @return the {@link Person}'s ID who owns the page
+     */
     String getOwnerId();
     void setOwnerId(String owner);
+
+    /**
+     * Represents the context identifier for the page.  This *MAY* be a Person ID depending on the context's needs
+     * @return a string representing the logical context for which the page is to be rendered (portal user's ID, profile owner ID, etc)
+     */
+    String getContextId();
+    void setContextId(String owner);
 
     PageLayout getPageLayout();
     void setPageLayout(PageLayout pageLayout);

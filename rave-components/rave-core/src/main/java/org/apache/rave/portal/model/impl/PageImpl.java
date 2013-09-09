@@ -26,6 +26,7 @@ public class PageImpl implements Page {
     private String id;
     private String name;
     private String ownerId;
+    private String contextId;
     private Page parentPage;
     private List<Page> subPages;
     private PageLayout pageLayout;
@@ -72,6 +73,16 @@ public class PageImpl implements Page {
     @Override
     public void setOwnerId(String owner) {
         this.ownerId = owner;
+    }
+
+    @Override
+    public String getContextId() {
+        return contextId;
+    }
+
+    @Override
+    public void setContextId(String contextId) {
+        this.contextId = contextId;
     }
 
     @Override

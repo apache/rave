@@ -75,6 +75,10 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     @Column(name = "owner_id")
     private String ownerId;
 
+    @Basic
+    @Column(name = "context_id")
+    private String contextId;
+
     @ManyToOne(cascade=CascadeType.ALL, optional = true)
     @JoinColumn(name="parent_page_id")
     private JpaPage parentPage;
@@ -165,6 +169,21 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     @Override
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+
+    /**
+     * Gets the {@link User} that owns the page
+     *
+     * @return Valid {@link org.apache.rave.model.User}
+     */
+    @Override
+    public String getContextId() {
+        return contextId;
+    }
+
+    @Override
+    public void setContextId(String contextId) {
+        this.contextId = contextId;
     }
 
     /**

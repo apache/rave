@@ -87,11 +87,18 @@ public interface PageService {
      *
      * @since 0.22
      * @param context the context for the pages ex: "portal", "profile", etc.
-     * @param userId the user to retrieve the page for
+     * @param contextId the identifier of the item in the context that matches the page.
+     *                  examples:
+     *                      context: "person_profile", contextId: "profile owner's id"
+     *                      context: "group", contextId: "group id"
+     *                      context: "project", contextId: "project number"
+     *                      context: "dashboard", contextId: "subject"
+     *                      context: "portal", contextId: "owner's id"
+     *
      * @return A non-null, possibly empty list of page for the given user.
      */
-    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'read')")
-    List<Page> getPages(String context, String userId);
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#contextId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'read')")
+    List<Page> getPages(String context, String contextId);
 
     /**
      * Return the page object from a list of pages given the pageId
