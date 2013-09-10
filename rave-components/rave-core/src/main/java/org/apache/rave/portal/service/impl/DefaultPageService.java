@@ -119,7 +119,6 @@ public class DefaultPageService implements PageService {
         return pageRepository.getPagesForContextType(contextId, context);
     }
 
-
     @Override
     public Page getPageFromList(String pageId, List<Page> pages) {
         for(Page page: pages) {

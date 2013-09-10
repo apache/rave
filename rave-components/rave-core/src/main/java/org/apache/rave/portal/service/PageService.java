@@ -97,7 +97,7 @@ public interface PageService {
      *
      * @return A non-null, possibly empty list of page for the given user.
      */
-    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#contextId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'read')")
+    @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
     List<Page> getPages(String context, String contextId);
 
     /**
