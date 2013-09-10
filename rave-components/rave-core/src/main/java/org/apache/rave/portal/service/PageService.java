@@ -24,6 +24,7 @@ import org.apache.rave.model.Region;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.rest.model.SearchResult;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -97,7 +98,7 @@ public interface PageService {
      *
      * @return A non-null, possibly empty list of page for the given user.
      */
-    @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
+    @PostFilter("hasPermission(filterObject, 'read')")
     List<Page> getPages(String context, String contextId);
 
     /**
