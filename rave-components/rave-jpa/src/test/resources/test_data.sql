@@ -305,8 +305,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @w
 
 --- Layout for user_id_1 ---
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
-values (@page_1_id, 'Main', @user_id_1, null, @two_col_id, 'USER');
+INSERT INTO page (entity_id, name, owner_id, context_id, parent_page_id, page_layout_id, page_type)
+values (@page_1_id, 'Main', @user_id_1, 'foo', null, @two_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 --Set up page user data

@@ -49,7 +49,8 @@ import java.util.List;
         @NamedQuery(name = JpaPage.GET_ALL, query="SELECT p FROM JpaPage p"),
         @NamedQuery(name = JpaPage.GET_COUNT, query="SELECT count(p) FROM JpaPage p"),
         @NamedQuery(name = JpaPage.DELETE_BY_USER_ID_AND_PAGE_TYPE, query="DELETE FROM JpaPage p WHERE p.ownerId = :userId and p.pageType = :pageType"),
-        @NamedQuery(name = JpaPage.USER_HAS_PERSON_PAGE, query="SELECT count(p) FROM JpaPage p WHERE p.ownerId = :userId and p.pageType = :pageType")
+        @NamedQuery(name = JpaPage.USER_HAS_PERSON_PAGE, query="SELECT count(p) FROM JpaPage p WHERE p.ownerId = :userId and p.pageType = :pageType"),
+        @NamedQuery(name = JpaPage.GET_BY_CONTEXT_AND_PAGE_TYPE, query="SELECT p FROM JpaPage p WHERE p.contextId = :contextId and p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
 public class JpaPage implements BasicEntity, Serializable, Page {
@@ -59,6 +60,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     public static final String USER_HAS_PERSON_PAGE = "JpaPage.hasPersonPage";
     public static final String GET_ALL = "JpaPage.getAll";
     public static final String GET_COUNT = "JpaPage.getCount";
+    public static final String GET_BY_CONTEXT_AND_PAGE_TYPE = "JpaPage.getByContextAndPageType";
 
     @XmlAttribute(name="id")
     @Id @Column(name="entity_id")

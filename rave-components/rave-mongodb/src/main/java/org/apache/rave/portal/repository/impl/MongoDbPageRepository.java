@@ -29,6 +29,7 @@ import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -51,6 +52,11 @@ public class MongoDbPageRepository implements PageRepository {
     @Override
     public List<Page> getAllPagesForUserType(String userId, String pageType) {
         return sort(template.find(query(where("pageType").is(getString(pageType)).andOperator(where("members").elemMatch(where("userId").is(userId))))), userId);
+    }
+
+    @Override
+    public List<Page> getPagesForContextType(String contextId, String pageType) {
+        return template.find(query(where("pageType").is(getString(pageType)).andOperator(where("contextId").is(contextId))));
     }
 
     @Override

@@ -84,6 +84,14 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
+    public List<Page> getPagesForContextType(String contextId, String pageType) {
+        TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPage.GET_BY_CONTEXT_AND_PAGE_TYPE, JpaPage.class);
+        query.setParameter("contextId", contextId);
+        query.setParameter("pageType", pageType.toUpperCase());
+        return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
+    }
+
+    @Override
     public int deletePages(String userId, String pageType) {
         List<Page> pages = getAllPagesForUserType(userId, pageType);
         int pageCount = pages.size();

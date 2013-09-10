@@ -121,6 +121,13 @@ public class JpaPageRepositoryTest {
     }
 
     @Test
+    public void getPagesByContextAndType() {
+        List<Page> pages = repository.getPagesForContextType("foo", PageType.USER.toString());
+        assertThat(pages, is(notNullValue()));
+        assertThat(pages.size(), is(1));
+    }
+
+    @Test
     public void getAllPages_validUser_validSubPagePageSet() {
         List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.SUB_PAGE.toString());
         assertThat(pages, is(notNullValue()));
