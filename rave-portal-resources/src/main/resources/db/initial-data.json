@@ -1236,6 +1236,17 @@
             "disableRendering": false,
             "featured": false,
             "widgetStatus": "PUBLISHED"
+        },
+        {
+            "id": 31,
+            "title": "Actions Example",
+            "url": "http://localhost:8080/demogadgets/actions_contributions.xml",
+            "type": "OpenSocial",
+            "author": "Rave Project",
+            "description": "Actions contributions examples",
+            "disableRendering": false,
+            "featured": false,
+            "widgetStatus": "PUBLISHED"
         }
     ],
     "authorities": [

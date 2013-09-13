@@ -26,8 +26,8 @@
  * @requires rave_log
  * @requires rave_state_manager
  */
-define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'osapi'],
-    function (_, viewManager, api, managedHub, log, stateManager) {
+define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'core/rave_action_manager', 'osapi'],
+    function (_, viewManager, api, managedHub, log, stateManager, actionManager) {
         var exports = {};
 
         var container;
@@ -43,6 +43,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
         rpcRegister();
         implementViews();
+        implementActions();
 
 
         function rpcRegister() {
@@ -111,6 +112,22 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
                 var _uid = el.getAttribute('data-rave-view');
                 viewManager.destroyView(_uid);
             };
+        }
+
+        function implementActions() {
+            container.actions.registerShowActionsHandler(function(actions) {
+                _.each(actions, function(action){
+                    actionManager.createAction(action.path, action.moduleId, function() {
+                        container.actions.runAction(action.id);
+                    })
+                })
+            });
+
+            container.actions.registerHideActionsHandler(function (actions){
+                _.each(actions, function(action){
+                    actionManager.removeAction(action.path, action.moduleId);
+                })
+            });
         }
 
         function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
@@ -195,6 +212,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             opts = opts || {};
             var site = container.newGadgetSite(el);
             site._widget = widget;
+            site.moduleId_ = widget.regionWidgetId;
             widget._site = site;
 
             var renderParams = {};
@@ -206,6 +224,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode || stateManager.getDebugMode();
             renderParams[osapi.container.RenderParam.WIDTH ] = getWidthFromParams(opts);
             renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
+            renderParams[osapi.container.RenderParam.MODULE_ID] = widget.regionWidgetId;
             container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
         }
 
@@ -233,7 +252,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             commonContainerTokenData[osapi.container.TokenResponse.TOKEN] = gadget.securityToken;
             commonContainerTokenData[osapi.container.MetadataResponse.RESPONSE_TIME_MS] = new Date().getTime();
             var commonContainerTokenWrapper = {};
+            //Shindig will look for the specific moduleId security token.  Since that is the same as the default in our case
+            //set them both to the same value.
             commonContainerTokenWrapper[gadget.widgetUrl] = commonContainerTokenData;
+            commonContainerTokenWrapper[gadget.widgetUrl + "#moduleId=" + gadget.regionWidgetId] = commonContainerTokenData;
 
             //Setup the preloadConfig data with all our preload data
             var preloadConfig = {};

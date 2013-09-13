@@ -41,8 +41,8 @@
  * });
  */
 define(['underscore', 'core/rave_widget_manager', 'core/rave_api', 'core/rave_widget', 'core/rave_log',
-    'core/rave_event_manager', 'core/rave_view_manager', 'core/rave_state_manager', 'core/rave_openajax_hub'],
-    function (_, widgetManager, api, RegionWidget, log, eventManager, viewManager, stateManager, managedHub) {
+    'core/rave_event_manager', 'core/rave_view_manager', 'core/rave_state_manager', 'core/rave_openajax_hub', 'core/rave_action_manager'],
+    function (_, widgetManager, api, RegionWidget, log, eventManager, viewManager, stateManager, managedHub, actionManager) {
 
         var exports = {};
 
@@ -70,6 +70,7 @@ define(['underscore', 'core/rave_widget_manager', 'core/rave_api', 'core/rave_wi
         _.extend(exports, viewManager);
         _.extend(exports, widgetManager);
         _.extend(exports, stateManager);
+        _.extend(exports, actionManager);
 
         return exports;
     }
