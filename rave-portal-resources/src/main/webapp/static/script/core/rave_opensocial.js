@@ -28,7 +28,8 @@
  */
 define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'core/rave_action_manager', 'osapi'],
     function (_, viewManager, api, managedHub, log, stateManager, actionManager) {
-        var exports = {};
+        //Due to the shindig bug in container actions, we have to keep a map of sites by widgetId
+        var exports = {}, siteByWidgetId = {};
 
         var container;
 
@@ -117,15 +118,20 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
         function implementActions() {
             container.actions.registerShowActionsHandler(function(actions) {
                 _.each(actions, function(action){
-                    actionManager.createAction(action.path, action.moduleId, function() {
-                        container.actions.runAction(action.id);
+                    //TODO: There is a bug in the shindig code where the action is assumed to launch a new gadget.  This works around the issue
+                    actionManager.createAction(action.id, action.label, action.path, action.moduleId, action.icon, action.tooltip, function() {
+                        var site = siteByWidgetId[action.moduleId];
+                        var holder = site.getActiveSiteHolder();
+                        if (holder) {
+                            gadgets.rpc.call(holder.getIframeId(), 'actions.runAction', null, action.id, null);
+                        }
                     })
                 })
             });
 
             container.actions.registerHideActionsHandler(function (actions){
                 _.each(actions, function(action){
-                    actionManager.removeAction(action.path, action.moduleId);
+                    actionManager.removeAction(action.id);
                 })
             });
         }
@@ -214,6 +220,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             site._widget = widget;
             site.moduleId_ = widget.regionWidgetId;
             widget._site = site;
+            siteByWidgetId[widget.regionWidgetId] = site;
 
             var renderParams = {};
             renderParams[osapi.container.RenderParam.VIEW] = opts.view || stateManager.getDefaultView();

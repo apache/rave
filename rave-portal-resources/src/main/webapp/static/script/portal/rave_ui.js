@@ -958,6 +958,48 @@ define(["jquery", "underscore", "rave",
             });
         }
 
+        function getActionElement(label, image, tooltip) {
+            var elem;
+            if(image) {
+                if(image.indexOf("css") === 0) {
+                    elem = '<i class="' + image.replace("css:","") + '" ></i>';
+                } else {
+                    elem = '<img src="' + image + '" />';
+                }
+            } else {
+                elem = "<a>" + label + "</a>";
+            }
+            return $(elem).attr("tooltip", tooltip);
+        }
+
+        function insertWidgetToolbarAction(widgetId, label, image, tooltip, id, onSelected) {
+            var $toolbar = $("#widget-" + widgetId + "-wrapper .widget-title-bar");
+            var $action = $('<div class="widget-titlebar-action widget-toolbar" ></div>').append(getActionElement(label, image, tooltip));
+            $action.attr("id", id).on('click', onSelected);
+            $toolbar.append($action);
+            return $action;
+        }
+
+        function registerActionsHandler() {
+            var actions = {};
+            rave.registerActionHandler({
+                create: function(id, label, path, widgetId, image, tooltip, onSelected) {
+                    if(!actions[id]) {
+                        var segments = path.split("/");
+                        //TODO Implement more paths and a better path routing system
+                        if (segments.length === 2 && segments[0] === "gadget" && segments[1] === "toolbar") {
+                            actions[id] = insertWidgetToolbarAction(widgetId, label, image, tooltip, id, onSelected);
+                        } else {
+                            rave.log("Unsupported action path: '" + path + "'")
+                        }
+                    }
+                },
+                remove: function(id) {
+                    if(actions[id]) actions[id].remove();
+                }
+            });
+        }
+
         function init() {
             initializePageSharing();
             registerPreferencesView();
@@ -966,6 +1008,7 @@ define(["jquery", "underscore", "rave",
             registerPopups();
             showEmptyDisplay();
             setupDragAndDrop();
+            registerActionsHandler();
         }
 
         rave.registerOnInitHandler(init);

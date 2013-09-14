@@ -34,18 +34,21 @@ define(['underscore'], function(_){
      * @param path {string} path to the action /gadget/toolbar, /gadget/menu, /container/menu, etc
      * @param widgetId {string} the id of the widget contributing the action
      * @param fnAction function to call when the action is selected
+     * @param tooltip
+     * @param image the image to display, either a relative path, URL or css class name in format of css:<css_type>:<className> eg. class:boostrap:icon-fun
+     * @param label the label of the action
+     * @param id unique ID of the action
      */
-    exports.createAction = function(path, widgetId, fnAction) {
-        _.invoke(actionHandlers, 'create', [path, widgetId, fnAction]);
+    exports.createAction = function(id, label, path, widgetId, image, tooltip, fnAction) {
+        _.invoke(actionHandlers, 'create', id, label, path, widgetId, image, tooltip, fnAction);
     }
 
     /**
      * Removes an action by calling all actionHandlers remove function
-     * @param {string} path to the action /gadget/toolbar, /gadget/menu, /container/menu, etc
-     * @param widgetId {string} the id of the widget contributing the action
+     * @param {string} id Unique identifier of the action
      */
-    exports.removeAction = function(path, widgetId) {
-        _.invoke(actionHandlers, 'remove', [path, widgetId]);
+    exports.removeAction = function(id) {
+        _.invoke(actionHandlers, 'remove', id);
     }
 
     /**

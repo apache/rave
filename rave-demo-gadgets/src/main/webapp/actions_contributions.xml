@@ -32,12 +32,13 @@
           <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
           <script type="text/x-handlebars-template" id="template">
             {{#each_entry this}}
-                <h3>{{key}}</h3>
+                <h4>{{key}}</h4>
                 <ul>
                 {{#each value}}<li><b>{{id}}:</b><span>{{description}}</span></li>{{/each}}
                 </ul>
             {{/each_entry}}
           </script>
+          <h3>Actions by Path</h3>
           <div id="render"></div>
           <script>
               Handlebars.registerHelper("each_entry", function(obj, options) {
@@ -61,8 +62,8 @@
                     tooltip: "This is a warning",
                     label: "Take Warning",
                     icon: "css:icon-warning-sign",
-                    callback: actionCallback,
-                    path: "/gadget/toolbar",
+                    callback: function() { actionCallback("warning"); },
+                    path: "gadget/toolbar",
                     moduleId: moduleId,
                     description: "Toolbar action as an image that when clicked fires the action"
                 };
@@ -74,8 +75,8 @@
                     tooltip: "This is a folder open",
                     label: "Open File",
                     icon: "css:icon-folder-open",
-                    callback: actionCallback,
-                    path: "/gadget/toolbar",
+                    callback: function() { actionCallback("open file"); },
+                    path: "gadget/toolbar",
                     moduleId: moduleId,
                     description: "Toolbar action as an image that when clicked fires the action"
                 };
