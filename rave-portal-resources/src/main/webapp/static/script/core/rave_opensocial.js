@@ -119,7 +119,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             container.actions.registerShowActionsHandler(function(actions) {
                 _.each(actions, function(action){
                     //TODO: There is a bug in the shindig code where the action is assumed to launch a new gadget.  This works around the issue
-                    actionManager.createAction(action.id, action.label, action.path, action.moduleId, action.icon, action.tooltip, function() {
+                    actionManager.createAction(action.id, action.label, action.path.replace("gadget", "widget"), action.moduleId, action.icon, action.tooltip, function() {
                         var site = siteByWidgetId[action.moduleId];
                         var holder = site.getActiveSiteHolder();
                         if (holder) {

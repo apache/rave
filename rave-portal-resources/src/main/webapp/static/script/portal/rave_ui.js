@@ -987,7 +987,7 @@ define(["jquery", "underscore", "rave",
                     if(!actions[id]) {
                         var segments = path.split("/");
                         //TODO Implement more paths and a better path routing system
-                        if (segments.length === 2 && segments[0] === "gadget" && segments[1] === "toolbar") {
+                        if (segments.length === 2 && segments[0] === "widget" && segments[1] === "toolbar") {
                             actions[id] = insertWidgetToolbarAction(widgetId, label, image, tooltip, id, onSelected);
                         } else {
                             rave.log("Unsupported action path: '" + path + "'")
