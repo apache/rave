@@ -116,6 +116,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
         }
 
         function implementActions() {
+            if(!container.actions) {
+                log("Could not initialize actions as the feature is not enabled in the Shindig common container.  Check the rave properties file.");
+                return;
+            }
             container.actions.registerShowActionsHandler(function(actions) {
                 _.each(actions, function(action){
                     //TODO: There is a bug in the shindig code where the action is assumed to launch a new gadget.  This works around the issue
