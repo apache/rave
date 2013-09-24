@@ -35,7 +35,7 @@
 <div class="row-fluid">
     <div class="tab-content" ng-show="currentPageId == page.id" ng-repeat="page in pages">
         <div id="emptyPageMessageWrapper" class="emptyPageMessageWrapper">
-            <div class="emptyPageMessage" ng-hide="hasWidgets(page)">
+            <div class="emptyPageMessage" ng-hide="page.hasRegionWidgets()">
                 <a href="/portal/app/store">Add widgets to this page</a>
             </div>
         </div>

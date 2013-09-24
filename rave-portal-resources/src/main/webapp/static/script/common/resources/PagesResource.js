@@ -17,9 +17,17 @@
  * under the License.
  */
 
-define([], function(){
+define(["underscore"], function(_){
     return ['RaveResource', function(RaveResource){
-        return RaveResource('pages/:id', {id: '@id'});
+        var PageResource = RaveResource('pages/:id', {id: '@id'});
+
+        PageResource.prototype.hasRegionWidgets = function() {
+            return _.find(this.regions, function(region) {
+                return region.regionWidgets.length;
+            });
+        };
+
+        return PageResource;
     }];
 })
 
