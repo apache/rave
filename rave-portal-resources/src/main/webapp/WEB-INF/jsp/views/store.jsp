@@ -338,7 +338,6 @@
                             ui.displayUsersOfWidget(element.data('widget-id'));
                         });
 
-                        rave.init();
                         raveStore.init('<c:out value="${referringPageId}"/>');
                     })
         })

@@ -121,7 +121,6 @@
                                     raveStore.confirmAddFromMarketplace(element.data('widget-url'), element.data('widget-type'));
                                 })
 
-                                rave.init();
                                 raveStore.init('<c:out value="${referringPageId}"/>');
                                 raveStore.initTags("<c:out value="${widget.id}"/>");
                             })

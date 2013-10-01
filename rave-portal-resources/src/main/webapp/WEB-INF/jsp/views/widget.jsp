@@ -288,7 +288,6 @@
                     ui.displayUsersOfWidget($(this).data('widget-id'))
                 })
 
-                rave.init();
                 raveStore.init('<c:out value="${referringPageId}"/>');
                 raveStore.initTags("<c:out value="${widget.id}"/>");
             })
