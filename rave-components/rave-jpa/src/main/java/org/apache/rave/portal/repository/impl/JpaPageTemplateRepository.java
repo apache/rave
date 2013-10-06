@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.JpaPageTemplate;
 import org.apache.rave.model.PageTemplate;
 import org.apache.rave.portal.model.conversion.JpaConverter;
@@ -45,6 +46,21 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
     }
 
     @Override
+    public List<PageTemplate> getLimitedList(int offset, int limit) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getCountAll() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<PageTemplate> getAllForType(String pageType) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public JpaPageTemplate getDefaultPage(String pageType) {
         TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, JpaPageTemplate.class);
         query.setParameter("pageType", pageType.toUpperCase());
@@ -52,7 +68,22 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
     }
 
     @Override
+    public Class<? extends PageTemplate> getType() {
+        return PageTemplate.class;
+    }
+
+    @Override
+    public PageTemplate get(String id) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public PageTemplate save(PageTemplate template) {
         return (PageTemplate) saveOrUpdate(template.getId(), manager, JpaConverter.getInstance().convert(template, PageTemplate.class));
+    }
+
+    @Override
+    public void delete(PageTemplate item) {
+        throw new NotImplementedException();
     }
 }
