@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
@@ -55,10 +56,36 @@ public class MongoDbPageTemplateRepository implements PageTemplateRepository {
     }
 
     @Override
+    public List<PageTemplate> getLimitedList(int offset, int limit) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getCountAll() {
+        return 0;
+    }
+
+    @Override
+    public List<PageTemplate> getAllForType(String pageType) {
+
+        return null;
+    }
+
+    @Override
     public PageTemplate getDefaultPage(String pageType) {
         PageTemplate temp = template.findOne(new Query(where("pageType").is(pageType.toUpperCase()).andOperator(where("defaultTemplate").is(true))), MongoDbPageTemplate.class, PAGE_TEMPLATE_COLLECTION);
         converter.hydrate(temp, PageTemplate.class);
         return temp;
+    }
+
+    @Override
+    public Class<? extends PageTemplate> getType() {
+        return PageTemplate.class;
+    }
+
+    @Override
+    public PageTemplate get(String id) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -67,6 +94,11 @@ public class MongoDbPageTemplateRepository implements PageTemplateRepository {
         template.save(converted, PAGE_TEMPLATE_COLLECTION);
         converter.hydrate(converted, PageTemplate.class);
         return converted;
+    }
+
+    @Override
+    public void delete(PageTemplate item) {
+        throw new NotImplementedException();
     }
 
     public void setConverter(HydratingConverterFactory converter) {
