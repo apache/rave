@@ -20,12 +20,27 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.model.PageTemplate;
 import org.apache.rave.model.PageType;
+import org.apache.rave.repository.Repository;
 
 import java.util.List;
 
-public interface PageTemplateRepository {
+/**
+ * Provides operations against the backing store for PageTemplate objects
+ */
+public interface PageTemplateRepository extends Repository<PageTemplate> {
 
-    List<PageTemplate> getAll();
+    /**
+     * Gets all page templates with the specified page type
+     * @param pageType the page type used to filter templates
+     * @return a list of all page templates for the type in the repository
+     */
+    List<PageTemplate> getAllForType(String pageType);
+
+    /**
+     * Gets the default page template for the given type
+     * @param pageType teh page type
+     * @return a valid page template or null if none exists for the type
+     */
     PageTemplate getDefaultPage(String pageType);
-    PageTemplate save(PageTemplate template);
+
 }
