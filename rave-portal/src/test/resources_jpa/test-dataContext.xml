@@ -66,8 +66,9 @@
     </bean>
 
     <bean id="dataImporter" class="org.apache.rave.portal.util.data.DataImporter">
+        <property name="modelClass" value="org.apache.rave.portal.util.data.ModelWrapper" />
         <property name="dataExecutor">
-            <bean class="org.apache.rave.portal.util.data.DataImporter$ExecutorImpl" />
+            <bean class="org.apache.rave.portal.util.data.ModelWrapperDataExecutor" />
         </property>
         <property name="scriptLocations">
             <list>
