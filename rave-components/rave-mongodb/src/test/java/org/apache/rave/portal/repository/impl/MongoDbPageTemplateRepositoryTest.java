@@ -24,6 +24,7 @@ import org.apache.rave.model.PageTemplate;
 import org.apache.rave.model.PageType;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
+import org.apache.rave.portal.repository.MongoPageTemplateOperations;
 import org.apache.rave.portal.repository.util.CollectionNames;
 import org.apache.rave.util.CollectionUtils;
 import org.junit.Before;
@@ -48,30 +49,24 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class MongoDbPageTemplateRepositoryTest {
 
     private MongoDbPageTemplateRepository templateRepository;
-    private HydratingConverterFactory converter;
-    private MongoOperations template;
+    private MongoPageTemplateOperations template;
 
     @Before
     public void setup(){
         templateRepository = new MongoDbPageTemplateRepository();
-        converter = createMock(HydratingConverterFactory.class);
-        template = createMock(MongoOperations.class);
+        template = createMock(MongoPageTemplateOperations.class);
         templateRepository.setTemplate(template);
-        templateRepository.setConverter(converter);
     }
 
     @Test
     public void getAll_Valid() {
-        List<MongoDbPageTemplate> templates = new ArrayList<MongoDbPageTemplate>();
+        List<PageTemplate> templates = new ArrayList<PageTemplate>();
         PageTemplate temp = new MongoDbPageTemplate();
         templates.add((MongoDbPageTemplate)temp);
-        expect(template.findAll(MongoDbPageTemplate.class, CollectionNames.PAGE_TEMPLATE_COLLECTION)).andReturn(templates);
-        converter.hydrate(temp, PageTemplate.class);
-        expectLastCall();
-        replay(template, converter);
+        expect(template.find(new Query())).andReturn(templates);
+        replay(template);
 
         List<PageTemplate> returned = templateRepository.getAll();
-        verify(converter);
         assertThat(returned, is(sameInstance(CollectionUtils.<PageTemplate>toBaseTypedList(templates))));
     }
 
@@ -79,10 +74,8 @@ public class MongoDbPageTemplateRepositoryTest {
     public void getDefaultPage_Valid(){
         PageType pageType = PageType.get("user");
         MongoDbPageTemplate found = new MongoDbPageTemplate();
-        expect(template.findOne(new Query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("defaultTemplate").is(true))), MongoDbPageTemplate.class, CollectionNames.PAGE_TEMPLATE_COLLECTION)).andReturn(found);
-        converter.hydrate(found, PageTemplate.class);
-        expectLastCall();
-        replay(converter, template);
+        expect(template.findOne(new Query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("defaultTemplate").is(true))))).andReturn(found);
+        replay(template);
 
         PageTemplate returned = templateRepository.getDefaultPage(pageType.toString());
 
@@ -94,12 +87,8 @@ public class MongoDbPageTemplateRepositoryTest {
         PageTemplate pageTemplate = new PageTemplateImpl();
         MongoDbPageTemplate converted = new MongoDbPageTemplate();
 
-        expect(converter.convert(pageTemplate, PageTemplate.class)).andReturn(converted);
-        template.save(converted, CollectionNames.PAGE_TEMPLATE_COLLECTION);
-        expectLastCall();
-        converter.hydrate(converted, PageTemplate.class);
-        expectLastCall();
-        replay(converter, template);
+        expect(template.save(eq(converted))).andReturn(converted);
+        replay(template);
 
         PageTemplate saved = templateRepository.save(pageTemplate);
         assertThat(converted, is(sameInstance(saved)));
