@@ -1173,6 +1173,32 @@ insert into page_template_widget (entity_id, page_template_region_id, render_seq
 values (@next_person_profile_subpage2_template_widget_id, @person_profile_subpage2_template_region_id, 0, @my_activity_widget_id, true);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
 
+----------------------------------------
+-- secondary person profile parent page templates
+----------------------------------------
+-- page
+set @person_profile_page_template_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_seq);
+insert into page_template (entity_id, page_type, page_layout_id, name, description, parent_page_template_id, render_sequence, default_template)
+values (@person_profile_page_template_id, 'PERSON_PROFILE', @person_profile_layout_id, 'Person Profile 2', 'Template for person profile pages', null, 0, false);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_seq;
+
+-- regions
+set @person_profile_page_template_region_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_region_seq);
+insert into page_template_region (entity_id, render_sequence, page_template_id, locked)
+values (@person_profile_page_template_region_id, 0, @person_profile_page_template_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_region_seq;
+
+-- widgets
+set @next_person_profile_page_template_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_widget_seq);
+insert into page_template_widget (entity_id, page_template_region_id, render_sequence, widget_id, locked)
+values (@next_person_profile_page_template_widget_id, @person_profile_page_template_region_id, 0, @my_groups_widget_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
+
+set @next_person_profile_page_template_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_widget_seq);
+insert into page_template_widget (entity_id, page_template_region_id, render_sequence, widget_id, locked)
+values (@next_person_profile_page_template_widget_id, @person_profile_page_template_region_id, 1, @work_experience_widget_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
+
 
 ----------------------------------------
 -- user page template

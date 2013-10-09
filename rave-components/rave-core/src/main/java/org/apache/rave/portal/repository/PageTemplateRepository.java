@@ -34,7 +34,7 @@ public interface PageTemplateRepository extends Repository<PageTemplate> {
      * @param pageType the page type used to filter templates
      * @return a list of all page templates for the type in the repository
      */
-    List<PageTemplate> getAllForType(String pageType);
+    List<PageTemplate> getAll(String pageType);
 
     /**
      * Gets the default page template for the given type

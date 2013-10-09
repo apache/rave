@@ -34,8 +34,9 @@ import java.util.List;
 @Entity
 @Table(name="page_template")
 @NamedQueries({
-        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_ALL, query = "SELECT p FROM JpaPageTemplate p ORDER BY p.renderSequence"),
-        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, query = "SELECT p FROM JpaPageTemplate p WHERE p.defaultTemplate = true and p.pageType = :pageType")
+        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_ALL, query = "SELECT p FROM JpaPageTemplate p WHERE p.pageType <> 'SUB_PAGE' ORDER BY p.renderSequence"),
+        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, query = "SELECT p FROM JpaPageTemplate p WHERE p.defaultTemplate = true and p.pageType = :pageType"),
+        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_ALL_FOR_TYPE, query = "SELECT p FROM JpaPageTemplate p WHERE p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
 public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate {
@@ -43,6 +44,7 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
     private static final long serialVersionUID = 1L;
     public static final String PAGE_TEMPLATE_GET_ALL = "PageTemplate.getAll";
     public static final String PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE = "PageTemplate.getDefaultPage";
+    public static final String PAGE_TEMPLATE_GET_ALL_FOR_TYPE = "PageTemplate.getAllByType";
 
     @Id
     @Column(name="entity_id")

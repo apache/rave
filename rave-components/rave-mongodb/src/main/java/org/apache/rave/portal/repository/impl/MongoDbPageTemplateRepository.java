@@ -56,7 +56,7 @@ public class MongoDbPageTemplateRepository implements PageTemplateRepository {
     }
 
     @Override
-    public List<PageTemplate> getAllForType(String pageType) {
+    public List<PageTemplate> getAll(String pageType) {
         return template.find(query(where("pageType").is(pageType.toUpperCase())));
     }
 

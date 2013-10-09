@@ -65,7 +65,7 @@ public class DefaultPageTemplatesResourceTest {
         int count = 4;
         String context = "context";
         List<PageTemplate> answer = getRepositoryTemplates(count);
-        expect(repository.getAllForType(context)).andReturn(answer);
+        expect(repository.getAll(context)).andReturn(answer);
         replay(repository);
 
         SearchResult< org.apache.rave.rest.model.PageTemplate> result = resource.getAllForContext(context);

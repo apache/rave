@@ -31,6 +31,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 @Repository
@@ -47,17 +48,20 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
 
     @Override
     public List<PageTemplate> getLimitedList(int offset, int limit) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_ALL, JpaPageTemplate.class);
+        return CollectionUtils.<PageTemplate>toBaseTypedList(getPagedResultList(query, offset, limit));
     }
 
     @Override
     public int getCountAll() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return getAll().size();
     }
 
     @Override
-    public List<PageTemplate> getAllForType(String pageType) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<PageTemplate> getAll(String pageType) {
+        TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_ALL_FOR_TYPE, JpaPageTemplate.class);
+        query.setParameter("pageType", pageType);
+        return CollectionUtils.<PageTemplate>toBaseTypedList(query.getResultList());
     }
 
     @Override
@@ -74,7 +78,7 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
 
     @Override
     public PageTemplate get(String id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return manager.find(JpaPageTemplate.class, id);
     }
 
     @Override
@@ -84,6 +88,6 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
 
     @Override
     public void delete(PageTemplate item) {
-        throw new NotImplementedException();
+        manager.remove(JpaConverter.getInstance().convert(item, PageTemplate.class));
     }
 }
