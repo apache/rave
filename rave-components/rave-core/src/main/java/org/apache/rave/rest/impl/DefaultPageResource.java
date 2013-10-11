@@ -20,9 +20,9 @@
 package org.apache.rave.rest.impl;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.rest.PageUsersResource;
 import org.apache.rave.rest.exception.ResourceNotFoundException;
-import org.apache.rave.model.PageType;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.rest.PagesResource;
 import org.apache.rave.rest.RegionsResource;
@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,23 +72,25 @@ public class DefaultPageResource implements PagesResource {
 
 
     @Override
-    public Page createPage(Page page) {
+    public Page createPage(String pageTemplateId, Page page) {
+        if (page.getName() == null) {
+            throw new BadRequestException("Page name property must be defined.");
+        }
+        org.apache.rave.model.Page fromDb;
+        if(StringUtils.isNotBlank(pageTemplateId)) {
+            fromDb = pageService.addNewPage(page.getName(), null, pageTemplateId);
         //TODO: RAVE-977 - when Page type enum is deprecated escape from this logic
-        if (page.getPageType().equals("user")) {
-            if (page.getName() == null) {
-                throw new BadRequestException("Page name property must be defined.");
-            }
+        } else if (page.getPageType().equals("user")) {
             if (page.getPageLayoutCode() == null) {
                 throw new BadRequestException("Page pageLayoutCode property must be defined.");
             }
-            org.apache.rave.model.Page fromDb = pageService.addNewUserPage(page.getName(), page.getPageLayoutCode());
-            Page responsePage = new Page(fromDb);
-
-            return responsePage;
+            fromDb = pageService.addNewUserPage(page.getName(), page.getPageLayoutCode());
         } else {
             //TODO: RAVE-977 this will change
             throw new BadRequestException("Page pageType property must equal 'user'.");
         }
+
+        return new Page(fromDb);
     }
 
     @Override

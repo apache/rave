@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.util.PageUtil;
 import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.*;
@@ -133,6 +134,17 @@ public class DefaultPageService implements PageService {
     public Page getDefaultPageFromList(List<Page> pages) {
         // the first sequenced ordered page is considered the user's default page
         return (pages == null || pages.isEmpty()) ? null : pages.get(0);
+    }
+
+    @Override
+    @Transactional
+    public Page addNewPage(String pageName, String contextId, String pageTemplateId) {
+        PageTemplate template = pageTemplateRepository.get(pageTemplateId);
+        if(template == null) {
+            throw new IllegalArgumentException("No page template found for the specified id " + pageTemplateId);
+        }
+        Page newInstance = PageUtil.convert(template, userService.getAuthenticatedUser(), false);
+        return pageRepository.save(newInstance);
     }
 
     @Override

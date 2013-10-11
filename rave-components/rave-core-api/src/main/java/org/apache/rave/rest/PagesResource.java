@@ -53,7 +53,7 @@ public interface PagesResource {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Page createPage(Page page);
+    Page createPage(@DefaultValue("") @QueryParam("templateId") String pageTemplateId, Page page);
 
     /**
      * Deletes the given page

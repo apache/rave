@@ -19,7 +19,6 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.model.Page;
-import org.apache.rave.model.PageType;
 import org.apache.rave.model.Region;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.rest.model.SearchResult;
@@ -117,6 +116,17 @@ public interface PageService {
      * @return the default Page in the list
      */
     Page getDefaultPageFromList(List<Page> pages);
+
+    /**
+     * Creates a new user page with the supplied pageName and pageLayoutCode
+     *
+     *
+     * @param pageName       the name of the new page
+     * @param contextId      the ID to set for the context of the page
+     * @param pageTemplateId the ID of the PageTemplate to create from  @return the new Page object
+     */
+    @PostAuthorize("hasPermission(returnObject, 'create')")
+    Page addNewPage(String pageName, String contextId, String pageTemplateId);
 
     /**
      * Creates a new user page with the supplied pageName and pageLayoutCode

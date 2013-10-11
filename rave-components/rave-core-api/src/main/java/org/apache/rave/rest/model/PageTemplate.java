@@ -39,6 +39,7 @@ public class PageTemplate implements RestEntity {
         this.description = source.getDescription();
         this.pageType = source.getPageType();
         this.pageLayoutCode = source.getPageLayout().getCode();
+        this.defaultTemplate = source.isDefaultTemplate();
     }
 
     public String getId() {
