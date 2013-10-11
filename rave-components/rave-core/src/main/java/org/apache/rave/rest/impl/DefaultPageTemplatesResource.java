@@ -19,6 +19,7 @@
 
 package org.apache.rave.rest.impl;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.rest.PageTemplatesResource;
@@ -26,6 +27,7 @@ import org.apache.rave.rest.model.PageTemplate;
 import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.PathParam;
+import java.util.List;
 
 /**
  * Default JAXRS implementation of teh {@link PageTemplatesResource}
@@ -36,21 +38,29 @@ public class DefaultPageTemplatesResource implements PageTemplatesResource {
 
     @Override
     public SearchResult<PageTemplate> getAll() {
-        return null;
+        return getListFromDb(repository.getAll());
     }
 
     @Override
-    public SearchResult<PageTemplate> getAllForContext(@PathParam("context") String context) {
-        return null;
+    public SearchResult<PageTemplate> getAllForContext(String context) {
+        return getListFromDb(repository.getAll(context));
     }
 
     @Override
-    public PageTemplate get(@PathParam("id") String id) {
-        return null;
+    public PageTemplate get(String id) {
+        return new PageTemplate(repository.get(id));
     }
 
     @Inject
     public void setRepository(PageTemplateRepository repository) {
         this.repository = repository;
+    }
+
+    private SearchResult<PageTemplate> getListFromDb(List<org.apache.rave.model.PageTemplate> fromDb) {
+        List<PageTemplate> converted = Lists.newArrayList();
+        for(org.apache.rave.model.PageTemplate template : fromDb) {
+            converted.add(new PageTemplate(template));
+        }
+        return new SearchResult<PageTemplate>(converted, converted.size());
     }
 }
