@@ -80,7 +80,7 @@ public class PageUtil {
      */
     private static  List<RegionWidget> convertWidgets(List<PageTemplateWidget> pageTemplateWidgets, Region region, boolean createIds){
         List<RegionWidget> widgets = new ArrayList<RegionWidget>();
-        int idx=100 * Integer.parseInt(region.getId());
+        int idx=createIds ? 100 * Integer.parseInt(region.getId()) : 0;
         for (PageTemplateWidget ptw : pageTemplateWidgets){
             RegionWidgetImpl regionWidget = new RegionWidgetImpl();
             if(createIds) {

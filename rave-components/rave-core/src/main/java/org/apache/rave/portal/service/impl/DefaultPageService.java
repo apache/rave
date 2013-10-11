@@ -144,6 +144,8 @@ public class DefaultPageService implements PageService {
             throw new IllegalArgumentException("No page template found for the specified id " + pageTemplateId);
         }
         Page newInstance = PageUtil.convert(template, userService.getAuthenticatedUser(), false);
+        newInstance.setContextId(contextId);
+        newInstance.setName(pageName);
         return pageRepository.save(newInstance);
     }
 
