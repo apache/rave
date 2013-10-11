@@ -55,6 +55,7 @@
             <ref bean="usersBean"/>
             <ref bean="pagesBean" />
             <ref bean="pageLayoutBean" />
+            <ref bean="pageTemplatesBean" />
             <ref bean="pagesForRenderBean" />
             <ref bean="categoriesBean"/>
             <ref bean="preferencesBean"/>
