@@ -60,7 +60,7 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
     @Override
     public List<PageTemplate> getAll(String pageType) {
         TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_ALL_FOR_TYPE, JpaPageTemplate.class);
-        query.setParameter("pageType", pageType);
+        query.setParameter("pageType", pageType.toUpperCase());
         return CollectionUtils.<PageTemplate>toBaseTypedList(query.getResultList());
     }
 
