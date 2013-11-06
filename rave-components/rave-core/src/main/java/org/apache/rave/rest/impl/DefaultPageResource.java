@@ -102,7 +102,8 @@ public class DefaultPageResource implements PagesResource {
             throw new BadRequestException("Page pageLayoutCode property must be defined.");
         }
         //TODO: a bad page layout code can corrupt the data
-        org.apache.rave.model.Page fromDb = pageService.updatePage(id, page.getName(), page.getPageLayoutCode());
+        //As part of the model refactor, this needs to be made more concise and clear what properties of a page are mutable and why
+        org.apache.rave.model.Page fromDb = pageService.updatePage(id, page.getName(), page.getPageLayoutCode(), page.getProperties());
         Page responsePage = new Page(fromDb);
 
         return responsePage;

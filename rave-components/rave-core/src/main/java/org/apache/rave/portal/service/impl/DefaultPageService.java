@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DefaultPageService implements PageService {
@@ -330,6 +331,12 @@ public class DefaultPageService implements PageService {
     @Override
     @Transactional
     public Page updatePage(String pageId, String name, String pageLayoutCode) {
+        return updatePage(pageId, name, pageLayoutCode, null);
+    }
+
+    @Override
+    @Transactional
+    public Page updatePage(String pageId, String name, String pageLayoutCode, Map<String, Object> properties) {
         Page page = pageRepository.get(pageId);
         PageLayout newLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
         PageLayout curLayout = page.getPageLayout();
@@ -352,9 +359,11 @@ public class DefaultPageService implements PageService {
         //save the new page properties
         page.setName(name);
         page.setPageLayout(newLayout);
-        pageRepository.save(page);
-
-        return page;
+        //Forces callers to send an empty map rather than a null value to clear properties
+        if(properties != null) {
+            page.setProperties(properties);
+        }
+        return pageRepository.save(page);
     }
 
     @Transactional

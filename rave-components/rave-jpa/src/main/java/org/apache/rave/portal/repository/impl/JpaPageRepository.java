@@ -19,20 +19,21 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.rave.exception.DataSerializationException;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaPageConverter;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.util.CollectionUtils;
+import org.apache.rave.util.JsonUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.*;
+import java.util.*;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
@@ -53,12 +54,13 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public Page get(String id) {
-        return manager.find(JpaPage.class, Long.parseLong(id));
+        return expandProperties(manager.find(JpaPage.class, Long.parseLong(id)));
     }
 
     @Override
     public Page save(Page item) {
         JpaPage page = pageConverter.convert(item);
+        page.serializeData();
         return saveOrUpdate(page.getEntityId(), manager, page);
     }
 
@@ -80,7 +82,7 @@ public class JpaPageRepository implements PageRepository {
         TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType.toUpperCase());
-        return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
+        return expandProperties(CollectionUtils.<Page>toBaseTypedList(query.getResultList()));
     }
 
     @Override
@@ -88,7 +90,7 @@ public class JpaPageRepository implements PageRepository {
         TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPage.GET_BY_CONTEXT_AND_PAGE_TYPE, JpaPage.class);
         query.setParameter("contextId", contextId);
         query.setParameter("pageType", pageType.toUpperCase());
-        return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
+        return expandProperties(CollectionUtils.<Page>toBaseTypedList(query.getResultList()));
     }
 
     @Override
@@ -126,8 +128,11 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public boolean hasPage(String userId, String pageType) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    public boolean hasPage(String contextId, String pageType) {
+        TypedQuery<Long> query = manager.createNamedQuery(JpaPage.HAS_CONTEXT_PAGE, Long.class);
+        query.setParameter("contextId", contextId);
+        query.setParameter("pageType", pageType);
+        return query.getSingleResult() > 0;
     }
 
     @Override
@@ -135,7 +140,7 @@ public class JpaPageRepository implements PageRepository {
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_PAGES_FOR_USER, JpaPageUser.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType.toUpperCase());
-        return CollectionUtils.<PageUser>toBaseTypedList(query.getResultList());
+        return expandPageUserProperties(CollectionUtils.<PageUser>toBaseTypedList(query.getResultList()));
     }
 
     @Override
@@ -143,12 +148,31 @@ public class JpaPageRepository implements PageRepository {
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_SINGLE_RECORD, JpaPageUser.class);
         query.setParameter("userId", userId);
         query.setParameter("pageId", pageId == null ? null : Long.parseLong(pageId));
-        return query.getSingleResult();
+        return expandPageUserProperties(query.getSingleResult());
     }
 
     @Override
     public Page createPageForUser(User user, PageTemplate pt) {
         return convert(pt, user);
+    }
+
+    @Override
+    public List<Page> getAll() {
+        TypedQuery<Page> query = manager.createNamedQuery(JpaPage.GET_ALL, Page.class);
+        return expandProperties(CollectionUtils.<Page>toBaseTypedList(query.getResultList()));
+    }
+
+    @Override
+    public List<Page> getLimitedList(int offset, int limit) {
+        TypedQuery<Page> query = manager.createNamedQuery(JpaPage.GET_ALL, Page.class);
+        return expandProperties(CollectionUtils.<Page>toBaseTypedList(getPagedResultList(query, offset, limit)));
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(JpaPage.GET_COUNT);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
     }
 
     private void removePageUsers(JpaPage item) {
@@ -158,6 +182,39 @@ public class JpaPageRepository implements PageRepository {
             manager.flush();
             manager.remove(user);
         }
+    }
+
+    private JpaPage expandProperties(JpaPage page) {
+        if(page != null) {
+            page.deserializeData();
+        }
+        return page;
+    }
+
+    private List<Page> expandProperties(List<Page> pages) {
+        for(Page page : pages) {
+            if(page instanceof JpaPage){
+                expandProperties((JpaPage)page);
+            }
+        }
+        return pages;
+    }
+
+    private JpaPageUser expandPageUserProperties(JpaPageUser pageUser) {
+        Page page = pageUser.getPage();
+        if(page != null && page instanceof JpaPage) {
+            ((JpaPage)page).deserializeData();
+        }
+        return pageUser;
+    }
+
+    private List<PageUser> expandPageUserProperties(List<PageUser> pageUsers) {
+        for(PageUser page : pageUsers) {
+            if(page instanceof JpaPageUser) {
+                expandPageUserProperties((JpaPageUser)page);
+            }
+        }
+        return pageUsers;
     }
 
     /**
@@ -266,24 +323,5 @@ public class JpaPageRepository implements PageRepository {
             pages.add(lPage);
         }
         return pages;
-    }
-
-    @Override
-    public List<Page> getAll() {
-        TypedQuery<Page> query = manager.createNamedQuery(JpaPage.GET_ALL, Page.class);
-        return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
-    }
-
-    @Override
-    public List<Page> getLimitedList(int offset, int limit) {
-        TypedQuery<Page> query = manager.createNamedQuery(JpaPage.GET_ALL, Page.class);
-        return CollectionUtils.<Page>toBaseTypedList(getPagedResultList(query, offset, limit));
-    }
-
-    @Override
-    public int getCountAll() {
-        Query query = manager.createNamedQuery(JpaPage.GET_COUNT);
-        Number countResult = (Number) query.getSingleResult();
-        return countResult.intValue();
     }
 }

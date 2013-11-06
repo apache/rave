@@ -37,7 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -289,6 +291,28 @@ public class JpaPageRepositoryTest {
         assertEquals(defaultPageTemplate.getSubPageTemplates().get(1).getName(), subPage2.getName());
         assertEquals(user.getId(), subPage1.getOwnerId());
         assertEquals(user.getId(), subPage2.getOwnerId());
+    }
+
+
+    @Test
+    @Transactional(readOnly = false)
+    @Rollback(true)
+    public void createPageWithProperties(){
+        Page page = new PageImpl(null, USER_ID);
+        page.setName("FOO");
+        HashMap<String, Object> objectHashMap = new HashMap<String, Object>();
+        HashMap<String, Object> subObject = new HashMap<String, Object>();
+        objectHashMap.put("context", subObject);
+        subObject.put("foo", "bar");
+        page.setProperties(objectHashMap);
+
+        Page fromDb = repository.save(page);
+        //Go and get it again to make sure it is coming from the db
+        fromDb = repository.get(fromDb.getId());
+        Map<String,Object> properties = fromDb.getProperties();
+        assertThat(properties, is(not(nullValue())));
+        assertThat(properties.get("context"), is(instanceOf(Map.class)));
+        assertThat(((Map)properties.get("context")).get("foo"), is(equalTo((Object)"bar")));
     }
 
     @Test

@@ -21,6 +21,7 @@ package org.apache.rave.portal.model.impl;
 import org.apache.rave.model.*;
 
 import java.util.List;
+import java.util.Map;
 
 public class PageImpl implements Page {
     private String id;
@@ -33,6 +34,7 @@ public class PageImpl implements Page {
     private List<Region> regions;
     private String pageType;
     private List<PageUser> members;
+    private Map<String, Object> properties;
 
     public PageImpl() {}
 
@@ -143,6 +145,16 @@ public class PageImpl implements Page {
     @Override
     public void setMembers(List<PageUser> members) {
         this.members = members;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     @Override

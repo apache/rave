@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.rave.model.Page;
 import org.apache.rave.model.PageLayout;
 import org.apache.rave.model.PageTemplate;
@@ -52,6 +53,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -736,7 +738,7 @@ public class DefaultPageServiceTest {
 
         RegionWidget instance = pageService.addWidgetToPage(PAGE_ID, WIDGET_ID);
 
-        verify(pageRepository,regionRepository,widgetRepository);
+        verify(pageRepository, regionRepository, widgetRepository);
 
         verifyPositions(0, instance, true);
         assertThat(originalRegion.getRegionWidgets().get(0), is(sameInstance(instance)));
@@ -968,6 +970,37 @@ public class DefaultPageServiceTest {
         replay(pageLayoutRepository);
 
         pageService.updatePage(PAGE_ID, newName, layoutName);
+
+        verify(curPage);
+    }
+
+    @Test
+    public void updatePage_properties() {
+        String newName = "new page name";
+        String layoutName = "layout name";
+        Map<String, Object> props = Maps.newHashMap();
+
+        PageLayoutImpl layout = createStrictMock(PageLayoutImpl.class);
+        expect(layout.getNumberOfRegions()).andReturn(Long.valueOf(2L)).anyTimes();
+        replay(layout);
+
+        //create a strict mock that ensures that the appropriate setters are
+        //called, rather than checking the return value from the function
+        Page curPage = createStrictMock(PageImpl.class);
+        expect(curPage.getPageLayout()).andReturn(layout);
+        curPage.setName(newName);
+        curPage.setPageLayout(layout);
+        curPage.setProperties(props);
+        replay(curPage);
+
+        expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
+        expect(pageRepository.save(curPage)).andReturn(curPage);
+        replay(pageRepository);
+
+        expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
+        replay(pageLayoutRepository);
+
+        pageService.updatePage(PAGE_ID, newName, layoutName, props);
 
         verify(curPage);
     }

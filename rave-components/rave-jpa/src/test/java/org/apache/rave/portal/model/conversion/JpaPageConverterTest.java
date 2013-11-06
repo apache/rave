@@ -32,6 +32,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -68,6 +69,7 @@ public class JpaPageConverterTest {
         page.setParentPage(new PageImpl("1"));
         page.setRegions(new ArrayList<Region>());
         page.setSubPages(new ArrayList<Page>());
+        page.setProperties(new HashMap<String, Object>());
 
         JpaPage converted = pageConverter.convert(page);
         assertThat(converted, is(not(sameInstance(page))));
@@ -82,5 +84,6 @@ public class JpaPageConverterTest {
         assertThat(converted.getPageLayout().getCode(), is(equalTo(page.getPageLayout().getCode())));
         assertThat(converted.getPageType(), is(equalTo(page.getPageType())));
         assertThat(converted.getSubPages(), is(equalTo(page.getSubPages())));
+        assertThat(converted.getProperties(), is(equalTo(page.getProperties())));
     }
 }

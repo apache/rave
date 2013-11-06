@@ -72,6 +72,7 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
         converted.setParentPage(source.getParentPage());
         converted.setRegions(source.getRegions());
         converted.setSubPages(source.getSubPages());
+        converted.setProperties(source.getProperties());
     }
 
     private void replacePageReferences(Page source, JpaPage converted) {
