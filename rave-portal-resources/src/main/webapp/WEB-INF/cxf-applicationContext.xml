@@ -59,6 +59,7 @@
             <ref bean="pagesForRenderBean" />
             <ref bean="categoriesBean"/>
             <ref bean="preferencesBean"/>
+            <ref bean="widgetsBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
@@ -76,6 +77,7 @@
     </bean>
 
     <bean id="preferencesBean" class="org.apache.rave.rest.impl.DefaultPortalPreferenceResource" autowire="byType" />
+    <bean id="widgetsBean" class="org.apache.rave.rest.impl.DefaultWidgetsResource" autowire="byType" />
 
     <bean id="pageLayoutBean" class="org.apache.rave.rest.impl.DefaultPageLayoutResource" autowire="byType" />
 
