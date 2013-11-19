@@ -20,6 +20,7 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
@@ -142,6 +143,9 @@ public class MongoDbWidgetConverterTest {
         WidgetRating wr = new WidgetRatingImpl();
         source.getRatings().add(wr);
 
+        source.setProperties(Maps.<String, Object>newHashMap());
+        source.getProperties().put("sub", "foo");
+
         converted = converter.convert(source);
 
         assertThat(converted.getUrl(), is(equalTo("http://mitre.org")));
@@ -181,6 +185,8 @@ public class MongoDbWidgetConverterTest {
         //Test convertRatings method
         assertNotNull(converted.getRatings());
         assertNotNull(converted.getRatings().get(0).getId());
+
+        assertThat((String)converted.getProperties().get("sub"), is(equalTo("foo")));
     }
 
     @Test

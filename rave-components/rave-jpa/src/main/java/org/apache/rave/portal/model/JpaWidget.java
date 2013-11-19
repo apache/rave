@@ -19,37 +19,19 @@
 
 package org.apache.rave.portal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
+import org.apache.rave.util.JsonUtils;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A widget
@@ -84,7 +66,7 @@ import java.util.List;
         @NamedQuery(name = JpaWidget.WIDGET_UNASSIGN_OWNER, query = "UPDATE JpaWidget w SET w.ownerId = null " + JpaWidget.WHERE_CLAUSE_OWNER )
 })
 public class JpaWidget implements BasicEntity, Serializable, Widget {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     public static final String PARAM_SEARCH_TERM = "searchTerm";
     public static final String PARAM_STATUS = "widgetStatus";
@@ -217,6 +199,15 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     @Basic
     @Column(name = "featured", columnDefinition = "boolean default false")
     private boolean featured;
+
+    @Lob @JsonIgnore
+    @Column(name = "serialized_data")
+    private String serializedData;
+
+    //It will be the responsibility of the repository to ensure that this
+    //property is set when the page is retrieved from the database
+    @Transient
+    private Map<String, Object> properties;
 
     public JpaWidget() {
     }
@@ -462,6 +453,38 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     @Override
     public void setFeatured(boolean featured) {
         this.featured = featured;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
+
+    public String getSerializedData() {
+        return serializedData;
+    }
+
+    public void setSerializedData(String serializedData) {
+        this.serializedData = serializedData;
+    }
+
+    public void serializeData() {
+        Map<String, Object> properties = this.getProperties();
+        if(properties != null) {
+            serializedData = JsonUtils.stringify(properties);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void deserializeData() {
+        if(serializedData != null) {
+            this.setProperties(JsonUtils.parse(serializedData, Map.class));
+        }
     }
 
     @Override

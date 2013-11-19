@@ -21,6 +21,7 @@ package org.apache.rave.rest.model;
 import org.apache.rave.model.WidgetStatus;
 
 import javax.xml.bind.annotation.*;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Widget", propOrder = {
@@ -51,6 +52,8 @@ public class Widget {
     private String description;
     @XmlElement(name = "status")
     private WidgetStatus status;
+    @XmlElement(name = "properties")
+    private Map<String, Object> properties;
     @XmlElement(name = "disable")
     private boolean disable;
     @XmlElement(name = "disabledMessage")
@@ -75,6 +78,7 @@ public class Widget {
         this.disable = base.isDisableRendering();
         this.disabledMessage = base.getDisableRenderingMessage();
         this.featured = base.isFeatured();
+        this.properties = base.getProperties();
     }
 
 
@@ -164,6 +168,14 @@ public class Widget {
 
     public void setStatus(WidgetStatus status) {
         this.status = status;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     public boolean isDisable() {

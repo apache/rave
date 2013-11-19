@@ -30,6 +30,7 @@ import org.apache.rave.portal.web.renderer.ScriptManager;
 import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.w3c.service.impl.W3CWidget;
+import org.apache.rave.util.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -74,7 +75,8 @@ public class W3cWidgetWrapperRenderer implements RegionWidgetWrapperRenderer {
         " widgetId: %8$s, " +
         " locked: %9$s, " +
         " hideChrome: %10$s, " +
-        " subPage: {id: %11$s, name: '%12$s', isDefault: %13$s}" +
+        " subPage: {id: %11$s, name: '%12$s', isDefault: %13$s}," +
+        " properties: %14$s" +
         "})});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
@@ -188,7 +190,8 @@ public class W3cWidgetWrapperRenderer implements RegionWidgetWrapperRenderer {
                 item.isHideChrome(),
                 pageId,
                 pageName,
-                isDefault);
+                isDefault,
+                JsonUtils.stringify(widget.getProperties()));
     }
 
     private boolean isDefaultSubPage(Page subPage) {

@@ -22,6 +22,7 @@ import org.apache.rave.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WidgetImpl implements Widget {
     private String id;
@@ -43,6 +44,7 @@ public class WidgetImpl implements Widget {
     private List<WidgetTag> tags = new ArrayList<WidgetTag>();
     private List<Category> categories = new ArrayList<Category>();
     private boolean featured;
+    private Map<String, Object> properties;
 
     public WidgetImpl() {}
 
@@ -205,6 +207,14 @@ public class WidgetImpl implements Widget {
 
     public void setFeatured(boolean featured) {
         this.featured = featured;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     @Override

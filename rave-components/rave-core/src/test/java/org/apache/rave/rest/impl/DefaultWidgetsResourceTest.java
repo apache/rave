@@ -20,6 +20,7 @@ package org.apache.rave.rest.impl;
 
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.rave.model.Widget;
 import org.apache.rave.model.WidgetStatus;
 import org.apache.rave.portal.model.impl.WidgetImpl;
@@ -31,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -60,6 +62,9 @@ public class DefaultWidgetsResourceTest {
         w1.setDisableRendering(true);
         w1.setDisableRenderingMessage("");
         w1.setFeatured(true);
+        Map<String, Object> properties = Maps.newHashMap();
+        properties.put("foo", "bar");
+        w1.setProperties(properties);
         w2 = new WidgetImpl("2", "http://example.com/2");
         w3 = new WidgetImpl("1", "http://example.com/2");
     }
@@ -130,5 +135,6 @@ public class DefaultWidgetsResourceTest {
         assertThat(widget.isDisable(), is(equalTo(source.isDisableRendering())));
         assertThat(widget.getDisabledMessage(), is(equalTo(source.getDisableRenderingMessage())));
         assertThat(widget.isFeatured(), is(equalTo(source.isFeatured())));
+        assertThat((String)widget.getProperties().get("foo"), is(equalTo("bar")));
     }
 }

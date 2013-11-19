@@ -54,7 +54,7 @@ import java.util.*;
 })
 @Access(AccessType.FIELD)
 public class JpaPage implements BasicEntity, Serializable, Page {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     public static final String DELETE_BY_USER_ID_AND_PAGE_TYPE = "JpaPage.deleteByUserIdAndPageType";
     public static final String USER_HAS_PERSON_PAGE = "JpaPage.hasPersonPage";

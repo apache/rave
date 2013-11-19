@@ -81,5 +81,6 @@ public class DefaultWidgetsResource implements WidgetsResource {
         fromDb.setDisableRendering(widget.isDisable());
         fromDb.setDisableRenderingMessage(widget.getDisabledMessage());
         fromDb.setFeatured(widget.isFeatured());
+        fromDb.setProperties(widget.getProperties());
     }
 }
