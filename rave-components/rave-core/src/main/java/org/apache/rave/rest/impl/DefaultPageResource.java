@@ -20,7 +20,9 @@
 package org.apache.rave.rest.impl;
 
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rave.portal.service.UserService;
 import org.apache.rave.rest.PageUsersResource;
 import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.portal.service.PageService;
@@ -34,29 +36,47 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DefaultPageResource implements PagesResource {
+
+    public static final String SELF = "@self";
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     private PageService pageService;
 
     private DefaultRegionsResource regionsResouce;
     private DefaultPageUsersResource pageUsersResource;
+    private UserService userService;
 
     @Override
     public SearchResult<Page> getPages() {
         SearchResult<org.apache.rave.model.Page> fromDb = pageService.getAll();
-        List<Page> pages = new ArrayList<Page>();
-
-        for (org.apache.rave.model.Page page : fromDb.getResultSet()) {
-            pages.add(new Page(page));
-        }
-
-        SearchResult<Page> returnPages = new SearchResult<Page>(pages, fromDb.getTotalResults());
-        return returnPages;
+        return convert(fromDb.getResultSet(), fromDb.getTotalResults());
     }
 
+    @Override
+    public SearchResult<Page> getContextPages(String context, String identifier) {
+        String contextId = identifier.equals(SELF) ? userService.getAuthenticatedUser().getId() : identifier;
+        //TODO Replace when handling supports page member handling as a special case RAVE-1044
+        List<org.apache.rave.model.Page> pages;
+        try {
+            if ("portal".equals(context)) {
+                pages = pageService.getAllUserPages(contextId);
+            } else if ("profile".equals(context)) {
+                pages = Arrays.asList(pageService.getPersonProfilePage(contextId));
+            } else {
+                pages = pageService.getPages(context, contextId);
+            }
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(contextId);
+        }
+        if (pages == null) {
+            throw new ResourceNotFoundException(contextId);
+        }
+        return convert(pages, pages.size());
+    }
 
     @Override
     public Page getPage(String id) {
@@ -65,9 +85,8 @@ public class DefaultPageResource implements PagesResource {
         if (fromDb == null) {
             throw new ResourceNotFoundException(id);
         }
-        Page responsePage = new Page(fromDb);
 
-        return responsePage;
+        return new Page(fromDb);
     }
 
 
@@ -138,6 +157,14 @@ public class DefaultPageResource implements PagesResource {
         return pageUsersResource;
     }
 
+    private SearchResult<Page> convert(List<org.apache.rave.model.Page> fromDb, int total) {
+        List<Page> pages = Lists.newArrayList();
+        for (org.apache.rave.model.Page page : fromDb) {
+            pages.add(new Page(page));
+        }
+        return new SearchResult<Page>(pages, total);
+    }
+
     @Inject
     public void setPageService(PageService pageService) {
         this.pageService = pageService;
@@ -151,5 +178,9 @@ public class DefaultPageResource implements PagesResource {
     @Inject
     public void setPageUsersResource(DefaultPageUsersResource pageUsersResource) {
         this.pageUsersResource = pageUsersResource;
+    }
+    @Inject
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

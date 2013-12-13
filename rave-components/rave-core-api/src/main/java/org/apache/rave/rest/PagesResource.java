@@ -44,6 +44,18 @@ public interface PagesResource {
     SearchResult<Page> getPages();
 
     /**
+     * Returns a list of pages in the context that the specified user has access to
+     *
+     * @param context the context to query
+     * @param identifier the id or keyword (ie @self)
+     * @return a list of pages
+     */
+    @GET
+    @Path("/{context}/{identifier}")
+    @Produces(MediaType.APPLICATION_JSON)
+    SearchResult<Page> getContextPages(@PathParam("context") String context, @PathParam("identifier") String identifier);
+
+    /**
      * Creates a new page
      *
      * @param page the definition of the new page
