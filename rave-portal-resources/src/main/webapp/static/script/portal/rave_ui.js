@@ -686,32 +686,32 @@ define(["jquery", "underscore", "rave",
                 });
 
                 //bind widget menu items
-                self.$minimizeIcon.click(minimize);
-                self.$toggleCollapseIcon.click(toggleCollapse);
+                self.$minimizeIcon.off("click").click(minimize);
+                self.$toggleCollapseIcon.off("click").click(toggleCollapse);
                 self.$cogIcon.click(addIframeOverlays);
                 self.$cogIcon.dropdown();
                 if (!self.$menuItemMove.hasClass("menu-item-disabled")) {
-                    self.$menuItemMove.click(getLaunchClosure(showMovePageDialog));
+                    self.$menuItemMove.off("click").click(getLaunchClosure(showMovePageDialog));
                 }
                 if (!self.$menuItemDelete.hasClass("menu-item-disabled")) {
-                    self.$menuItemDelete.click(getLaunchClosure(deleteWidget));
+                    self.$menuItemDelete.off("click").click(getLaunchClosure(deleteWidget));
                 }
                 if (!self.$menuItemMaximize.hasClass("menu-item-disabled")) {
-                    self.$menuItemMaximize.click(getLaunchClosure(maximize));
+                    self.$menuItemMaximize.off("click").click(getLaunchClosure(maximize));
                 }
                 if (!self.$menuItemAbout.hasClass("menu-item-disabled")) {
-                    self.$menuItemAbout.click(getLaunchClosure(aboutWidget));
+                    self.$menuItemAbout.off("click").click(getLaunchClosure(aboutWidget));
                 }
                 if (!self.$menuItemComment.hasClass("menu-item-disabled")) {
-                    self.$menuItemComment.click(getLaunchClosure(commentOnWidget));
+                    self.$menuItemComment.off("click").click(getLaunchClosure(commentOnWidget));
                 }
                 if (!self.$menuItemRate.hasClass("menu-item-disabled")) {
-                    self.$menuItemRate.click(getLaunchClosure(rateWidget));
+                    self.$menuItemRate.off("click").click(getLaunchClosure(rateWidget));
                 }
                 var metadata = self.widget.metadata;
                 if (metadata && (metadata.hasPrefsToEdit || (metadata.views && metadata.views.preferences))) {
                     self.$menuItemEditPrefs.removeClass("menu-item-disabled");
-                    self.$menuItemEditPrefs.click(getLaunchClosure(showPrefsPane));
+                    self.$menuItemEditPrefs.off("click").click(getLaunchClosure(showPrefsPane));
                 }
 
                 function getLaunchClosure(fn) {
