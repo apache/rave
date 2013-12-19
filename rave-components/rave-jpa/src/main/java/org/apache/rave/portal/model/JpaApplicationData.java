@@ -56,12 +56,12 @@ public class JpaApplicationData implements BasicEntity, ApplicationData {
     private String appUrl;
 
     @Transient
-    private Map<String, String> data;
+    private Map<String, Object> data;
 
     public JpaApplicationData() {
     }
 
-    public JpaApplicationData(Long entityId, String userId, String appUrl, Map<String, String> data) {
+    public JpaApplicationData(Long entityId, String userId, String appUrl, Map<String, Object> data) {
         this.entityId = entityId;
         this.userId = userId;
         this.appUrl = appUrl;
@@ -109,12 +109,12 @@ public class JpaApplicationData implements BasicEntity, ApplicationData {
     }
 
     @Override
-    public Map<String, String> getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
     @Override
-    public void setData(Map<String, String> data) {
+    public void setData(Map<String, Object> data) {
         this.data = data;
     }
 }

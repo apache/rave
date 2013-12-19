@@ -23,6 +23,8 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.Futures;
+
 import org.apache.rave.model.ActivityStreamsEntry;
 import org.apache.rave.model.ActivityStreamsObject;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
@@ -31,7 +33,6 @@ import org.apache.rave.portal.repository.ActivityStreamsRepository;
 import org.apache.rave.util.ActivityConversionUtil;
 import org.apache.shindig.auth.BasicSecurityToken;
 import org.apache.shindig.auth.SecurityToken;
-import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
 import org.apache.shindig.protocol.model.SortOrder;
@@ -90,7 +91,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
     @Override
     public Future<RestfulCollection<ActivityEntry>> getActivityEntries(Set<UserId> userIds, GroupId groupId, String appId, Set<String> fields, CollectionOptions options, SecurityToken token) {
         List<ActivityEntry> result = getFromRepository(userIds, groupId, appId, fields, options, token);
-        return ImmediateFuture.newInstance(new RestfulCollection<ActivityEntry>(result));
+        return Futures.immediateFuture(new RestfulCollection<ActivityEntry>(result));
 
     }
 
@@ -121,7 +122,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
             entries.add(getActivity(fields, userId.getUserId(token), peopleById, id));
         }
 
-        return ImmediateFuture.newInstance(new RestfulCollection<ActivityEntry>(entries));
+        return Futures.immediateFuture(new RestfulCollection<ActivityEntry>(entries));
     }
 
     /**
@@ -142,7 +143,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
      */
     @Override
     public Future<ActivityEntry> getActivityEntry(UserId userId, GroupId groupId, String appId, Set<String> fields, String activityId, SecurityToken token) throws ProtocolException {
-        return ImmediateFuture.newInstance(getActivity(fields, userId.getUserId(token), Maps.<String, Person>newHashMap(), activityId));
+        return Futures.immediateFuture(getActivity(fields, userId.getUserId(token), Maps.<String, Person>newHashMap(), activityId));
     }
 
     /**
@@ -173,7 +174,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
             }
         }
 
-        return ImmediateFuture.newInstance(null);
+        return Futures.immediateFuture(null);
     }
 
     /**
@@ -223,7 +224,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
 
         ActivityStreamsEntry saved = repository.save(tmp);
         ActivityEntryImpl impl = converter.convert(saved);
-        return ImmediateFuture.newInstance((ActivityEntry) impl);
+        return Futures.immediateFuture((ActivityEntry) impl);
     }
 
     /**
@@ -251,7 +252,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
         ActivityStreamsEntryImpl activityEntity = converter.convert(activity);
 
         ActivityStreamsEntry saved = repository.save(activityEntity);
-        return ImmediateFuture.newInstance((ActivityEntry)converter.convert(saved));
+        return Futures.immediateFuture((ActivityEntry)converter.convert(saved));
 
     }
 

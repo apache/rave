@@ -20,6 +20,8 @@
 package org.apache.rave.opensocial.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.Futures;
+
 import org.apache.rave.opensocial.service.impl.DefaultActivityStreamsService;
 import org.apache.rave.model.ActivityStreamsEntry;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
@@ -28,7 +30,6 @@ import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
 import org.apache.rave.portal.repository.ActivityStreamsRepository;
 import org.apache.rave.util.ActivityConversionUtil;
 import org.apache.shindig.auth.SecurityToken;
-import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.RestfulCollection;
 import org.apache.shindig.social.core.model.ActivityObjectImpl;
 import org.apache.shindig.social.core.model.PersonImpl;
@@ -143,7 +144,7 @@ public class DefaultActivityStreamsServiceTest {
 
         expect(repository.save(activityStreamsEntry)).andReturn(activityStreamsEntry);
         expect(repository.getByUserId(ID_1)).andReturn((List) getActivityList());
-        expect(personService.getPeople(users,groupId,null,fields,token)).andReturn(ImmediateFuture.newInstance(new RestfulCollection<Person>(getDbPersonList())));
+        expect(personService.getPeople(users,groupId,null,fields,token)).andReturn(Futures.immediateFuture(new RestfulCollection<Person>(getDbPersonList())));
         replay(repository);
         replay(personService);
 
@@ -170,7 +171,7 @@ public class DefaultActivityStreamsServiceTest {
 
         expect(repository.save(EasyMock.isA(ActivityStreamsEntryImpl.class))).andReturn(activityStreamsEntry);
         expect(repository.get(ACTIVITY_ID)).andReturn(activityStreamsEntry);
-        expect(personService.getPeople(users,groupId,null,fields,token)).andReturn(ImmediateFuture.newInstance(new RestfulCollection<Person>(getDbPersonList())));
+        expect(personService.getPeople(users,groupId,null,fields,token)).andReturn(Futures.immediateFuture(new RestfulCollection<Person>(getDbPersonList())));
         replay(repository);
         replay(personService);
 

@@ -27,7 +27,6 @@ import org.apache.rave.portal.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.repository.ApplicationDataRepository;
 import org.apache.rave.service.LockService;
 import org.apache.shindig.auth.SecurityToken;
-import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.DataCollection;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.social.opensocial.spi.AppDataService;
@@ -36,7 +35,10 @@ import org.apache.shindig.social.opensocial.spi.UserId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.util.concurrent.Futures;
+
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -91,7 +93,7 @@ public class DefaultAppDataService implements AppDataService {
         //fetch their appdata, convert it to a DataCollection and return it
         List<ApplicationData> applicationData = applicationDataRepository.getApplicationData(personIds, appId);
         DataCollection dataCollection = convertAppDataMapToDataCollection(personIds, applicationData, fields);
-        return ImmediateFuture.newInstance(dataCollection);
+        return Futures.immediateFuture(dataCollection);
     }
 
     /**
@@ -120,11 +122,11 @@ public class DefaultAppDataService implements AppDataService {
 
             //if there is no data, there's nothing to delete, so we're done...
             if (applicationData == null || applicationData.getData() == null) {
-                return ImmediateFuture.newInstance(null);
+                return Futures.immediateFuture(null);
             }
 
             //remove the fields specified -- empty field set implies remove all, otherwise remove just the fields specified
-            Map<String, String> data = applicationData.getData();
+            Map<String, Object> data = applicationData.getData();
             if (fields == null || fields.size() == 0) {
                 data.clear();
             } else {
@@ -137,7 +139,7 @@ public class DefaultAppDataService implements AppDataService {
             lock.unlock();
             lockService.returnLock(lock);
         }
-        return ImmediateFuture.newInstance(null);
+        return Futures.immediateFuture(null);
     }
 
     /**
@@ -156,7 +158,7 @@ public class DefaultAppDataService implements AppDataService {
      */
     @Override
     public Future<Void> updatePersonData(UserId userId, GroupId groupId, String appId, Set<String>
-            fields, Map<String, String> values, SecurityToken token) throws ProtocolException {
+            fields, Map<String, Object> values, SecurityToken token) throws ProtocolException {
         //make sure the request conforms to the OpenSocial visibility rules
         String personId = validateWriteRequest(userId, groupId, appId, token);
 
@@ -169,7 +171,7 @@ public class DefaultAppDataService implements AppDataService {
 
             //if there is no data, create an empty object to store the data in that we'll save when we're done
             if (applicationData == null) {
-                applicationData = new ApplicationDataImpl(null, personId, appId, new HashMap<String, String>());
+                applicationData = new ApplicationDataImpl(null, personId, appId, new HashMap<String, Object>());
             }
 
             //if the fields parameter is empty, we can just use the values map directly since this is a full update
@@ -185,7 +187,7 @@ public class DefaultAppDataService implements AppDataService {
             //map (due to the check above), so we can just enumerate over it now to finish our work.  So we want to remove
             //any fields found in the fields set that are not found in the values map and update the rest.
             else {
-                Map<String, String> data = applicationData.getData();
+                Map<String, Object> data = applicationData.getData();
                 for (String field : fields) {
                     //if this field is not in the values map, its a delete
                     if (!values.containsKey(field)) {
@@ -203,7 +205,7 @@ public class DefaultAppDataService implements AppDataService {
             lock.unlock();
             lockService.returnLock(lock);
         }
-        return ImmediateFuture.newInstance(null);
+        return Futures.immediateFuture(null);
     }
 
     private List<String> validateReadRequest(Set<UserId> userIds, GroupId groupId, String appId, SecurityToken token) {
@@ -251,18 +253,18 @@ public class DefaultAppDataService implements AppDataService {
     private DataCollection convertAppDataMapToDataCollection(List<String> personIds, List<ApplicationData> applicationData,
                                                              Set<String> fields) {
         //create the map that we'll use to associate users with their appdata
-        Map<String, Map<String, String>> dataCollectionMap = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, Object>> dataCollectionMap = new HashMap<String, Map<String, Object>>();
 
         //enumerate the data we have mapping it back to the owner
         for (ApplicationData data : applicationData) {
             //create a map for our return values
-            Map<String, String> returnData = new HashMap<String, String>();
+            Map<String, Object> returnData = new HashMap<String, Object>();
             //if there isn't a set of fields to filter on return all user data, otherwise filter to the specified fields
             if (fields == null || fields.size() == 0) {
                 returnData.putAll(data.getData());
             } else {
                 //otherwise filter the values
-                for (Map.Entry<String, String> userDataEntry : data.getData().entrySet()) {
+                for (Map.Entry<String, Object> userDataEntry : data.getData().entrySet()) {
                     if (fields.contains(userDataEntry.getKey())) {
                         returnData.put(userDataEntry.getKey(), userDataEntry.getValue());
                     }
@@ -276,7 +278,7 @@ public class DefaultAppDataService implements AppDataService {
         //now enumerate all of the personIds to be sure we have some data in the map for them, and if not, add empty data
         for (String personId : personIds) {
             if (!dataCollectionMap.containsKey(personId)) {
-                dataCollectionMap.put(personId, new HashMap<String, String>());
+                dataCollectionMap.put(personId, new HashMap<String, Object>());
             }
         }
 

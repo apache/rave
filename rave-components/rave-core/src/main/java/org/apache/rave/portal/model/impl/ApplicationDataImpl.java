@@ -26,7 +26,7 @@ public class ApplicationDataImpl implements ApplicationData {
     private String id;
     private String userId;
     private String appUrl;
-    private Map<String, String> data;
+    private Map<String, Object> data;
 
     public ApplicationDataImpl() {}
 
@@ -34,7 +34,7 @@ public class ApplicationDataImpl implements ApplicationData {
         this.id = id;
     }
 
-    public ApplicationDataImpl(String id, String userId, String appUrl, Map<String, String> data) {
+    public ApplicationDataImpl(String id, String userId, String appUrl, Map<String, Object> data) {
         this.id = id;
         this.userId = userId;
         this.appUrl = appUrl;
@@ -72,12 +72,12 @@ public class ApplicationDataImpl implements ApplicationData {
     }
 
     @Override
-    public Map<String, String> getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
     @Override
-    public void setData(Map<String, String> data) {
+    public void setData(Map<String, Object> data) {
         this.data = data;
     }
 }

@@ -57,11 +57,11 @@ public class JpaApplicationDataRepositoryTest {
     private static final String SECOND_VALID_APPLICATION_ID = "http://example.com/gadget2.xml";
     private static final Long VALID_APPLICATION_DATA_ID = 1L;
 
-    private Map<String, String> validApplicationDataMap;
+    private Map<String, Object> validApplicationDataMap;
 
     @Before
     public void setup() {
-        validApplicationDataMap = new HashMap<String, String>();
+        validApplicationDataMap = new HashMap<String, Object>();
         validApplicationDataMap.put("color", "blue");
         validApplicationDataMap.put("speed", "fast");
         validApplicationDataMap.put("state", "MA");
@@ -137,7 +137,7 @@ public class JpaApplicationDataRepositoryTest {
     @Rollback(true)
     public void save_existingEntity() {
         JpaApplicationData applicationData = new JpaApplicationData(VALID_APPLICATION_DATA_ID, VALID_USER_ID,
-                VALID_APPLICATION_ID, new HashMap<String, String>());
+                VALID_APPLICATION_ID, new HashMap<String, Object>());
 
         JpaApplicationData saved = (JpaApplicationData)repository.save(applicationData);
         manager.flush();
@@ -174,8 +174,8 @@ public class JpaApplicationDataRepositoryTest {
         assertThat(applicationData.getUserId(), is(equalTo(VALID_USER_ID)));
         assertThat(applicationData.getAppUrl(), is(equalTo(VALID_APPLICATION_ID)));
 
-        Map<String, String> actualData = applicationData.getData();
-        for (Map.Entry<String, String> entry : validApplicationDataMap.entrySet()) {
+        Map<String, Object> actualData = applicationData.getData();
+        for (Map.Entry<String, Object> entry : validApplicationDataMap.entrySet()) {
             assertEquals(entry.getValue(), actualData.get(entry.getKey()));
         }
     }

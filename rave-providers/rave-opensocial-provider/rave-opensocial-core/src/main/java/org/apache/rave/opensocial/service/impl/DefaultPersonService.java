@@ -20,12 +20,13 @@
 package org.apache.rave.opensocial.service.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.Futures;
+
 import org.apache.rave.opensocial.repository.OpenSocialPersonRepository;
 import org.apache.rave.opensocial.service.SimplePersonService;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.auth.AbstractSecurityToken;
 import org.apache.shindig.auth.SecurityToken;
-import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
 import org.apache.shindig.social.opensocial.model.Person;
@@ -37,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -66,13 +68,13 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
 
     	collectionOptions = manipulateCollectionOptions(collectionOptions,token);
         List<org.apache.rave.model.Person> people = getPeople(userIds, groupId, collectionOptions, token);
-        return ImmediateFuture.newInstance(new RestfulCollection<Person>(convertPeople(people, fields)));
+        return Futures.immediateFuture(new RestfulCollection<Person>(convertPeople(people, fields)));
     }
 
     @Override
     public Future<Person> getPerson(UserId id, Set<String> fields, SecurityToken token) throws ProtocolException {
 
-        return ImmediateFuture.newInstance(convertPerson(getPersonForId(id, token), fields));
+        return Futures.immediateFuture(convertPerson(getPersonForId(id, token), fields));
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.apache.rave.portal.model.JpaApplicationData;
 import org.apache.rave.portal.model.conversion.JpaApplicationDataConverter;
 import org.apache.rave.portal.repository.ApplicationDataRepository;
 import org.apache.rave.util.CollectionUtils;
+import org.apache.rave.util.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Lob;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -161,28 +163,21 @@ public class JpaApplicationDataRepository implements ApplicationDataRepository {
             super();
         }
 
-        public JpaSerializableApplicationData(Long entityId, String userId, String appUrl, Map<String, String> data) {
+        public JpaSerializableApplicationData(Long entityId, String userId, String appUrl, Map<String, Object> data) {
             super(entityId, userId, appUrl, data);
         }
 
         public void serializeData() {
-            serializedData = new JSONObject(this.getData()).toString();
+          Map<String, Object> data = this.getData();
+          if (data != null) {
+            serializedData = JsonUtils.stringify(data);
+          }
         }
 
+        @SuppressWarnings("unchecked")
         public void deserializeData() {
-            try {
-                Map<String, String> data = new HashMap<String, String>();
-                if (StringUtils.isNotBlank(serializedData)) {
-                    JSONObject jsonObject = new JSONObject(serializedData);
-                    Iterator keys = jsonObject.keys();
-                    while (keys.hasNext()) {
-                        String key = (String) keys.next();
-                        data.put(key, (String) jsonObject.get(key));
-                    }
-                }
-                this.setData(data);
-            } catch (JSONException e) {
-                throw new DataSerializationException("Exception caught while deserializing data: " + serializedData, e);
+            if (serializedData != null && StringUtils.isNotBlank(serializedData)) {
+              this.setData(JsonUtils.parse(serializedData, Map.class));
             }
         }
     }
