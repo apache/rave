@@ -1097,7 +1097,7 @@
         {
             "id": 18,
             "title": "Activity Stream",
-            "url": "http://accelerator.opensocial2.org/gadgets/examples/gadgets/activitystream/gadget.xml",
+            "url": "https://raw.github.com/OpenSocial/examples/master/gadgets/activitystream/gadget.xml",
             "type": "OpenSocial",
             "author": "OpenSocial Foundation",
             "description": "OpenSocial Activity Stream gadget with support for Embedded Experiences",
