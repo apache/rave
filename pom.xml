@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-master</artifactId>
-        <version>0.21</version>
+        <version>0.23-SNAPSHOT</version>
         <relativePath>../rave-master-pom/pom.xml</relativePath>
     </parent>
 
