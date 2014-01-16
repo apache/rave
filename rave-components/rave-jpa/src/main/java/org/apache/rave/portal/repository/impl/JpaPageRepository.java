@@ -158,13 +158,13 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public List<Page> getAll() {
-        TypedQuery<Page> query = manager.createNamedQuery(JpaPage.GET_ALL, Page.class);
+        TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPage.GET_ALL, JpaPage.class);
         return expandProperties(CollectionUtils.<Page>toBaseTypedList(query.getResultList()));
     }
 
     @Override
     public List<Page> getLimitedList(int offset, int limit) {
-        TypedQuery<Page> query = manager.createNamedQuery(JpaPage.GET_ALL, Page.class);
+        TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPage.GET_ALL, JpaPage.class);
         return expandProperties(CollectionUtils.<Page>toBaseTypedList(getPagedResultList(query, offset, limit)));
     }
 

@@ -67,5 +67,6 @@ public class JpaPageTemplateConverter implements ModelConverter<PageTemplate, Jp
         converted.setPageTemplateRegions(source.getPageTemplateRegions());
         converted.setRenderSequence(source.getRenderSequence());
         converted.setDefaultTemplate(source.isDefaultTemplate());
+        converted.setProperties(source.getProperties());
     }
 }

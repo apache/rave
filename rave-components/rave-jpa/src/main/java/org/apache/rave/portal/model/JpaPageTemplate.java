@@ -24,8 +24,10 @@ import org.apache.rave.model.PageLayout;
 import org.apache.rave.model.PageTemplate;
 import org.apache.rave.model.PageTemplateRegion;
 import org.apache.rave.model.PageType;
+import org.apache.rave.persistence.jpa.JpaSerializable;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.util.JsonUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -41,7 +43,7 @@ import java.util.Map;
         @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_ALL_FOR_TYPE, query = "SELECT p FROM JpaPageTemplate p WHERE p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
-public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate {
+public class JpaPageTemplate implements BasicEntity, Serializable, JpaSerializable, PageTemplate {
 
     private static final long serialVersionUID = 1L;
     public static final String PAGE_TEMPLATE_GET_ALL = "PageTemplate.getAll";
@@ -229,5 +231,21 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
     @Override
     public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
+    }
+
+    @Override
+    public void serializeData() {
+        Map<String, Object> properties = this.getProperties();
+        if(properties != null) {
+            serializedData = JsonUtils.stringify(properties);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void deserializeData() {
+        if(serializedData != null) {
+            this.setProperties(JsonUtils.parse(serializedData, Map.class));
+        }
     }
 }

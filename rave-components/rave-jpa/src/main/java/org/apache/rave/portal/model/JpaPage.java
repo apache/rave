@@ -21,6 +21,7 @@ package org.apache.rave.portal.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.rave.model.*;
+import org.apache.rave.persistence.jpa.JpaSerializable;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.util.JsonUtils;
@@ -53,7 +54,7 @@ import java.util.*;
         @NamedQuery(name = JpaPage.GET_BY_CONTEXT_AND_PAGE_TYPE, query="SELECT p FROM JpaPage p WHERE p.contextId = :contextId and p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
-public class JpaPage implements BasicEntity, Serializable, Page {
+public class JpaPage implements BasicEntity, Serializable, JpaSerializable, Page {
     private static final long serialVersionUID = 2L;
 
     public static final String DELETE_BY_USER_ID_AND_PAGE_TYPE = "JpaPage.deleteByUserIdAndPageType";
@@ -339,6 +340,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
         return "Page{" + "entityId=" + entityId + ", name=" + name + ", ownerId=" + ownerId + ", pageLayout=" + pageLayout + ", pageType=" + pageType + "}";
     }
 
+    @Override
     public void serializeData() {
         Map<String, Object> properties = this.getProperties();
         if(properties != null) {
@@ -346,6 +348,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void deserializeData() {
         if(serializedData != null) {

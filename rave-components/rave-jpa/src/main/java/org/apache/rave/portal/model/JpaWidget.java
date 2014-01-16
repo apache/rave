@@ -21,6 +21,7 @@ package org.apache.rave.portal.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.rave.model.*;
+import org.apache.rave.persistence.jpa.JpaSerializable;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.util.JsonUtils;
 
@@ -65,7 +66,7 @@ import java.util.Map;
         @NamedQuery(name = JpaWidget.WIDGET_COUNT_BY_TAG, query = JpaWidget.SELECT_COUNT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS + JpaWidget.WHERE_CLAUSE_TAG_ID),
         @NamedQuery(name = JpaWidget.WIDGET_UNASSIGN_OWNER, query = "UPDATE JpaWidget w SET w.ownerId = null " + JpaWidget.WHERE_CLAUSE_OWNER )
 })
-public class JpaWidget implements BasicEntity, Serializable, Widget {
+public class JpaWidget implements BasicEntity, Serializable, JpaSerializable, Widget {
     private static final long serialVersionUID = 2L;
 
     public static final String PARAM_SEARCH_TERM = "searchTerm";
@@ -473,6 +474,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
         this.serializedData = serializedData;
     }
 
+    @Override
     public void serializeData() {
         Map<String, Object> properties = this.getProperties();
         if(properties != null) {
@@ -480,6 +482,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void deserializeData() {
         if(serializedData != null) {

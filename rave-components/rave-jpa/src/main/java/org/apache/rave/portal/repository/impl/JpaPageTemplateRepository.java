@@ -19,6 +19,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.rave.persistence.jpa.JpaSerializable;
 import org.apache.rave.portal.model.JpaPageTemplate;
 import org.apache.rave.model.PageTemplate;
 import org.apache.rave.portal.model.conversion.JpaConverter;
@@ -43,13 +44,13 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
     @Override
     public List<PageTemplate> getAll() {
         TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_ALL, JpaPageTemplate.class);
-        return CollectionUtils.<PageTemplate>toBaseTypedList(query.getResultList());
+        return CollectionUtils.<PageTemplate>toBaseTypedList(expandProperties(query.getResultList()));
     }
 
     @Override
     public List<PageTemplate> getLimitedList(int offset, int limit) {
         TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_ALL, JpaPageTemplate.class);
-        return CollectionUtils.<PageTemplate>toBaseTypedList(getPagedResultList(query, offset, limit));
+        return CollectionUtils.<PageTemplate>toBaseTypedList(expandProperties(getPagedResultList(query, offset, limit)));
     }
 
     @Override
@@ -61,14 +62,14 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
     public List<PageTemplate> getAll(String pageType) {
         TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_ALL_FOR_TYPE, JpaPageTemplate.class);
         query.setParameter("pageType", pageType.toUpperCase());
-        return CollectionUtils.<PageTemplate>toBaseTypedList(query.getResultList());
+        return CollectionUtils.<PageTemplate>toBaseTypedList(expandProperties(query.getResultList()));
     }
 
     @Override
     public JpaPageTemplate getDefaultPage(String pageType) {
         TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, JpaPageTemplate.class);
         query.setParameter("pageType", pageType.toUpperCase());
-        return query.getSingleResult();
+        return expandProperties(query.getSingleResult());
     }
 
     @Override
@@ -78,16 +79,30 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
 
     @Override
     public PageTemplate get(String id) {
-        return manager.find(JpaPageTemplate.class, id);
+        return expandProperties(manager.find(JpaPageTemplate.class, id));
     }
 
     @Override
     public PageTemplate save(PageTemplate template) {
-        return (PageTemplate) saveOrUpdate(template.getId(), manager, JpaConverter.getInstance().convert(template, PageTemplate.class));
+        JpaPageTemplate converted = JpaConverter.getInstance().convert(template, PageTemplate.class);
+        converted.serializeData();
+        return expandProperties(saveOrUpdate(template.getId(), manager, converted));
     }
 
     @Override
     public void delete(PageTemplate item) {
         manager.remove(JpaConverter.getInstance().convert(item, PageTemplate.class));
+    }
+
+    private List<JpaPageTemplate> expandProperties(List<JpaPageTemplate> resultList) {
+        for(JpaSerializable serializable : resultList) {
+            expandProperties(serializable);
+        }
+        return resultList;
+    }
+
+    private <T extends JpaSerializable> T expandProperties(T jpaPageTemplate) {
+        jpaPageTemplate.deserializeData();
+        return jpaPageTemplate;
     }
 }
