@@ -19,6 +19,8 @@
 
 package org.apache.rave.rest.model;
 
+import java.util.Map;
+
 /**
  * REST model for PageTemplate objects
  */
@@ -30,6 +32,7 @@ public class PageTemplate implements RestEntity {
     private String pageType;
     private String pageLayoutCode;
     private boolean defaultTemplate;
+    private Map<String, Object> properties;
 
     public PageTemplate() {}
 
@@ -40,6 +43,7 @@ public class PageTemplate implements RestEntity {
         this.pageType = source.getPageType();
         this.pageLayoutCode = source.getPageLayout().getCode();
         this.defaultTemplate = source.isDefaultTemplate();
+        this.properties = source.getProperties();
     }
 
     public String getId() {
@@ -88,5 +92,13 @@ public class PageTemplate implements RestEntity {
 
     public void setDefaultTemplate(boolean defaultTemplate) {
         this.defaultTemplate = defaultTemplate;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 }
