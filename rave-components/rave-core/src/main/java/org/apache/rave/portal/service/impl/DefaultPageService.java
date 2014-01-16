@@ -381,6 +381,7 @@ public class DefaultPageService implements PageService {
                 addWidgetToPageRegion(clonedPage.getId(), widgetId, clonedPage.getRegions().get(i).getId());
             }
         }
+        clonedPage.setProperties(page.getProperties());
         clonedPage = getFromRepository(clonedPage.getId(), pageRepository);
         // newly created page - so only one pageUser
         PageUser pageUser = clonedPage.getMembers().get(0);
