@@ -20,6 +20,7 @@ package org.apache.rave.model;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
+import java.util.Map;
 
 @XmlTransient
 public interface PageTemplate {
@@ -61,4 +62,20 @@ public interface PageTemplate {
     List<PageTemplate> getSubPageTemplates();
 
     void setSubPageTemplates(List<PageTemplate> subPageTemplates);
+
+    /**
+     * Generic property bag for extension of the page template object.
+     *
+     * Rave makes no attempt to understand the shape of the property bag.
+     *
+     * @return a valid Map of String to Object.
+     */
+    Map<String, Object> getProperties();
+
+    /**
+     * Overrides the current properties with a new set.
+     *
+     * @param properties a non-null map of string to JSON serializable object
+     */
+    void setProperties(Map<String, Object> properties);
 }

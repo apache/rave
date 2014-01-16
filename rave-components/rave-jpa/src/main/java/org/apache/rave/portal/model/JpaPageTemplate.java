@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.rave.model.PageLayout;
 import org.apache.rave.model.PageTemplate;
 import org.apache.rave.model.PageTemplateRegion;
@@ -30,6 +31,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name="page_template")
@@ -87,6 +89,14 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
     @Basic(optional = false)
     @Column(name = "default_template")
     private boolean defaultTemplate;
+
+    @Lob @JsonIgnore
+    @Column(name = "serialized_data")
+    private String serializedData;
+
+    //It will be the responsibility of the repository to ensure that this property is set when the page is retrieved from the database
+    @Transient
+    private Map<String, Object> properties;
 
     @Override
     public Long getEntityId() {
@@ -209,5 +219,15 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
     @Override
     public String getId() {
         return this.getEntityId() == null ? null : this.getEntityId().toString();
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 }
