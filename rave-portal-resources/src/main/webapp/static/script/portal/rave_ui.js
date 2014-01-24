@@ -231,6 +231,9 @@ define(["jquery", "underscore", "rave",
                 uiState.widget = rave.getWidget(ravePortal.getObjectIdFromDomId(widgetEl.id));
                 uiState.currentRegion = ravePortal.getObjectIdFromDomId(ui.item.parent().get(0).id);
 
+                // Workaround for SHINDIG-1965 to keep the iframe re-parenting from firing the load events again
+                $(widgetEl).find('iframe').removeAttr('onload');
+
                 //for every drag operation, create an overlay for each iframe
                 //to prevent the iframe from intercepting mouse events
                 //which kills drag performance
