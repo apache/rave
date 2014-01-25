@@ -48,7 +48,7 @@ define(['core/rave_openajax_hub', 'core/rave_state_manager'], function(managedHu
                             frameborder: 0
                         },
                         uri: widget.widgetUrl,
-                        onGadgetLoad: "onWidget"+widget.regionWidgetId+"Load"
+                        onGadgetLoad: function(){window["onWidget"+widget.regionWidgetId+"Load"].call()}
                     }
                 }
             );
