@@ -362,8 +362,8 @@ public class DefaultPageService implements PageService {
                 cloneRegionWidgets(subPage, clonedSubPage);
             }
         }
-        clonedPage.setProperties(page.getProperties());
         clonedPage = getFromRepository(clonedPage.getId(), pageRepository);
+        clonedPage.setProperties(page.getProperties());
         // newly created page - so only one pageUser
         PageUser pageUser = clonedPage.getMembers().get(0);
         // update status to pending
