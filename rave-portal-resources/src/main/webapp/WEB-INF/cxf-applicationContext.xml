@@ -61,6 +61,7 @@
             <ref bean="preferencesBean"/>
             <ref bean="widgetsBean"/>
             <ref bean="organizationsBean"/>
+            <ref bean="groupsBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
@@ -78,6 +79,7 @@
     </bean>
 
     <bean id="organizationsBean" class="org.apache.rave.rest.impl.DefaultOrganizationsResource"/>
+    <bean id="groupsBean" class="org.apache.rave.rest.impl.DefaultGroupsResource"/>
 
     <bean id="preferencesBean" class="org.apache.rave.rest.impl.DefaultPortalPreferenceResource" autowire="byType" />
     <bean id="widgetsBean" class="org.apache.rave.rest.impl.DefaultWidgetsResource" autowire="byType" />
