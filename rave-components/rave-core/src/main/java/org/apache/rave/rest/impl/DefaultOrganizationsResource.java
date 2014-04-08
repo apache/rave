@@ -34,12 +34,12 @@ public class DefaultOrganizationsResource implements OrganizationsResource {
     }
 
     @Override
-    public Response getOrganization(@PathParam("id") String id) {
+    public Response getOrganization(String id) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response updateOrganization(@PathParam("id") String id, Organization organization, @Context UriInfo uri) {
+    public Response updateOrganization(String id, Organization organization, UriInfo uri) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
