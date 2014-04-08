@@ -60,6 +60,7 @@
             <ref bean="categoriesBean"/>
             <ref bean="preferencesBean"/>
             <ref bean="widgetsBean"/>
+            <ref bean="organizationsBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
@@ -75,6 +76,8 @@
         <property name="categoryService" ref="defaultCategoryService"/>
         <property name="userService" ref="userService"/>
     </bean>
+
+    <bean id="organizationsBean" class="org.apache.rave.rest.impl.DefaultOrganizationsResource"/>
 
     <bean id="preferencesBean" class="org.apache.rave.rest.impl.DefaultPortalPreferenceResource" autowire="byType" />
     <bean id="widgetsBean" class="org.apache.rave.rest.impl.DefaultWidgetsResource" autowire="byType" />
