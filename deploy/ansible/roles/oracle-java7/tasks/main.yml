@@ -1,0 +1,21 @@
+- name: Check whether or not oracle-java7 is currently installed
+  shell: "[ -d /usr/lib/jvm/java-7-oracle ] && echo 'Found' || echo ''"
+  register: oracle_java_installed
+  changed_when: oracle_java_installed.stdout == ""
+  tags: oracle-java7
+
+- name: Add oracle java repository
+  apt_repository: repo="ppa:webupd8team/java" update_cache=yes
+  when: (not oracle_java_installed.stdout)
+  tags: oracle-java7
+
+- name: Accept the oracle license
+  debconf: name="oracle-java7-installer" question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+  when: (not oracle_java_installed.stdout)
+  tags: oracle-java7
+
+- name: Install packages
+  apt: name={{item}} state=present update_cache=yes
+  with_items: oracle_packages
+  when: (not oracle_java_installed.stdout)
+  tags: oracle-java7

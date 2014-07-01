@@ -1,0 +1,42 @@
+- name: Check whether or not Java 1.7 is installed
+  shell: "[ -d /usr/lib/jvm/java-7-openjdk-amd64 ] && echo 'Found' || echo ''"
+  register: jdk_installed
+  changed_when: jdk_installed.stdout == ""
+  tags: tomcat7-jdk
+
+- name: Install Java 1.7
+  apt: pkg=openjdk-7-jdk state=present
+  when: (not jdk_installed.stdout)
+  tags: tomcat7-jdk
+
+- name: Check whether or not Tomcat7 is installed
+  shell: "[ -d /etc/tomcat7 ] && echo 'Found' || echo ''"
+  register: tomcat_installed
+  changed_when: tomcat_installed.stdout == ""
+  tags: tomcat7
+
+- name: Update apt cache
+  apt: update_cache=yes
+  when: (not tomcat_installed.stdout)
+  tags: tomcat7
+
+- name: Install Tomcat 7
+  apt: pkg=tomcat7 state=present
+  when: (not tomcat_installed.stdout)
+  tags: tomcat7
+
+- name: Install Tomcat 7 Admin Interface
+  apt: pkg=tomcat7-admin state=present
+  when: (not tomcat_installed.stdout)
+  tags: tomcat7
+
+- name: Configure Tomcat 7 Users
+  template: src=tomcat-users.xml dest=/etc/tomcat7/
+  when: (not tomcat_installed.stdout)
+  tags: tomcat7
+
+- name: Load custom configuration for tomcat7
+  template: src=server.xml dest=/etc/tomcat7/
+  notify: tomcat7-restart
+  when: (not tomcat_installed.stdout)
+  tags: tomcat7
