@@ -1,0 +1,3 @@
+oracle_packages:
+    - oracle-java7-installer
+    - oracle-java7-set-default

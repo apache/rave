@@ -1,0 +1,40 @@
+# install maven
+- name: Check whether or not maven is currently installed
+  shell: "[ -d {{ maven_install_dir }}/{{ maven_extracted_dirname }} ] && echo 'Found' || echo ''"
+  register: mvn_installed
+  changed_when: mvn_installed.stdout == ""
+  tags: maven
+
+- name: Create a maven directory
+  file: path={{ maven_install_dir }} owner=root group=root mode=0775 state=directory
+  when: (not mvn_installed.stdout)
+  tags: maven
+
+- name: Download maven
+  get_url: dest={{ maven_install_dir }}/{{ maven_download_filename }} url={{ maven_download_url }}
+  when: (not mvn_installed.stdout)
+  tags: maven
+
+- name: Extract maven archive file
+  command: creates={{ maven_install_dir }}/{{ maven_extracted_dirname }} chdir={{ maven_install_dir }} tar zxvf {{ maven_install_dir }}/{{ maven_download_filename }} --owner=root
+  when: (not mvn_installed.stdout)
+  tags: maven
+
+- name: Create a maven latest symlink
+  file: src={{ maven_install_dir }}/{{ maven_extracted_dirname }} dest={{ maven_install_dir }}/latest owner=root group=root state=link
+  when: (not mvn_installed.stdout)
+  tags: maven
+
+- name: Copy config maven.sh
+  action: template src=maven.sh dest=/etc/profile.d/maven.sh owner=root group=root mode=0644
+  when: (not mvn_installed.stdout)
+  tags: maven
+
+- name: Cleanup maven archive file
+  file: path={{ maven_install_dir }}/{{ maven_download_filename }} state=absent
+  when: (not mvn_installed.stdout)
+  tags: maven
+
+- name: Install maven dependencies for apache rave
+  command: /usr/local/maven/latest/bin/mvn install chdir={{ maven_rave_dir }} creates={{ maven_rave_dir }}/target
+  tags: maven
