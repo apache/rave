@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model.conversion;
 
+import com.google.common.collect.Maps;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.WidgetImpl;
@@ -79,6 +80,7 @@ public class JpaWidgetConverterTest {
         template.setTags(new ArrayList<WidgetTag>());
         template.setCategories(new ArrayList<Category>());
         template.setFeatured(true);
+        template.setProperties(Maps.<String,Object>newHashMap());
 
         Widget jpaTemplate = converter.convert(template);
 
@@ -103,6 +105,7 @@ public class JpaWidgetConverterTest {
         assertThat(jpaTemplate.getTags(), is(equalTo(template.getTags())));
         assertThat(jpaTemplate.getCategories(), is(equalTo(template.getCategories())));
         assertThat(jpaTemplate.isFeatured(), is(equalTo(template.isFeatured())));
+        assertThat(jpaTemplate.getProperties(), is(equalTo(template.getProperties())));
     }
 
 }

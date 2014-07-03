@@ -26,8 +26,8 @@
  * @requires rave_log
  * @requires rave_state_manager
  */
-define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'osapi'],
-    function (_, viewManager, api, managedHub, log, stateManager) {
+define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'core/rave_action_manager', 'osapi'],
+    function (_, viewManager, api, managedHub, log, stateManager, actionManager) {
         var exports = {};
 
         var container;
@@ -36,6 +36,8 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
         containerConfig[osapi.container.ServiceConfig.API_PATH] = "/rpc";
         containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = stateManager.getDebugMode();
         container = new osapi.container.Container(containerConfig);
+        //Due to the shindig bug in container actions, we have to keep a map of sites by widgetId
+        container._siteByWidgetId = {};
 
         gadgets.pubsub2router.init({
             hub: managedHub
@@ -43,6 +45,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
         rpcRegister();
         implementViews();
+        implementActions();
 
 
         function rpcRegister() {
@@ -113,6 +116,31 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             };
         }
 
+        function implementActions() {
+            if(!container.actions) {
+                log("Could not initialize actions as the feature is not enabled in the Shindig common container.  Check the rave properties file.");
+                return;
+            }
+            container.actions.registerShowActionsHandler(function(actions) {
+                _.each(actions, function(action){
+                    //TODO: There is a bug in the shindig code where the action is assumed to launch a new gadget.  This works around the issue
+                    actionManager.createAction(action.id, action.label, action.path.replace("gadget", "widget"), action.moduleId, action.icon, action.tooltip, function() {
+                        var site = container._siteByWidgetId[action.moduleId];
+                        var holder = site.getActiveSiteHolder();
+                        if (holder) {
+                            gadgets.rpc.call(holder.getIframeId(), 'actions.runAction', null, action.id, null);
+                        }
+                    })
+                })
+            });
+
+            container.actions.registerHideActionsHandler(function (actions){
+                _.each(actions, function(action){
+                    actionManager.removeAction(action.id);
+                })
+            });
+        }
+
         function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
             var widget = args.gs._widget,
                 viewSurface = viewName || stateManager.getDefaultView();
@@ -161,10 +189,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
         function getHeightFromParams(opts) {
             var height;
-            if (opts.height) {
+            if(opts.height) {
                 height = opts.height;
             }
-            else if (opts.preferredHeight) {
+            else if(opts.preferredHeight) {
                 height = opts.preferredHeight;
             }
             else {
@@ -175,10 +203,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
         function getWidthFromParams(opts) {
             var width;
-            if (opts.width) {
+            if(opts.width) {
                 width = opts.width;
             }
-            else if (opts.preferredWidth) {
+            else if(opts.preferredWidth) {
                 width = opts.preferredWidth;
             }
             else {
@@ -187,34 +215,37 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             return width;
         }
 
-        exports.renderWidget = function (widget, opts) {
+        exports.renderWidget = function (widget, el, opts) {
             if (widget.error) {
-                widget.renderError(widget.error.message);
+                widget.renderError(el, widget.error.message);
                 return;
             }
             opts = opts || {};
-            if (!widget._site) {
-                widget._site = container.newGadgetSite(widget._el);
-                widget._site._widget = widget;
-            }
+			if (!widget._site) {
+				widget._site = container.newGadgetSite(el);
+				widget._site.moduleId_ = widget.regionWidgetId;
+				widget._site._widget = widget;
+			}
+			container._siteByWidgetId[widget.regionWidgetId] = widget._site;
 
             var renderParams = {};
-            renderParams[osapi.container.RenderParam.VIEW] = opts.view || widget.constructor.defaultView;
+            renderParams[osapi.container.RenderParam.VIEW] = opts.view || widget.constructor.defaultView || stateManager.getDefaultView();
             renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
-            renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
-            renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || widget.constructor.defaultHeight;
-            renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
-            renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
-            renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || widget.constructor.defaultWidth;
+            renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug || stateManager.getDebugMode();
+            renderParams[osapi.container.RenderParam.HEIGHT ] = getHeightFromParams(opts);
+            renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache || stateManager.getDebugMode();
+            renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode || stateManager.getDebugMode();
+            renderParams[osapi.container.RenderParam.WIDTH ] = getWidthFromParams(opts);
             renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
-            container.navigateGadget(widget._site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
-        }
-
-        exports.unrenderWidget = function (widget) {
-            if (widget._site) {
-                container.closeGadget(widget._site);
-            }
-        }
+            renderParams[osapi.container.RenderParam.MODULE_ID] = widget.regionWidgetId;
+            container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
+        };
+		
+		exports.unrenderWidget = function (widget) {
+			if (widget._site) {
+				container.closeGadget(widget._site);
+			}
+		}
 
         /**
          * Combines the default user pref list from the metadata with those set by the user
@@ -240,7 +271,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             commonContainerTokenData[osapi.container.TokenResponse.TOKEN] = gadget.securityToken;
             commonContainerTokenData[osapi.container.MetadataResponse.RESPONSE_TIME_MS] = new Date().getTime();
             var commonContainerTokenWrapper = {};
+            //Shindig will look for the specific moduleId security token.  Since that is the same as the default in our case
+            //set them both to the same value.
             commonContainerTokenWrapper[gadget.widgetUrl] = commonContainerTokenData;
+            commonContainerTokenWrapper[gadget.widgetUrl + "#moduleId=" + gadget.regionWidgetId] = commonContainerTokenData;
 
             //Setup the preloadConfig data with all our preload data
             var preloadConfig = {};

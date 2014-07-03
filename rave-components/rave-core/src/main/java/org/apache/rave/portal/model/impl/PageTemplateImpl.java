@@ -24,6 +24,7 @@ import org.apache.rave.model.PageTemplateRegion;
 import org.apache.rave.model.PageType;
 
 import java.util.List;
+import java.util.Map;
 
 public class PageTemplateImpl implements PageTemplate {
     private String id;
@@ -36,6 +37,7 @@ public class PageTemplateImpl implements PageTemplate {
     private List<PageTemplateRegion> pageTemplateRegions;
     private long renderSequence;
     private boolean defaultTemplate;
+    private Map<String, Object> properties;
 
     public PageTemplateImpl() {
 
@@ -123,6 +125,14 @@ public class PageTemplateImpl implements PageTemplate {
 
     public void setDefaultTemplate(boolean defaultTemplate) {
         this.defaultTemplate = defaultTemplate;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     @Override

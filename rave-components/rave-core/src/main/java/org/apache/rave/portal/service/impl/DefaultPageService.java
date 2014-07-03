@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.util.PageUtil;
 import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.*;
@@ -39,8 +40,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DefaultPageService implements PageService {
@@ -115,10 +119,9 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
-    public List<Page> getPages(String context, String userId) {
-        return null;
+    public List<Page> getPages(String context, String contextId) {
+        return pageRepository.getPagesForContextType(contextId, context);
     }
-
 
     @Override
     public Page getPageFromList(String pageId, List<Page> pages) {
@@ -138,6 +141,19 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
+    public Page addNewPage(String pageName, String contextId, String pageTemplateId) {
+        PageTemplate template = pageTemplateRepository.get(pageTemplateId);
+        if(template == null) {
+            throw new IllegalArgumentException("No page template found for the specified id " + pageTemplateId);
+        }
+        Page newInstance = PageUtil.convert(template, userService.getAuthenticatedUser(), false);
+        newInstance.setContextId(contextId);
+        newInstance.setName(pageName);
+        return pageRepository.save(newInstance);
+    }
+
+    @Override
+    @Transactional
     public Page addNewUserPage(String pageName, String pageLayoutCode) {
         return addNewUserPage(userService.getAuthenticatedUser(), pageName, pageLayoutCode);
     }
@@ -152,47 +168,7 @@ public class DefaultPageService implements PageService {
     @Override
     @Transactional
     public Page addNewSubPage(String pageName, String pageLayoutCode, Page parentPage) {
-        User user = userService.getAuthenticatedUser();
-        PageLayout pageLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
-
-        // Create regions
-        List<Region> regions = new ArrayList<Region>();
-        List<Page> parentsSubPages = new ArrayList<Page>();
-        int regionCount;
-        for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
-            Region region = new RegionImpl();
-            region.setRenderOrder(regionCount);
-            // TODO: this should eventually be defined by the PageTemplateRegion.locked field
-            region.setLocked(false);
-            regions.add(region);
-        }
-
-        // Create a Page object and register it.
-        long renderSequence = (parentPage.getSubPages() != null) ? parentPage.getSubPages().size() + 1 : 1;
-        Page page = new PageImpl();
-        page.setName(pageName);
-        page.setOwnerId(user.getId());
-        page.setPageLayout(pageLayout);
-        page.setRegions(regions);
-        // set this as a "sub-page" page type
-        page.setPageType(PageType.SUB_PAGE.toString());
-
-        PageUser pageUser = new PageUserImpl(page.getOwnerId(), page, renderSequence);
-        pageUser.setPageStatus(PageInvitationStatus.OWNER);
-        List<PageUser> members = new ArrayList<PageUser>();
-        members.add(pageUser);
-        page.setMembers(members);
-
-        // Properly sets both sides of the circular parent-child reference
-        page.setParentPage(parentPage);
-        if (parentPage.getSubPages() != null){
-            parentsSubPages = parentPage.getSubPages();
-        }
-        parentsSubPages.add(page);
-        parentPage.setSubPages(parentsSubPages);
-        pageRepository.save(page);
-
-        return page;
+        return addNewSubPage(userService.getAuthenticatedUser(), pageName, pageLayoutCode, parentPage);
     }
 
     @Override
@@ -317,6 +293,12 @@ public class DefaultPageService implements PageService {
     @Override
     @Transactional
     public Page updatePage(String pageId, String name, String pageLayoutCode) {
+        return updatePage(pageId, name, pageLayoutCode, null);
+    }
+
+    @Override
+    @Transactional
+    public Page updatePage(String pageId, String name, String pageLayoutCode, Map<String, Object> properties) {
         Page page = pageRepository.get(pageId);
         PageLayout newLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
         PageLayout curLayout = page.getPageLayout();
@@ -339,9 +321,11 @@ public class DefaultPageService implements PageService {
         //save the new page properties
         page.setName(name);
         page.setPageLayout(newLayout);
-        pageRepository.save(page);
-
-        return page;
+        //Forces callers to send an empty map rather than a null value to clear properties
+        if(properties != null) {
+            page.setProperties(properties);
+        }
+        return pageRepository.save(page);
     }
 
     @Transactional
@@ -351,15 +335,35 @@ public class DefaultPageService implements PageService {
             // try to use the original page name if none supplied
             pageName = page.getName();
         }
-        Page clonedPage = addNewUserPage(userService.getUserById(userId), pageName, page.getPageLayout().getCode());
-        // populate all the widgets in cloned page from original
-        for(int i=0; i<page.getRegions().size(); i++){
-            for(int j=0; j<page.getRegions().get(i).getRegionWidgets().size(); j++){
-                String widgetId = page.getRegions().get(i).getRegionWidgets().get(j).getWidgetId();
-                addWidgetToPageRegion(clonedPage.getId(), widgetId, clonedPage.getRegions().get(i).getId());
+        User user = userService.getUserById(userId);
+        Page clonedPage = addNewUserPage(user, pageName, page.getPageLayout().getCode());
+        if (page.getRegions().size() == 0) {
+            // Don't want regions on the cloned page either
+            // TODO: Move this into the addNewUserPage functionality
+            List<Region> emptyRegions = Lists.newArrayList();
+            clonedPage.setRegions(emptyRegions);
+            clonedPage = pageRepository.save(clonedPage);
+        }
+        cloneRegionWidgets(page, clonedPage);
+        List<Page> subPages = page.getSubPages();
+        for(Page subPage : subPages) {
+            clonedPage = getFromRepository(clonedPage.getId(), pageRepository);
+            Page updatedPage = addNewSubPage(user, subPage.getName(), subPage.getPageLayout().getCode(), clonedPage);
+            Page clonedSubPage = null;
+            for (Page newSubPage : updatedPage.getSubPages()) {
+                // This is the only way to find the subpage we just created such that it is actually populated with region ids
+                if (newSubPage.getName().equals(subPage.getName()) && 
+                        newSubPage.getPageLayout().getCode().equals(subPage.getPageLayout().getCode())) {
+                    clonedSubPage = newSubPage;
+                    break;
+                }
+            }
+            if (clonedSubPage != null) {
+                cloneRegionWidgets(subPage, clonedSubPage);
             }
         }
         clonedPage = getFromRepository(clonedPage.getId(), pageRepository);
+        clonedPage.setProperties(page.getProperties());
         // newly created page - so only one pageUser
         PageUser pageUser = clonedPage.getMembers().get(0);
         // update status to pending
@@ -614,6 +618,47 @@ public class DefaultPageService implements PageService {
         return pageRepository.save(page);
     }
 
+    private Page addNewSubPage(User user, String pageName, String pageLayoutCode, Page parentPage) {
+        PageLayout pageLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
+
+        // Create regions
+        List<Region> regions = new ArrayList<Region>();
+        List<Page> parentsSubPages = new ArrayList<Page>();
+        int regionCount;
+        for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
+            Region region = new RegionImpl();
+            region.setRenderOrder(regionCount);
+            // TODO: this should eventually be defined by the PageTemplateRegion.locked field
+            region.setLocked(false);
+            regions.add(region);
+        }
+
+        // Create a Page object and register it.
+        long renderSequence = (parentPage.getSubPages() != null) ? parentPage.getSubPages().size() + 1 : 1;
+        Page page = new PageImpl();
+        page.setName(pageName);
+        page.setOwnerId(user.getId());
+        page.setPageLayout(pageLayout);
+        page.setRegions(regions);
+        // set this as a "sub-page" page type
+        page.setPageType(PageType.SUB_PAGE.toString());
+
+        PageUser pageUser = new PageUserImpl(page.getOwnerId(), page, renderSequence);
+        pageUser.setPageStatus(PageInvitationStatus.OWNER);
+        List<PageUser> members = new ArrayList<PageUser>();
+        members.add(pageUser);
+        page.setMembers(members);
+
+        // Properly sets both sides of the circular parent-child reference
+        page.setParentPage(parentPage);
+        if (parentPage.getSubPages() != null){
+            parentsSubPages = parentPage.getSubPages();
+        }
+        parentsSubPages.add(page);
+        parentPage.setSubPages(parentsSubPages);
+        return pageRepository.save(page);
+    }
+
     private void updatePageRenderSequences(List<PageUser> pages) {
         if (pages != null && !pages.isEmpty()) {
             for (int i = 0; i < pages.size(); i++) {
@@ -700,5 +745,16 @@ public class DefaultPageService implements PageService {
         }
         // also traverse up and make sure its region is also not locked
         verifyRegionIsNotLocked(regionWidget.getRegion());
+    }
+
+    private void cloneRegionWidgets(Page sourcePage, Page destinationPage) {
+        // populate all the widgets in cloned page from original
+        for (int i=0; i < sourcePage.getRegions().size(); i++) {
+            // Walk through this list in reverse order so the widgets get laid our correctly
+            for (int j=sourcePage.getRegions().get(i).getRegionWidgets().size() - 1; j >= 0; j--) {
+                String widgetId = sourcePage.getRegions().get(i).getRegionWidgets().get(j).getWidgetId();
+                addWidgetToPageRegion(destinationPage.getId(), widgetId, destinationPage.getRegions().get(i).getId());
+            }
+        }
     }
 }

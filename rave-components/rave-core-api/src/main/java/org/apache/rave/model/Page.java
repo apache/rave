@@ -20,17 +20,32 @@ package org.apache.rave.model;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
+import java.util.Map;
 
 @XmlTransient
 public interface Page {
+
     String getId();
     void setId(String id);
 
     String getName();
     void setName(String name);
 
+    /**
+     * Represents the individual who is responsible for the page
+     *
+     * NOTE: This should be eventually deprecated in favor of context id
+     * @return the {@link Person}'s ID who owns the page
+     */
     String getOwnerId();
     void setOwnerId(String owner);
+
+    /**
+     * Represents the context identifier for the page.  This *MAY* be a Person ID depending on the context's needs
+     * @return a string representing the logical context for which the page is to be rendered (portal user's ID, profile owner ID, etc)
+     */
+    String getContextId();
+    void setContextId(String owner);
 
     PageLayout getPageLayout();
     void setPageLayout(PageLayout pageLayout);
@@ -49,4 +64,20 @@ public interface Page {
 
     List<PageUser> getMembers();
     void setMembers(List<PageUser> members);
+
+    /**
+     * Generic property bag for extension of the page object.
+     *
+     * Rave makes no attempt to understand the shape of the property bag.
+     *
+     * @return a valid Map of String to Object.
+     */
+    Map<String, Object> getProperties();
+
+    /**
+     * Overrides the current properties with a new set.
+     *
+     * @param properties a non-null map of string to JSON serializable object
+     */
+    void setProperties(Map<String, Object> properties);
 }

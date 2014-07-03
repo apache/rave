@@ -19,6 +19,7 @@
 
 package org.apache.rave.provider.opensocial.web.renderer;
 
+import com.google.common.collect.Maps;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.impl.*;
@@ -37,6 +38,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -96,6 +98,9 @@ public class OpenSocialWidgetRendererTest {
         w.setId(WIDGET_ID);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
+        Map<String, Object> props = Maps.newHashMap();
+        w.setProperties(props);
+        props.put("foo","bar");
 
         Region region = new RegionImpl(REGION_ID);
         region.setPage(subPage);
@@ -121,7 +126,8 @@ public class OpenSocialWidgetRendererTest {
                         " widgetId: '" + WIDGET_ID + "'," +
                         " locked: " + VALID_LOCKED + "," +
                         " hideChrome: " + VALID_HIDE_CHROME + "," +
-                        " subPage: {id: '" + VALID_SUBPAGE_ID + "', name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}" +
+                        " subPage: {id: '" + VALID_SUBPAGE_ID + "', name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}," +
+                        " properties: {\"foo\":\"bar\"}" +
                         "})" +
                         "});</script>";
 
@@ -171,7 +177,8 @@ public class OpenSocialWidgetRendererTest {
                         " widgetId: 'null'," +
                         " locked: false," +
                         " hideChrome: false," +
-                        " subPage: {id: null, name: '', isDefault: false}" +
+                        " subPage: {id: null, name: '', isDefault: false}," +
+                        " properties: null" +
                         "})" +
                         "});</script>";
 

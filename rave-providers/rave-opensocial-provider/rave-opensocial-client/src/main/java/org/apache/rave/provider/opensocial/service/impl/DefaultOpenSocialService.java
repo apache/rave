@@ -36,10 +36,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultOpenSocialService implements OpenSocialService {
-    private GadgetMetadataRepository gadgetMetadataRepository;
-    private final WidgetService widgetService;
-    private final PageService pageService;
-    private final SecurityTokenService tokenService;
+    protected final GadgetMetadataRepository gadgetMetadataRepository;
+    protected final WidgetService widgetService;
+    protected final PageService pageService;
+    protected final SecurityTokenService tokenService;
 
     @Autowired
     public DefaultOpenSocialService(GadgetMetadataRepository gadgetMetadataRepository, WidgetService widgetService, PageService pageService, SecurityTokenService tokenService) {
@@ -71,7 +71,7 @@ public class DefaultOpenSocialService implements OpenSocialService {
         return tokenService.getEncryptedSecurityToken(item.getId(), item.getWidgetUrl(), item.getOwnerId());
     }
 
-    private void validate(Widget widget) {
+    protected void validate(Widget widget) {
         if(widget == null) {
             throw new ResourceNotFoundException("The requested gadget does not exist in the gadget store.");
         } else if(widget.getWidgetStatus().equals(WidgetStatus.PREVIEW)) {

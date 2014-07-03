@@ -73,5 +73,6 @@ public class JpaWidgetConverter implements ModelConverter<Widget, JpaWidget> {
         converted.setTags(source.getTags());
         converted.setCategories(source.getCategories());
         converted.setFeatured(source.isFeatured());
+        converted.setProperties(source.getProperties());
     }
 }

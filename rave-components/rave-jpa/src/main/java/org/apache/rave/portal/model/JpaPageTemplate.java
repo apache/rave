@@ -19,30 +19,36 @@
 
 package org.apache.rave.portal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.rave.model.PageLayout;
 import org.apache.rave.model.PageTemplate;
 import org.apache.rave.model.PageTemplateRegion;
 import org.apache.rave.model.PageType;
+import org.apache.rave.persistence.jpa.JpaSerializable;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.util.JsonUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name="page_template")
 @NamedQueries({
-        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_ALL, query = "SELECT p FROM JpaPageTemplate p ORDER BY p.renderSequence"),
-        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, query = "SELECT p FROM JpaPageTemplate p WHERE p.defaultTemplate = true and p.pageType = :pageType")
+        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_ALL, query = "SELECT p FROM JpaPageTemplate p WHERE p.pageType <> 'SUB_PAGE' ORDER BY p.renderSequence"),
+        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, query = "SELECT p FROM JpaPageTemplate p WHERE p.defaultTemplate = true and p.pageType = :pageType"),
+        @NamedQuery(name = JpaPageTemplate.PAGE_TEMPLATE_GET_ALL_FOR_TYPE, query = "SELECT p FROM JpaPageTemplate p WHERE p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
-public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate {
+public class JpaPageTemplate implements BasicEntity, Serializable, JpaSerializable, PageTemplate {
 
     private static final long serialVersionUID = 1L;
     public static final String PAGE_TEMPLATE_GET_ALL = "PageTemplate.getAll";
     public static final String PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE = "PageTemplate.getDefaultPage";
+    public static final String PAGE_TEMPLATE_GET_ALL_FOR_TYPE = "PageTemplate.getAllByType";
 
     @Id
     @Column(name="entity_id")
@@ -85,6 +91,14 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
     @Basic(optional = false)
     @Column(name = "default_template")
     private boolean defaultTemplate;
+
+    @Lob @JsonIgnore
+    @Column(name = "serialized_data")
+    private String serializedData;
+
+    //It will be the responsibility of the repository to ensure that this property is set when the page is retrieved from the database
+    @Transient
+    private Map<String, Object> properties;
 
     @Override
     public Long getEntityId() {
@@ -207,5 +221,31 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
     @Override
     public String getId() {
         return this.getEntityId() == null ? null : this.getEntityId().toString();
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
+
+    @Override
+    public void serializeData() {
+        Map<String, Object> properties = this.getProperties();
+        if(properties != null) {
+            serializedData = JsonUtils.stringify(properties);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void deserializeData() {
+        if(serializedData != null) {
+            this.setProperties(JsonUtils.parse(serializedData, Map.class));
+        }
     }
 }

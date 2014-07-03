@@ -32,6 +32,6 @@ public interface ApplicationData {
     String getAppUrl();
     void setAppUrl(String appUrl);
 
-    Map<String, String> getData();
-    void setData(Map<String, String> data);
+    Map<String, Object> getData();
+    void setData(Map<String, Object> data);
 }

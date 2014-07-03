@@ -21,6 +21,7 @@ package org.apache.rave.model;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
+import java.util.Map;
 
 @XmlTransient
 public interface Widget {
@@ -106,4 +107,20 @@ public interface Widget {
     boolean isFeatured();
 
     void setFeatured(boolean featured);
+
+    /**
+     * Generic property bag for extension of the widget object.
+     *
+     * Rave makes no attempt to understand the shape of properties in the bag.
+     *
+     * @return a valid Map of String to JSON Serializable Object.
+     */
+    Map<String, Object> getProperties();
+
+    /**
+     * Overrides the current properties with a new set.
+     *
+     * @param properties a non-null map of string to JSON serializable objects
+     */
+    void setProperties(Map<String, Object> properties);
 }

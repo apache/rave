@@ -35,10 +35,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 @Transactional(readOnly=true)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -64,7 +63,27 @@ public class JpaPageTemplateRepositoryTest {
     @Test
     public void getAll_valid(){
         List<PageTemplate> pageTemplateList = pageTemplateRepository.getAll();
+        assertThat(pageTemplateList.size(), is(equalTo(3)));
+    }
+
+    @Test
+    public void getAll_forType_valid(){
+        List<PageTemplate> pageTemplateList = pageTemplateRepository.getAll("PERSON_PROFILE");
+        assertThat(pageTemplateList.size(), is(equalTo(2)));
+    }
+
+    @Test
+    public void getAll_limited(){
+        List<PageTemplate> pageTemplateList = pageTemplateRepository.getLimitedList(0, 1);
+        assertThat(pageTemplateList.size(), is(equalTo(1)));
+    }
+
+    @Test
+    public void get_valid(){
+        PageTemplate pageTemplateList = pageTemplateRepository.get("1");
         assertNotNull(pageTemplateList);
+        assertThat(pageTemplateList.getId(), is(equalTo("1")));
+        assertThat(pageTemplateList.getPageType(), is(equalTo("PERSON_PROFILE")));
     }
     
     @Test

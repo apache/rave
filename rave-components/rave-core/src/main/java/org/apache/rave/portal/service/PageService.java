@@ -19,14 +19,15 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.model.Page;
-import org.apache.rave.model.PageType;
 import org.apache.rave.model.Region;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.rest.model.SearchResult;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author carlucci
@@ -87,11 +88,18 @@ public interface PageService {
      *
      * @since 0.22
      * @param context the context for the pages ex: "portal", "profile", etc.
-     * @param userId the user to retrieve the page for
+     * @param contextId the identifier of the item in the context that matches the page.
+     *                  examples:
+     *                      context: "person_profile", contextId: "profile owner's id"
+     *                      context: "group", contextId: "group id"
+     *                      context: "project", contextId: "project number"
+     *                      context: "dashboard", contextId: "subject"
+     *                      context: "portal", contextId: "owner's id"
+     *
      * @return A non-null, possibly empty list of page for the given user.
      */
-    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'read')")
-    List<Page> getPages(String context, String userId);
+    @PostFilter("hasPermission(filterObject, 'read')")
+    List<Page> getPages(String context, String contextId);
 
     /**
      * Return the page object from a list of pages given the pageId
@@ -109,6 +117,17 @@ public interface PageService {
      * @return the default Page in the list
      */
     Page getDefaultPageFromList(List<Page> pages);
+
+    /**
+     * Creates a new user page with the supplied pageName and pageLayoutCode
+     *
+     *
+     * @param pageName       the name of the new page
+     * @param contextId      the ID to set for the context of the page
+     * @param pageTemplateId the ID of the PageTemplate to create from  @return the new Page object
+     */
+    @PostAuthorize("hasPermission(returnObject, 'create')")
+    Page addNewPage(String pageName, String contextId, String pageTemplateId);
 
     /**
      * Creates a new user page with the supplied pageName and pageLayoutCode
@@ -222,6 +241,8 @@ public interface PageService {
     @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.model.RegionWidget', 'delete')")
     Region removeWidgetFromPage(String regionWidgetId);
 
+    //TODO re-design update methodology to support a wider set of properties and re-collapse to a single method
+
     /**
      * Updates the page properties.
      *
@@ -231,6 +252,23 @@ public interface PageService {
      */
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update')")
     Page updatePage(String pageId, String name, String pageLayoutCode);
+
+    //There are cases where we need to update more than just hte name & layout, but those need to be thought through.
+    //Properties are intended to be managed by the client and to Rave is an opaque data bag.  Rather than re-design the entire
+    //page update methodology as part of adding properties, this addition allows us to update properties from the client
+    //without making breaking changes to existing code or page mutability assumptions.
+    /**
+     * Updates the page properties.
+     *
+     * @param pageId         the id of the page to update
+     * @param name           the new name for the page
+     * @param pageLayoutCode the new layout for the page
+     * @param properties     the properties of the page to set.  MUST NOT be null. To clear properties, call with empty map.
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update')")
+    Page updatePage(String pageId, String name, String pageLayoutCode, Map<String, Object> properties);
+
+    //END TODO
 
     /**
      * Moves a page to be rendered after another page in order for a user

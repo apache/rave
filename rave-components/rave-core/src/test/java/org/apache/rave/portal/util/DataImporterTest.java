@@ -23,6 +23,8 @@ import org.apache.rave.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.util.data.DataImporter;
+import org.apache.rave.portal.util.data.ModelWrapper;
+import org.apache.rave.portal.util.data.ModelWrapperDataExecutor;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -43,7 +45,7 @@ public class DataImporterTest {
     private CategoryRepository categoryRepository;
     private PageTemplateRepository pageTemplateRepository;
     private ActivityStreamsRepository activityStreamsRepository;
-    private DataImporter importer;
+    private DataImporter<ModelWrapper> importer;
 
     @Before
     public void setup() {
@@ -57,7 +59,7 @@ public class DataImporterTest {
         pageTemplateRepository = createMock(PageTemplateRepository.class);
         activityStreamsRepository = createMock(ActivityStreamsRepository.class);
 
-        DataImporter.ExecutorImpl executor = new DataImporter.ExecutorImpl();
+        ModelWrapperDataExecutor executor = new ModelWrapperDataExecutor();
         executor.setPageLayoutRepository(pageLayoutRepository);
         executor.setUserRepository(userRepository);
         executor.setWidgetRepository(widgetRepository);
@@ -68,9 +70,10 @@ public class DataImporterTest {
         executor.setPageTemplateRepository(pageTemplateRepository);
         executor.setActivityStreamsRepository(activityStreamsRepository);
 
-        importer = new DataImporter();
+        importer = new DataImporter<ModelWrapper>();
         importer.setScriptLocations(Arrays.asList((Resource) new ClassPathResource("test-data.json")));
         importer.setDataExecutor(executor);
+        importer.setModelClass(ModelWrapper.class);
     }
 
     @Test

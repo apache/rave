@@ -32,6 +32,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -62,11 +63,13 @@ public class JpaPageConverterTest {
         page.setMembers(new ArrayList<PageUser>());
         page.setName("name");
         page.setOwnerId("");
+        page.setContextId("context");
         page.setPageLayout(new PageLayoutImpl());
         page.setPageType(PageType.USER.toString());
         page.setParentPage(new PageImpl("1"));
         page.setRegions(new ArrayList<Region>());
         page.setSubPages(new ArrayList<Page>());
+        page.setProperties(new HashMap<String, Object>());
 
         JpaPage converted = pageConverter.convert(page);
         assertThat(converted, is(not(sameInstance(page))));
@@ -77,8 +80,10 @@ public class JpaPageConverterTest {
         assertThat(converted.getMembers(), is(equalTo(page.getMembers())));
         assertThat(converted.getName(), is(equalTo(page.getName())));
         assertThat(converted.getOwnerId(), is(equalTo(page.getOwnerId())));
+        assertThat(converted.getContextId(), is(equalTo(page.getContextId())));
         assertThat(converted.getPageLayout().getCode(), is(equalTo(page.getPageLayout().getCode())));
         assertThat(converted.getPageType(), is(equalTo(page.getPageType())));
         assertThat(converted.getSubPages(), is(equalTo(page.getSubPages())));
+        assertThat(converted.getProperties(), is(equalTo(page.getProperties())));
     }
 }

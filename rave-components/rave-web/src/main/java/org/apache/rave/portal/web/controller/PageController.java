@@ -59,7 +59,7 @@ public class PageController {
     }
 
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-    public String login() {
+    public String login(Model model, HttpServletRequest httpServletRequest) {
         return ViewNames.LOGIN_PAGE;
     }
 

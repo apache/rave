@@ -52,7 +52,9 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         MongoDbPage page = new MongoDbPage();
         page.setId(sourcePage.getId() == null ? generateId() : sourcePage.getId());
         page.setOwnerId(sourcePage.getOwnerId());
+        page.setContextId(sourcePage.getContextId());
         page.setPageLayoutCode(sourcePage.getPageLayout().getCode());
+        page.setProperties(sourcePage.getProperties());
         page.setName(sourcePage.getName());
         page.setRegions(sourcePage.getRegions());
         //Enforce consistent casing for page types

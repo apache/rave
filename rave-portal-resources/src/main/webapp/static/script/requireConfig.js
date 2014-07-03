@@ -20,7 +20,7 @@
 requirejs.config({
     "paths":{
         "backbone":"//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min",
-        "bootstrap": '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.3/bootstrap.min',
+        "bootstrap": '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min',
         "clientMessages": "../../app/messagebundle/rave_client_messages",
         "handlebars":"//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.rc.2/handlebars.min",
         "jquery": "//ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min",

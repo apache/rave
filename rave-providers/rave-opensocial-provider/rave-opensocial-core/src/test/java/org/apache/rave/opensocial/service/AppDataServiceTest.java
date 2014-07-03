@@ -60,7 +60,7 @@ public class AppDataServiceTest {
     private static final String VALID_APPLICATION_DATA_ID = "1";
     private static final Long VALID_MODULE_ID = 1l;
 
-    private Map<String, String> validApplicationDataMap;
+    private Map<String, Object> validApplicationDataMap;
     private ApplicationData validApplicationData;
 
     private Person validPerson;
@@ -72,7 +72,7 @@ public class AppDataServiceTest {
         appDataRepository = createMock(ApplicationDataRepository.class);
         appDataService = new DefaultAppDataService(personService, lockService, appDataRepository);
 
-        validApplicationDataMap = new HashMap<String, String>();
+        validApplicationDataMap = new HashMap<String, Object>();
         validApplicationDataMap.put("color", "blue");
         validApplicationDataMap.put("speed", "fast");
         validApplicationDataMap.put("state", "MA");
@@ -92,7 +92,7 @@ public class AppDataServiceTest {
     @Test
     public void getPersonData_validRequest_noAppData() throws Exception {
         testGetPersonData(validApplicationData.getData().keySet(), VALID_OWNER_ID, VALID_VIEWER_ID, VALID_APPLICATION_ID,
-                null, new HashMap<String, String>());
+                null, new HashMap<String, Object>());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class AppDataServiceTest {
 
     @Test
     public void getPersonData_validRequest_hasAppData_partialFields() throws Exception {
-        HashMap<String, String> expectedData = new HashMap<String, String>(validApplicationDataMap);
+        HashMap<String, Object> expectedData = new HashMap<String, Object>(validApplicationDataMap);
         expectedData.remove("color");
 
         testGetPersonData(expectedData.keySet(), VALID_OWNER_ID, VALID_VIEWER_ID, VALID_APPLICATION_ID,
@@ -126,24 +126,24 @@ public class AppDataServiceTest {
     public void deletePersonData_validRequest_clearAllDataWithAllFields() throws Exception {
         Set<String> fieldsToDelete = new HashSet<String>(validApplicationData.getData().keySet());
 
-        testDeletePersonData(fieldsToDelete, new HashMap<String, String>());
+        testDeletePersonData(fieldsToDelete, new HashMap<String, Object>());
     }
 
     @Test
     public void deletePersonData_validRequest_clearAllDataWithNullFields() throws Exception {
-        testDeletePersonData(null, new HashMap<String, String>());
+        testDeletePersonData(null, new HashMap<String, Object>());
     }
 
     @Test
     public void deletePersonData_validRequest_clearAllDataWithEmptyFields() throws Exception {
-        testDeletePersonData(new HashSet<String>(), new HashMap<String, String>());
+        testDeletePersonData(new HashSet<String>(), new HashMap<String, Object>());
     }
 
     @Test
     public void deletePersonData_validRequest_clearSomeData() throws Exception {
         Set<String> fieldsToDelete = new HashSet<String>(validApplicationData.getData().keySet());
         fieldsToDelete.remove("color");
-        HashMap<String, String> expectedApplicationDataAfterDelete = new HashMap<String, String>(validApplicationData.getData());
+        HashMap<String, Object> expectedApplicationDataAfterDelete = new HashMap<String, Object>(validApplicationData.getData());
         for (String fieldToDelete : fieldsToDelete) {
             expectedApplicationDataAfterDelete.remove(fieldToDelete);
         }
@@ -153,7 +153,7 @@ public class AppDataServiceTest {
 
     @Test(expected = ProtocolException.class)
     public void deletePersonData_invalidRequest_wrongViewer() throws Exception {
-        testDeletePersonData("11111", "11111", new HashSet<String>(), new HashMap<String, String>(),
+        testDeletePersonData("11111", "11111", new HashSet<String>(), new HashMap<String, Object>(),
                 validApplicationData);
     }
 
@@ -171,13 +171,13 @@ public class AppDataServiceTest {
 
     @Test
     public void updatePersonData_validRequest_removeAllValues() throws Exception {
-        HashMap<String, String> values = new HashMap<String, String>();
+        HashMap<String, Object> values = new HashMap<String, Object>();
         testUpdatePersonData(null, values, values, validApplicationData);
     }
 
     @Test
     public void updatePersonData_validRequest_replaceAllValues_nullFields() throws Exception {
-        HashMap<String, String> values = new HashMap<String, String>();
+        HashMap<String, Object> values = new HashMap<String, Object>();
         values.put("newKey1", "newValue1");
         values.put("newKey2", "newValue2");
         testUpdatePersonData(null, values, values, validApplicationData);
@@ -185,7 +185,7 @@ public class AppDataServiceTest {
 
     @Test
     public void updatePersonData_validRequest_replaceAllValues_emptyFields() throws Exception {
-        HashMap<String, String> values = new HashMap<String, String>();
+        HashMap<String, Object> values = new HashMap<String, Object>();
         values.put("newKey1", "newValue1");
         values.put("newKey2", "newValue2");
         testUpdatePersonData(new HashSet<String>(), values, values, validApplicationData);
@@ -193,11 +193,11 @@ public class AppDataServiceTest {
 
     @Test
     public void updatePersonData_validRequest_appendNewValues() throws Exception {
-        HashMap<String, String> values = new HashMap<String, String>();
+        HashMap<String, Object> values = new HashMap<String, Object>();
         values.put("newKey1", "newValue1");
         values.put("newKey2", "newValue2");
 
-        HashMap<String, String> expectedValuesAfterUpdate = new HashMap<String, String>(validApplicationData.getData());
+        HashMap<String, Object> expectedValuesAfterUpdate = new HashMap<String, Object>(validApplicationData.getData());
         expectedValuesAfterUpdate.putAll(values);
 
         testUpdatePersonData(values.keySet(), values, expectedValuesAfterUpdate, validApplicationData);
@@ -205,7 +205,7 @@ public class AppDataServiceTest {
 
     @Test
     public void updatePersonData_validRequest_appendNewValues_nullApplicationData() throws Exception {
-        HashMap<String, String> values = new HashMap<String, String>();
+        HashMap<String, Object> values = new HashMap<String, Object>();
         values.put("newKey1", "newValue1");
         values.put("newKey2", "newValue2");
 
@@ -218,10 +218,10 @@ public class AppDataServiceTest {
         Set<String> fields = new HashSet<String>();
         fields.add(propertyToRemove);
 
-        HashMap<String, String> expectedValuesAfterUpdate = new HashMap<String, String>(validApplicationData.getData());
+        HashMap<String, Object> expectedValuesAfterUpdate = new HashMap<String, Object>(validApplicationData.getData());
         expectedValuesAfterUpdate.remove(propertyToRemove);
 
-        testUpdatePersonData(fields, new HashMap<String, String>(), expectedValuesAfterUpdate, validApplicationData);
+        testUpdatePersonData(fields, new HashMap<String, Object>(), expectedValuesAfterUpdate, validApplicationData);
     }
 
     @Test
@@ -232,10 +232,10 @@ public class AppDataServiceTest {
         Set<String> fields = new HashSet<String>();
         fields.add(propertyToUpdate);
 
-        HashMap<String, String> values = new HashMap<String, String>();
+        HashMap<String, Object> values = new HashMap<String, Object>();
         values.put(propertyToUpdate, updatedValue);
 
-        HashMap<String, String> expectedValuesAfterUpdate = new HashMap<String, String>(validApplicationData.getData());
+        HashMap<String, Object> expectedValuesAfterUpdate = new HashMap<String, Object>(validApplicationData.getData());
         expectedValuesAfterUpdate.put(propertyToUpdate, updatedValue);
 
         testUpdatePersonData(fields, values, expectedValuesAfterUpdate, validApplicationData);
@@ -246,13 +246,13 @@ public class AppDataServiceTest {
         Set<String> fields = new HashSet<String>();
         fields.add("foo");
 
-        HashMap<String, String> values = new HashMap<String, String>();
+        HashMap<String, Object> values = new HashMap<String, Object>();
         values.put("a key", "that is not present in the fields set");
         testUpdatePersonData(fields, values, values, validApplicationData);
     }
 
     private void testGetPersonData(Set<String> fields, String ownerId, String viewerId, String applicationId,
-                                   ApplicationData applicationData, Map<String, String> expectedData) throws Exception {
+                                   ApplicationData applicationData, Map<String, Object> expectedData) throws Exception {
 
         Set<UserId> userIds = new HashSet<UserId>(Arrays.asList(new UserId(UserId.Type.userId, VALID_USER_ID)));
 
@@ -269,20 +269,20 @@ public class AppDataServiceTest {
 
         Future<DataCollection> result = appDataService.getPersonData(userIds, groupId, VALID_APPLICATION_ID, fields,
                 securityToken);
-        Map<String, String> actualData = result.get().getEntry().get(viewerId);
+        Map<String, Object> actualData = result.get().getEntry().get(viewerId);
         assertThat(actualData, is(not(nullValue())));
-        for (Map.Entry<String, String> entry : expectedData.entrySet()) {
+        for (Map.Entry<String, Object> entry : expectedData.entrySet()) {
             assertEquals(entry.getValue(), actualData.get(entry.getKey()));
         }
     }
 
-    private void testDeletePersonData(Set<String> fieldsToDelete, HashMap<String, String> expectedApplicationDataAfterDelete) {
+    private void testDeletePersonData(Set<String> fieldsToDelete, HashMap<String, Object> expectedApplicationDataAfterDelete) {
         testDeletePersonData(VALID_OWNER_ID, VALID_VIEWER_ID, fieldsToDelete, expectedApplicationDataAfterDelete,
                 validApplicationData);
     }
 
     private void testDeletePersonData(String ownerId, String viewerId, Set<String> fieldsToDelete,
-                                      HashMap<String, String> expectedApplicationDataAfterDelete,
+                                      HashMap<String, Object> expectedApplicationDataAfterDelete,
                                       ApplicationData applicationData) {
 
         UserId userId = new UserId(UserId.Type.userId, VALID_USER_ID);
@@ -341,8 +341,8 @@ public class AppDataServiceTest {
         assertEquals(null, result.get());
     }
 
-    private void testUpdatePersonData(Set<String> fields, Map<String, String> values,
-                                      HashMap<String, String> expectedApplicationDataAfterUpdate,
+    private void testUpdatePersonData(Set<String> fields, Map<String, Object> values,
+                                      HashMap<String, Object> expectedApplicationDataAfterUpdate,
                                       ApplicationData applicationData) {
 
         UserId userId = new UserId(UserId.Type.userId, VALID_USER_ID);

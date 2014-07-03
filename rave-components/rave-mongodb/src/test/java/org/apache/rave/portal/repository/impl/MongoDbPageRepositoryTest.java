@@ -80,6 +80,27 @@ public class MongoDbPageRepositoryTest {
         assertNotNull(result);
 
     }
+    @Test
+    public void getByContext(){
+        String contextId = "1234L";
+        String userId1 = "9999L";
+        String pageType = PageType.USER.toString();
+        PageUserImpl user = new PageUserImpl();
+        user.setId("3333L");
+        user.setUserId(userId1);
+        List<Page> pages = Lists.newArrayList();
+        List<PageUser> page_users = Lists.newArrayList();
+        page_users.add(user);
+        Page page = new PageImpl();
+        page.setMembers(page_users);
+        pages.add(page);
+
+        expect(template.find(isA(Query.class))).andReturn(pages);
+        replay(template);
+
+        List<Page> result = repo.getPagesForContextType(contextId, pageType);
+        assertNotNull(result);
+    }
 
     @Test
     public void getType(){

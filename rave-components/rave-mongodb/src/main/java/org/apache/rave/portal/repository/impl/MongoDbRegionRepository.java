@@ -64,15 +64,24 @@ public class MongoDbRegionRepository implements RegionRepository {
         Page page;
         int index;
 
-        if(item.getId() == null) {
+        String itemId = item.getId();
+        if(itemId == null) {
             page = getPageFromRepository(item);
             page.getRegions().add(item);
             index = page.getRegions().size()-1;
         } else {
-            page = getPageByRegionId(item.getId());
+            page = getPageByRegionId(itemId);
             index = replaceRegion(page, item);
         }
-        Page saved = template.save(page);
+        // In case we found a subpage
+        Page parentPage = page.getParentPage();
+        Page saved;
+        if (parentPage != null) {
+            saved = template.save(parentPage);
+            saved = findSubpageByRegionId(itemId, saved);
+        } else {
+            saved = template.save(page);
+        }
         return saved.getRegions().get(index);
     }
 
@@ -158,7 +167,27 @@ public class MongoDbRegionRepository implements RegionRepository {
     }
 
     private Page getPageByRegionId(String  id) {
-        return template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(id))));
+        Page page = template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(id))));
+        if (page != null) {
+            return page;
+        }
+        // Try to find a subpage region
+        page = template.findOne(new Query(Criteria.where("subPages").elemMatch(Criteria.where("regions").elemMatch(Criteria.where("_id").is(id)))));
+        return findSubpageByRegionId(id, page);
+    }
+
+    private Page findSubpageByRegionId(String id, Page page) {
+        List<Page> subPages = page.getSubPages();
+        List<Region> regions;
+        for (Page subPage : subPages) {
+            regions = subPage.getRegions();
+            for (Region region : regions) {
+                if (id.equals(region.getId())) {
+                    return subPage;
+                }
+            }
+        }
+        return null;
     }
 
 

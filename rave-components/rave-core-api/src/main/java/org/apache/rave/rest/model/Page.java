@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Page", propOrder = {
@@ -42,6 +43,8 @@ public class Page  implements RestEntity{
     private String pageType;
     @XmlElement(name="pageLayoutCode")
     private String pageLayoutCode;
+    @XmlElement(name="properties")
+    private Map<String, Object> properties;
     @XmlElementWrapper(name = "subPages")
     @XmlElement(name="Page")
     private List<Page> subPages;
@@ -60,6 +63,7 @@ public class Page  implements RestEntity{
         this.ownerId = source.getOwnerId();
         this.pageType = source.getPageType().toString();
         this.pageLayoutCode = source.getPageLayout().getCode();
+        this.properties = source.getProperties();
         this.subPages = createSubPages(source);
         this.regions = createRegions(source);
         this.members = createPageUsers(source);
@@ -103,6 +107,14 @@ public class Page  implements RestEntity{
 
     public void setPageLayoutCode(String pageLayoutCode) {
         this.pageLayoutCode = pageLayoutCode;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     public List<Page> getSubPages() {

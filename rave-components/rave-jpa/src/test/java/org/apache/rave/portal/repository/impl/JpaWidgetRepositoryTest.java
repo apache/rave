@@ -19,8 +19,10 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import com.google.common.collect.Maps;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
@@ -74,6 +76,7 @@ public class JpaWidgetRepositoryTest {
         JpaWidget widget = (JpaWidget)repository.get("1");
         assertThat(widget, is(notNullValue()));
         assertThat(widget.getEntityId(), is(equalTo(1L)));
+        validateProperties(widget);
     }
 
     @Test
@@ -85,10 +88,11 @@ public class JpaWidgetRepositoryTest {
     @Test
     public void getByUrl_valid() {
         final String widgetUrl =
-                "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
+                "http://www.widget-dico.com/wikipedia/google/wikipedia.xml";
         final Widget widget = repository.getByUrl(widgetUrl);
         assertNotNull(widget);
         assertEquals(widgetUrl, widget.getUrl());
+        validateProperties(widget);
     }
 
     @Test
@@ -110,6 +114,13 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
+    public void getByFreeTextSearch_wiki() {
+        List<Widget> widgets = repository.getByFreeTextSearch("AA", 0, 1);
+        assertEquals(1, widgets.size());
+        validateProperties(widgets);
+    }
+
+    @Test
     public void countFreeTextSearch() {
         int count = repository.getCountFreeTextSearch("gAdGet");
         assertTrue(count >= 2);
@@ -120,14 +131,17 @@ public class JpaWidgetRepositoryTest {
         List<Widget> widgets = repository.getAll();
         assertThat(widgets, is(notNullValue()));
         assertThat(widgets.size() > 4, is(true));
+        validateProperties(widgets);
     }
 
     @Test
     public void getLimitedList() {
         final int pageSize = 3;
+        //Widget 1 should always appear in the list because the query is ordered
         List<Widget> widgets = repository.getLimitedList(0, pageSize);
         assertNotNull(widgets);
         assertTrue(widgets.size() <= pageSize);
+        validateProperties(widgets);
     }
 
     @Test
@@ -142,6 +156,7 @@ public class JpaWidgetRepositoryTest {
         List<Widget> published = repository.getByStatus(WidgetStatus.PUBLISHED, 0, pageSize);
         assertNotNull(published);
         assertTrue(published.size() > 0);
+        validateProperties(published);
 
         List<Widget> preview = repository.getByStatus(WidgetStatus.PREVIEW, 0, pageSize);
         assertNotNull(preview);
@@ -181,6 +196,16 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
+    public void getByStatusAndTypeAndFreeText_wiki() {
+        final String searchTerm = "AA";
+        final String type = "OpenSocial";
+        List<Widget> widgets = repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, type,
+                searchTerm, 0, 1);
+        assertEquals(1, widgets.size());
+        validateProperties(widgets);
+    }
+
+    @Test
     public void countByStatusAndTypeAndFreeText() {
         final String searchTerm = "gAdGet";
         final String type = "OpenSocial";
@@ -192,6 +217,7 @@ public class JpaWidgetRepositoryTest {
     public void getByOwner() {
         final User user = new JpaUser(2L);
         List<Widget> widgets = repository.getByOwner(user, 0, 10);
+        validateProperties(widgets);
         assertEquals(1, widgets.size());
     }
 
@@ -218,6 +244,36 @@ public class JpaWidgetRepositoryTest {
         widget = repository.save(widget);
         assertNotNull(widget.getId());
         assertEquals(longDescription, widget.getDescription());
+    }
+
+    @Test
+    @Transactional(readOnly = false)
+    @Rollback
+    @SuppressWarnings("unchecked")
+    public void saveWidgetWithProperties() {
+        final String url = "http://example.com/doesnotexistyet";
+        final String longDescription = "Foo";
+
+        Widget doesnotexist = repository.getByUrl(url);
+        assertNull(doesnotexist);
+
+        Map<String, Object> properties = Maps.newHashMap();
+        Map<String, String> sub = Maps.newHashMap();
+        sub.put("bar", "none");
+        properties.put("sub", sub);
+        properties.put("foo", "bar");
+
+        Widget widget = new WidgetImpl();
+        widget.setTitle("Widget with properties");
+        widget.setUrl(url);
+        widget.setDescription(longDescription);
+        widget.setProperties(properties);
+        widget = repository.save(widget);
+        assertNotNull(widget.getId());
+        assertEquals(longDescription, widget.getDescription());
+        assertEquals(widget.getProperties().get("foo"), "bar");
+        assertEquals(((Map<String,String>)widget.getProperties().get("sub")).get("bar"), "none");
+        assertNotNull(((JpaWidget)widget).getSerializedData());
     }
 
     @Test
@@ -494,5 +550,20 @@ public class JpaWidgetRepositoryTest {
         assertThat(widget, is(notNullValue()));
         repository.delete(widget);
         assertThat(repository.get(WIDGET_ID), is(nullValue()));
+    }
+
+    private void validateProperties(List<Widget> widgets) {
+        for(Widget w: widgets) {
+            if(w.getId().equals("1")) {
+                validateProperties(w);
+                return;
+            }
+        }
+        throw new RuntimeException("Widget not found in test data");
+    }
+
+    private void validateProperties(Widget w) {
+        assertThat(w.getProperties(), is(not(nullValue())));
+        assertThat(w.getProperties().get("sub"), is(not(nullValue())));
     }
 }

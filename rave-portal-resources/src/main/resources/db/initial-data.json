@@ -1097,7 +1097,7 @@
         {
             "id": 18,
             "title": "Activity Stream",
-            "url": "http://accelerator.opensocial2.org/gadgets/examples/gadgets/activitystream/gadget.xml",
+            "url": "https://raw.github.com/OpenSocial/examples/master/gadgets/activitystream/gadget.xml",
             "type": "OpenSocial",
             "author": "OpenSocial Foundation",
             "description": "OpenSocial Activity Stream gadget with support for Embedded Experiences",
@@ -1233,6 +1233,17 @@
             "type": "OpenSocial",
             "author": "OpenSocial Foundation",
             "description": "Example jQuery Photo Embedded Experience Gadget",
+            "disableRendering": false,
+            "featured": false,
+            "widgetStatus": "PUBLISHED"
+        },
+        {
+            "id": 31,
+            "title": "Actions Example",
+            "url": "http://localhost:8080/demogadgets/actions_contributions.xml",
+            "type": "OpenSocial",
+            "author": "Rave Project",
+            "description": "Actions contributions examples",
             "disableRendering": false,
             "featured": false,
             "widgetStatus": "PUBLISHED"

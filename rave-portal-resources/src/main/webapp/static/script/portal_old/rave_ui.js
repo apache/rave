@@ -231,6 +231,9 @@ define(["jquery", "underscore", "rave",
                 uiState.widget = rave.getWidget(ravePortal.getObjectIdFromDomId(widgetEl.id));
                 uiState.currentRegion = ravePortal.getObjectIdFromDomId(ui.item.parent().get(0).id);
 
+                // Workaround for SHINDIG-1965 to keep the iframe re-parenting from firing the load events again
+                $(widgetEl).find('iframe').removeAttr('onload');
+
                 //for every drag operation, create an overlay for each iframe
                 //to prevent the iframe from intercepting mouse events
                 //which kills drag performance
@@ -686,33 +689,41 @@ define(["jquery", "underscore", "rave",
                 });
 
                 //bind widget menu items
-                self.$minimizeIcon.click(minimize);
-                self.$toggleCollapseIcon.click(toggleCollapse);
+                self.$minimizeIcon.off("click").click(minimize);
+                self.$toggleCollapseIcon.off("click").click(toggleCollapse);
                 self.$cogIcon.click(addIframeOverlays);
                 self.$cogIcon.dropdown();
                 if (!self.$menuItemMove.hasClass("menu-item-disabled")) {
-                    self.$menuItemMove.click(showMovePageDialog);
+                    self.$menuItemMove.off("click").click(getLaunchClosure(showMovePageDialog));
                 }
                 if (!self.$menuItemDelete.hasClass("menu-item-disabled")) {
-                    self.$menuItemDelete.click(deleteWidget);
+                    self.$menuItemDelete.off("click").click(getLaunchClosure(deleteWidget));
                 }
                 if (!self.$menuItemMaximize.hasClass("menu-item-disabled")) {
-                    self.$menuItemMaximize.click(maximize);
+                    self.$menuItemMaximize.off("click").click(getLaunchClosure(maximize));
                 }
                 if (!self.$menuItemAbout.hasClass("menu-item-disabled")) {
-                    self.$menuItemAbout.click(aboutWidget)
+                    self.$menuItemAbout.off("click").click(getLaunchClosure(aboutWidget));
                 }
                 if (!self.$menuItemComment.hasClass("menu-item-disabled")) {
-                    self.$menuItemComment.click(commentOnWidget);
+                    self.$menuItemComment.off("click").click(getLaunchClosure(commentOnWidget));
                 }
                 if (!self.$menuItemRate.hasClass("menu-item-disabled")) {
-                    self.$menuItemRate.click(rateWidget);
+                    self.$menuItemRate.off("click").click(getLaunchClosure(rateWidget));
                 }
                 var metadata = self.widget.metadata;
                 if (metadata && (metadata.hasPrefsToEdit || (metadata.views && metadata.views.preferences))) {
                     self.$menuItemEditPrefs.removeClass("menu-item-disabled");
-                    self.$menuItemEditPrefs.click(showPrefsPane);
+                    self.$menuItemEditPrefs.off("click").click(getLaunchClosure(showPrefsPane));
                 }
+
+                function getLaunchClosure(fn) {
+                    return function(evt) {
+                        self.$cogIcon.dropdown();
+                        fn(evt);
+                    }
+                }
+
             }
             HomeView.prototype.getWidgetSite = function () {
                 return this.$widgetSite[0];
@@ -927,6 +938,48 @@ define(["jquery", "underscore", "rave",
             });
         }
 
+        function getActionElement(label, image, tooltip) {
+            var elem;
+            if(image) {
+                if(image.indexOf("css") === 0) {
+                    elem = '<i class="' + image.replace("css:","") + '" ></i>';
+                } else {
+                    elem = '<img src="' + image + '" />';
+                }
+            } else {
+                elem = "<a>" + label + "</a>";
+            }
+            return $(elem).attr("tooltip", tooltip);
+        }
+
+        function insertWidgetToolbarAction(widgetId, label, image, tooltip, id, onSelected) {
+            var $toolbar = $("#widget-" + widgetId + "-wrapper .widget-title-bar");
+            var $action = $('<div class="widget-titlebar-action widget-toolbar" ></div>').append(getActionElement(label, image, tooltip));
+            $action.attr("id", id).on('click', onSelected);
+            $toolbar.append($action);
+            return $action;
+        }
+
+        function registerActionsHandler() {
+            var actions = {};
+            rave.registerActionHandler({
+                create: function(id, label, path, widgetId, image, tooltip, onSelected) {
+                    if(!actions[id]) {
+                        var segments = path.split("/");
+                        //TODO Implement more paths and a better path routing system
+                        if (segments.length === 2 && segments[0] === "widget" && segments[1] === "toolbar") {
+                            actions[id] = insertWidgetToolbarAction(widgetId, label, image, tooltip, id, onSelected);
+                        } else {
+                            rave.log("Unsupported action path: '" + path + "'")
+                        }
+                    }
+                },
+                remove: function(id) {
+                    if(actions[id]) actions[id].remove();
+                }
+            });
+        }
+
         function init() {
             initializePageSharing();
             registerHomeView();
@@ -934,6 +987,7 @@ define(["jquery", "underscore", "rave",
             registerPopups();
             showEmptyDisplay();
             setupDragAndDrop();
+            registerActionsHandler();
         }
 
         rave.registerOnInitHandler(init);

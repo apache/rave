@@ -19,20 +19,18 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.MongoDbPageTemplate;
 import org.apache.rave.model.PageTemplate;
-import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
+import org.apache.rave.portal.repository.MongoPageTemplateOperations;
 import org.apache.rave.portal.repository.PageTemplateRepository;
-import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
-import static org.apache.rave.portal.repository.util.CollectionNames.PAGE_TEMPLATE_COLLECTION;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 /**
  */
@@ -40,40 +38,54 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class MongoDbPageTemplateRepository implements PageTemplateRepository {
 
     @Autowired
-    private HydratingConverterFactory converter;
-
-    @Autowired
-    private MongoOperations template;
+    private MongoPageTemplateOperations template;
 
     @Override
     public List<PageTemplate> getAll() {
-        List<MongoDbPageTemplate> templates = template.findAll(MongoDbPageTemplate.class, PAGE_TEMPLATE_COLLECTION);
-        for(MongoDbPageTemplate temp : templates) {
-            converter.hydrate(temp, PageTemplate.class);
-        }
-        return CollectionUtils.<PageTemplate>toBaseTypedList(templates);
+        return template.find(new Query());
+    }
+
+    @Override
+    public List<PageTemplate> getLimitedList(int offset, int limit) {
+        return template.find(new Query().limit(limit).skip(offset));
+    }
+
+    @Override
+    public int getCountAll() {
+        return (int)template.count(new Query());
+    }
+
+    @Override
+    public List<PageTemplate> getAll(String pageType) {
+        return template.find(query(where("pageType").is(pageType.toUpperCase())));
     }
 
     @Override
     public PageTemplate getDefaultPage(String pageType) {
-        PageTemplate temp = template.findOne(new Query(where("pageType").is(pageType.toUpperCase()).andOperator(where("defaultTemplate").is(true))), MongoDbPageTemplate.class, PAGE_TEMPLATE_COLLECTION);
-        converter.hydrate(temp, PageTemplate.class);
-        return temp;
+        return template.findOne(new Query(where("pageType").is(pageType.toUpperCase()).andOperator(where("defaultTemplate").is(true))));
+    }
+
+    @Override
+    public Class<? extends PageTemplate> getType() {
+        return PageTemplate.class;
+    }
+
+    @Override
+    public PageTemplate get(String id) {
+        return template.get(id);
     }
 
     @Override
     public PageTemplate save(PageTemplate pageTemplate) {
-        MongoDbPageTemplate converted = converter.convert(pageTemplate, PageTemplate.class);
-        template.save(converted, PAGE_TEMPLATE_COLLECTION);
-        converter.hydrate(converted, PageTemplate.class);
-        return converted;
+        return template.save(pageTemplate);
     }
 
-    public void setConverter(HydratingConverterFactory converter) {
-        this.converter = converter;
+    @Override
+    public void delete(PageTemplate item) {
+        template.remove(query(where("_id").is(item.getId())));
     }
 
-    public void setTemplate(MongoOperations template) {
+    public void setTemplate(MongoPageTemplateOperations template) {
         this.template = template;
     }
 }

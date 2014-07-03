@@ -29,6 +29,8 @@ public class MongoDbModelUtil {
 
     private MongoDbModelUtil(){}
 
+    public static final int MAX_TREE_DEPTH = 4;
+
     public static String generateId() {
         return UUID.randomUUID().toString().replace("-", "_");
     }

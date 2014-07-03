@@ -26,9 +26,11 @@ import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.util.MongoDbModelUtil;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -51,6 +53,11 @@ public class MongoDbPageRepository implements PageRepository {
     @Override
     public List<Page> getAllPagesForUserType(String userId, String pageType) {
         return sort(template.find(query(where("pageType").is(getString(pageType)).andOperator(where("members").elemMatch(where("userId").is(userId))))), userId);
+    }
+
+    @Override
+    public List<Page> getPagesForContextType(String contextId, String pageType) {
+        return template.find(query(where("pageType").is(getString(pageType)).andOperator(where("contextId").is(contextId))));
     }
 
     @Override
@@ -101,19 +108,46 @@ public class MongoDbPageRepository implements PageRepository {
         return MongoDbPage.class;
     }
 
+    //TODO Change persisted page structure to normalize sub pages
     @Override
     public Page get(String  id) {
-        return template.get(id);
+        Page page = template.get(id);
+        //We have to account for sub pages
+        if(page == null) {
+            page = template.findOne(query(new Criteria().orOperator(addSubPageQuery(id))));
+            if(page != null) {
+                page = findSubPage(page, id);
+            }
+        }
+        return page;
     }
 
     @Override
     public Page save(Page item) {
+        while(item.getParentPage() != null) {
+            item = item.getParentPage();
+        }
         return template.save(item);
     }
 
     @Override
     public void delete(Page item) {
         template.remove(query(where("_id").is(item.getId())));
+    }
+
+    @Override
+    public List<Page> getAll() {
+        return template.find(new Query());
+    }
+
+    @Override
+    public List<Page> getLimitedList(int offset, int pageSize) {
+        return template.find(new Query().skip(offset).limit(pageSize));
+    }
+
+    @Override
+    public int getCountAll() {
+        return (int) template.count(new Query());
     }
 
     private List<Page> sort(List<Page> pages, final String  userId) {
@@ -147,6 +181,30 @@ public class MongoDbPageRepository implements PageRepository {
             }
         }
         return -1;
+    }
+
+    private Page findSubPage(Page page, String id) {
+        if(page.getSubPages() != null) {
+            for(Page subPage : page.getSubPages()) {
+                if(subPage.getId().equals(id)) {
+                    return subPage;
+                }
+                Page found = findSubPage(subPage, id);
+                if(found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Criteria[] addSubPageQuery(String id) {
+       //TODO Dynamically create the criteria in a loop with a max-depth
+       return new Criteria[] {
+            where("subPages").elemMatch(where("_id").is(id)),
+            where("subPages").elemMatch(where("subPages").elemMatch(where("_id").is(id))),
+            where("subPages").elemMatch(where("subPages").elemMatch(where("subPages").elemMatch(where("_id").is(id))))
+       };
     }
 
     /**
@@ -270,19 +328,4 @@ public class MongoDbPageRepository implements PageRepository {
         this.template = template;
     }
 
-
-    @Override
-    public List<Page> getAll() {
-        return template.find(new Query());
-    }
-
-    @Override
-    public List<Page> getLimitedList(int offset, int pageSize) {
-        return template.find(new Query().skip(offset).limit(pageSize));
-    }
-
-    @Override
-    public int getCountAll() {
-        return (int) template.count(new Query());
-    }
 }

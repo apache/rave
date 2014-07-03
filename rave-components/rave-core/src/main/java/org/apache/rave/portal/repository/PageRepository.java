@@ -29,13 +29,22 @@ import java.util.List;
  */
 public interface PageRepository extends Repository<Page>{
     /**
-     * Returns all pages of a given PageType owned by the user
+     * Returns all pages of a given page type where the user is a member of the page
      *
      * @param userId the userId to search by
      * @param pageType the pageType to search by
      * @return a list of all the Page objects owned by userId of type pageType
      */
     List<Page> getAllPagesForUserType(String userId, String pageType);
+
+    /**
+     * Returns all pages of a given type where the contextId matches the specified ID
+     *
+     * @param contextId the ID of the context to match
+     * @param pageType the type of the page
+     * @return a list of all the Page objects with the specified contextId of type pageType
+     */
+    List<Page> getPagesForContextType(String contextId, String pageType);
 
     /**
      * Delete all pages for a userId of the supplied pageType

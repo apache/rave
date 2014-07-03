@@ -18,18 +18,18 @@
  */
 package org.apache.rave.portal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.rave.model.*;
+import org.apache.rave.persistence.jpa.JpaSerializable;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.util.JsonUtils;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * A page, which consists of regions, and which may be owned by a {@link JpaUser} (note the ownership will likely need to
@@ -49,16 +49,20 @@ import java.util.List;
         @NamedQuery(name = JpaPage.GET_ALL, query="SELECT p FROM JpaPage p"),
         @NamedQuery(name = JpaPage.GET_COUNT, query="SELECT count(p) FROM JpaPage p"),
         @NamedQuery(name = JpaPage.DELETE_BY_USER_ID_AND_PAGE_TYPE, query="DELETE FROM JpaPage p WHERE p.ownerId = :userId and p.pageType = :pageType"),
-        @NamedQuery(name = JpaPage.USER_HAS_PERSON_PAGE, query="SELECT count(p) FROM JpaPage p WHERE p.ownerId = :userId and p.pageType = :pageType")
+        @NamedQuery(name = JpaPage.USER_HAS_PERSON_PAGE, query="SELECT count(p) FROM JpaPage p WHERE p.ownerId = :userId and p.pageType = :pageType"),
+        @NamedQuery(name = JpaPage.HAS_CONTEXT_PAGE, query="SELECT count(p) FROM JpaPage p WHERE p.contextId = :contextId and p.pageType = :pageType"),
+        @NamedQuery(name = JpaPage.GET_BY_CONTEXT_AND_PAGE_TYPE, query="SELECT p FROM JpaPage p WHERE p.contextId = :contextId and p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
-public class JpaPage implements BasicEntity, Serializable, Page {
-    private static final long serialVersionUID = 1L;
+public class JpaPage implements BasicEntity, Serializable, JpaSerializable, Page {
+    private static final long serialVersionUID = 2L;
 
     public static final String DELETE_BY_USER_ID_AND_PAGE_TYPE = "JpaPage.deleteByUserIdAndPageType";
     public static final String USER_HAS_PERSON_PAGE = "JpaPage.hasPersonPage";
     public static final String GET_ALL = "JpaPage.getAll";
     public static final String GET_COUNT = "JpaPage.getCount";
+    public static final String HAS_CONTEXT_PAGE = "JpaPage.hasContextPage";
+    public static final String GET_BY_CONTEXT_AND_PAGE_TYPE = "JpaPage.getByContextAndPageType";
 
     @XmlAttribute(name="id")
     @Id @Column(name="entity_id")
@@ -74,6 +78,10 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     @Basic
     @Column(name = "owner_id")
     private String ownerId;
+
+    @Basic
+    @Column(name = "context_id")
+    private String contextId;
 
     @ManyToOne(cascade=CascadeType.ALL, optional = true)
     @JoinColumn(name="parent_page_id")
@@ -98,6 +106,14 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
     @OneToMany(targetEntity=JpaPageUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="page", orphanRemoval=true)
     private List<JpaPageUser> members;
+
+    @Lob @JsonIgnore
+    @Column(name = "serialized_data")
+    private String serializedData;
+
+    //It will be the responsibility of the repository to ensure that this property is set when the page is retrieved from the database
+    @Transient
+    private Map<String, Object> properties;
 
 
     public JpaPage() {
@@ -165,6 +181,21 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     @Override
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+
+    /**
+     * Gets the {@link User} that owns the page
+     *
+     * @return Valid {@link org.apache.rave.model.User}
+     */
+    @Override
+    public String getContextId() {
+        return contextId;
+    }
+
+    @Override
+    public void setContextId(String contextId) {
+        this.contextId = contextId;
     }
 
     /**
@@ -273,6 +304,16 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     }
 
     @Override
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -297,6 +338,22 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     @Override
     public String toString() {
         return "Page{" + "entityId=" + entityId + ", name=" + name + ", ownerId=" + ownerId + ", pageLayout=" + pageLayout + ", pageType=" + pageType + "}";
+    }
+
+    @Override
+    public void serializeData() {
+        Map<String, Object> properties = this.getProperties();
+        if(properties != null) {
+            serializedData = JsonUtils.stringify(properties);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void deserializeData() {
+        if(serializedData != null) {
+            this.setProperties(JsonUtils.parse(serializedData, Map.class));
+        }
     }
 
     /**

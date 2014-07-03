@@ -30,6 +30,7 @@ import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
+import org.apache.rave.util.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -74,7 +75,8 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
             " widgetId: '%9$s'," +
             " locked: %10$s," +
             " hideChrome: %11$s," +
-            " subPage: {id: %12$s, name: '%13$s', isDefault: %14$s}" +
+            " subPage: {id: %12$s, name: '%13$s', isDefault: %14$s}," +
+            " properties: %15$s" +
             "})});</script>";
     private static final String MARKUP = "<!-- RegionWidget '%1$s' placeholder -->";
 
@@ -154,7 +156,8 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
                 item.isHideChrome(),
                 pageId,
                 pageName,
-                isDefault
+                isDefault,
+                JsonUtils.stringify(widget.getProperties())
                 );
     }
 

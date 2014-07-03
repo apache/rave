@@ -23,54 +23,46 @@
  * @requires rave_openajax_hub
  * @requires rave_state_manager
  */
-define(['core/rave_openajax_hub', 'core/rave_state_manager'], function (managedHub, stateManager) {
-    var exports = {}
+define(['core/rave_openajax_hub', 'core/rave_state_manager'], function(managedHub, stateManager){
+        var exports = {}
 
-    exports.initWidget = function (widget) {
-    }
-    exports.renderWidget = function (widget, opts) {
-        var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
-        window["onWidget" + widget.regionWidgetId + "Load"] = function () {
-            window.document.getElementById(widget.regionWidgetId).style.visibility = "visible";
-        };
+        exports.initWidget = function(widget){}
+        exports.renderWidget = function(widget, el, opts){
+            var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
+            window["onWidget"+widget.regionWidgetId+"Load"] = function(){
+                window.document.getElementById(widget.regionWidgetId).style.visibility="visible";
+            };
 
-        new OpenAjax.hub.IframeContainer(managedHub, "" + widget.regionWidgetId,
-            {
-                Container: {
-                    onSecurityAlert: onClientSecurityAlert,
-                    onConnect: onClientConnect,
-                    onDisconnect: onClientDisconnect
-                },
-                IframeContainer: {
-                    parent: widget._el,
-                    iframeAttrs: {
-                        height: widget.height || stateManager.getDefaultHeight(),
-                        width: widget.width || stateManager.getDefaultWidth(),
-                        frameborder: 0
+            new OpenAjax.hub.IframeContainer(managedHub , ""+widget.regionWidgetId,
+                {
+                    Container: {
+                        onSecurityAlert: onClientSecurityAlert,
+                        onConnect:       onClientConnect,
+                        onDisconnect:    onClientDisconnect
                     },
-                    uri: widget.widgetUrl,
-                    onGadgetLoad: "onWidget" + widget.regionWidgetId + "Load"
+                    IframeContainer: {
+                        parent:      el,
+                        iframeAttrs: {
+                            height: widget.height || stateManager.getDefaultHeight(),
+                            width:  widget.width || stateManager.getDefaultWidth(),
+                            frameborder: 0
+                        },
+                        uri: widget.widgetUrl,
+                        onGadgetLoad: function(){window["onWidget"+widget.regionWidgetId+"Load"].call()}
+                    }
                 }
-            }
-        );
-    }
+            );
+        };    
+	
+	    exports.unrenderWidget = function () { /*TODO...*/ }
 
-    exports.unrenderWidget = function () {
-        //TODO...
-    }
+        function onClientSecurityAlert(source, alertType) {  /* Handle client-side security alerts */  }
+        function onClientConnect(container) {        /* Called when client connects */   }
+        function onClientDisconnect(container) {     /* Called when client disconnects */ }
 
-    function onClientSecurityAlert(source, alertType) {  /* Handle client-side security alerts */
-    }
+        exports.closeWidget = function(widget){
+            //TODO...
+        }
 
-    function onClientConnect(container) {        /* Called when client connects */
-    }
-
-    function onClientDisconnect(container) {     /* Called when client disconnects */
-    }
-
-    exports.closeWidget = function (widget) {
-        //TODO...
-    }
-
-    return exports;
+        return exports;
 })

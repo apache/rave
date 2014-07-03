@@ -56,7 +56,7 @@ public class JpaApplicationDataConverterTest {
         ApplicationData applicationData = new ApplicationDataImpl();
         applicationData.setId("1");
         applicationData.setAppUrl("url");
-        applicationData.setData(new HashMap<String, String>());
+        applicationData.setData(new HashMap<String, Object>());
         applicationData.setUserId("userid");
 
         JpaApplicationData converted = applicationDataConverter.convert(applicationData);

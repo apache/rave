@@ -93,13 +93,13 @@ public class JpaWidgetRepository implements WidgetRepository {
     public List<Widget> getAll() {
         log.warn("Requesting potentially large resultset of Widget. No pagesize set.");
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.GET_ALL, JpaWidget.class);
-        return CollectionUtils.<Widget>toBaseTypedList(query.getResultList());
+        return expandProperties(query.getResultList());
     }
 
     @Override
     public List<Widget> getLimitedList(int offset, int pageSize) {
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.GET_ALL, JpaWidget.class);
-        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
+        return expandProperties(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
@@ -114,7 +114,7 @@ public class JpaWidgetRepository implements WidgetRepository {
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_FREE_TEXT,
                 JpaWidget.class);
         setFreeTextSearchTerm(query, searchTerm);
-        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
+        return expandProperties(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
@@ -130,7 +130,7 @@ public class JpaWidgetRepository implements WidgetRepository {
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_STATUS,
                 JpaWidget.class);
         query.setParameter(JpaWidget.PARAM_STATUS, widgetStatus);
-        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
+        return expandProperties(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
@@ -150,7 +150,7 @@ public class JpaWidgetRepository implements WidgetRepository {
         query.where(getStatusAndTypeAndFreeTextPredicates(cb, widgetType, widgetStatus, type, searchTerm));
         query.orderBy(getOrderByTitleAsc(cb, widgetType));
 
-        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(manager.createQuery(query), offset, pageSize));
+        return expandProperties(getPagedResultList(manager.createQuery(query), offset, pageSize));
     }
 
     @Override
@@ -169,7 +169,7 @@ public class JpaWidgetRepository implements WidgetRepository {
     public List<Widget> getByOwner(User owner, int offset, int pageSize) {
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_OWNER, JpaWidget.class);
         query.setParameter(JpaWidget.PARAM_OWNER, owner.getId());
-        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
+        return expandProperties(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
@@ -190,7 +190,7 @@ public class JpaWidgetRepository implements WidgetRepository {
         // url is a unique field, so no paging needed
         query.setParameter(JpaWidget.PARAM_URL, widgetUrl);
         final List<JpaWidget> resultList = query.getResultList();
-        return getSingleResult(resultList);
+        return expandProperties(getSingleResult(resultList));
     }
 
     @Override
@@ -300,7 +300,7 @@ public class JpaWidgetRepository implements WidgetRepository {
         Tag tag = tagRepository.getByKeyword(tagKeyword);
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_TAG, JpaWidget.class);
         query.setParameter(JpaWidget.PARAM_TAG_ID, tag == null ? null : Long.parseLong(tag.getId()));
-        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
+        return expandProperties(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
@@ -329,12 +329,14 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Override
     public Widget get(String id) {
-        return manager.find(JpaWidget.class, Long.parseLong(id));
+        return expandProperties(manager.find(JpaWidget.class, Long.parseLong(id)));
     }
 
     @Override
     public Widget save(Widget item) {
-        return saveOrUpdate(item.getId(), manager, converter.convert(item));
+        JpaWidget converted = converter.convert(item);
+        converted.serializeData();
+        return expandProperties(saveOrUpdate(item.getId(), manager, converted));
     }
 
     @Override
@@ -513,5 +515,19 @@ public class JpaWidgetRepository implements WidgetRepository {
         TypedQuery<JpaWidgetRating> query = manager.createNamedQuery(JpaWidgetRating.DELETE_ALL_BY_USER, JpaWidgetRating.class);
         query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
         return query.executeUpdate();
+    }
+
+    private List<Widget> expandProperties(List<JpaWidget> widgets) {
+        for(JpaWidget widget : widgets) {
+            expandProperties(widget);
+        }
+        return CollectionUtils.<Widget>toBaseTypedList(widgets);
+    }
+
+    private JpaWidget expandProperties(JpaWidget widget) {
+        if(widget != null) {
+            widget.deserializeData();
+        }
+        return widget;
     }
 }
