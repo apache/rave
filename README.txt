@@ -38,17 +38,18 @@ Building and running
 To setup the vagrant development environment:
 
   - Requirements:
-    Vagrant v1.6.3+, Ansible 1.6.5+
+    Vagrant v1.6.3+, Ansible 1.6.5+, Node 0.10.0+, Grunt 0.4.0+
 
   - Install the `vagrant-hostsupdater` plugin by performing `vagrant plugin install vagrant-hostsupdater`.
 
   - To build the virtual machine, simply run `vagrant up`.
 
+  - Run `npm install` from the root directory.
+
 To run the apache rave application:
 
-  - SSH into the vagrant box
-  - Run the following command to start the rave portal
-      `sudo mvn cargo:run -f /rave/rave-portal/pom.xml`
+  - Run `grunt dev` from the command line.
+  - If this is your first time building, wait up to 20 minutes. Otherwise, give it 5minutes or so.
   - open url http://rave.dev:8080/portal in a browser
   - Login as user `canonical` with the password `canonical`
 
