@@ -393,4 +393,12 @@ public class DefaultUserServiceTest {
         service.registerNewUser(user);
         verify(userRepository, pageTemplateRepository, pageRepository);
     }
+
+    @Test
+    public void getAllPeople() {
+        expect(personRepository.getAll()).andReturn(new ArrayList<Person>());
+        replay(personRepository);
+        service.getAllPeople();
+        verify(personRepository);
+    }
 }

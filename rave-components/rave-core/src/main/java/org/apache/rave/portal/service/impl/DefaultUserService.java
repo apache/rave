@@ -280,6 +280,11 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    public List<Person> getAllPeople() {
+        return personRepository.getAll();
+    }
+
+    @Override
     @Transactional
     // TODO RAVE-300: add security check that is is called by admin or the user itself
     public void deleteUser(String userId) {

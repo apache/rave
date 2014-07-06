@@ -235,4 +235,11 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
      */
     SearchResult<Person> getPersonsByFreeTextSearch(String searchTerm, int offset, int pageSize);
 
+    /**
+     * Gets the {@link Person} list containing all the people
+     *
+     * @return
+     */
+    List<Person> getAllPeople();
+
 }
