@@ -37,4 +37,5 @@
 
 - name: Install maven dependencies for apache rave
   command: /usr/local/maven/latest/bin/mvn -DskipTests=true -DskipIntegrationTests=true clean install chdir={{ maven_rave_dir }} creates={{ maven_rave_dir }}/target
+  sudo: yes
   tags: maven

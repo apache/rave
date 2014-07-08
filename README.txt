@@ -48,6 +48,18 @@ To run the apache rave application:
 
   - SSH into the vagrant box
   - Run the following command to start the rave portal
-      `mvn cargo:run -f /rave/rave-portal/pom.xml`
+      `sudo mvn cargo:run -f /rave/rave-portal/pom.xml`
   - open url http://rave.dev:8080/portal in a browser
-  - press Ctrl-C in the console to stop the application
+  - Login as user `canonical` with the password `canonical`
+
+When you're done, you can type `ctrl + C` in the console to stop the application.
+
+Unbuilding the Application
+==========================
+
+Building the application creates a handful of directories called `target` in the repository. To remove them all at once run `mvn clean` from
+the `/rave` directory on the Vagrantbox.
+
+Note that this will require that you re-provision the box to run the app. You can do this from the root directory of the application when you're
+*not on the box* by running `vagrant provision`.
+`vagrant provision` from 
