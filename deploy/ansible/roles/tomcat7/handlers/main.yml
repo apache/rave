@@ -1,3 +1,0 @@
----
-- name: tomcat7-restart
-  service: name=tomcat7 state=restarted

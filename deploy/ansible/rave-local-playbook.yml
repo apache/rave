@@ -8,4 +8,3 @@
   roles:
     - oracle-java7
     - maven
-    - tomcat7
