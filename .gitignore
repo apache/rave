@@ -5,3 +5,4 @@ target/
 .DS_Store
 .vagrant/
 node_modules
+bower_components
