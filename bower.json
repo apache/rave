@@ -1,0 +1,29 @@
+{
+  "name": "ng-rave",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jmeas/ng-rave",
+  "authors": [
+    "Apache"
+  ],
+  "description": "The Angular version of Rave.",
+  "keywords": [
+    "social",
+    "gadgets",
+    "widgets",
+    "rave",
+    "apache"
+  ],
+  "license": "Apache License 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.20",
+    "angular-ui-router": "~0.2.10",
+    "bootstrap": "^2.0"
+  }
+}
