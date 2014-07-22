@@ -1,0 +1,10 @@
+maven_version: 3.1.1
+maven_min_memory: 256m
+maven_max_memory: 512m
+maven_install_dir: /usr/local/maven
+maven_rave_dir: /rave
+maven_major_version: 3
+maven_base_download_url: "http://apache.mirrors.tds.net/maven/maven-{{ maven_major_version }}/{{ maven_version }}/binaries/"
+maven_extracted_dirname: "apache-maven-{{ maven_version }}"
+maven_download_filename: "apache-maven-{{ maven_version }}-bin.tar.gz"
+maven_download_url: "{{ maven_base_download_url }}/{{ maven_download_filename }}"

@@ -2,3 +2,4 @@
 .idea/
 overlays/
 target/
+.vagrant

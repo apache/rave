@@ -1,0 +1,10 @@
+---
+-
+  hosts: all
+  sudo: yes
+  vars:
+    app_base_path: "/rave/"
+    default_user: "rave"
+  roles:
+    - oracle-java7
+    - maven

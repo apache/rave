@@ -38,32 +38,18 @@ Building and running
 To build from source code:
 
   - Requirements:
-    Sources compilation require Java SE 6 or higher.
-    The project is built with Apache Maven 3+ (suggested is 3.0.3).
-    You need to download and install Maven 3 from: http://maven.apache.org/
+    Vagrant v1.6.3+, Ansible 1.6.5+
 
-  - The Rave project itself (this one) depends on the separate Rave Master project
-    which defines general and global settings for the whole of the Rave project,
-    independent of a specific release.
-    As its rave-master-pom is already published to the Apache Snapshots repository,
-    there is no need to check it out manually and build it locally yourself,
-    unless changes are needed on general and global level.
+  - Install the `vagrant-hostsupdater` plugin by performing `vagrant plugin install vagrant-hostsupdater`.
+
+  - Add `192.168.13.37   localhost` to the top of your hosts file.
+
+  - To build the virtual machine, simply run `vagrant up`.
     
-    If so needed, the Rave Master project can be checked out from:
-      http://svn.apache.org/repos/asf/rave/rave-master-pom/trunk rave-master-pom
+  - To run Rave, ssh onto the Vagrantbox with the command `vagrant ssh`, then run the command:
+    `sudo mvn cargo:run -f /rave/rave-portal/pom.xml`
 
-    After check out, cd into rave-master-pom and invoke maven to install it using:
-      $mvn install
-    
-  - To build the Rave project invoke maven in the root directory:
-      $mvn install
+  - Navigate to http://localhost:8080/ in a browser
 
-To run a local Tomcat instance with rave-shindig and rave-portal deployed:
-
-  - from the top-level rave directory, use the command
-      $mvn cargo:run -f rave-portal/pom.xml
-  - alternatively, navigate to the rave-portal subdirectory and invoke:
-      $mvn cargo:run
-  - open url http://localhost:8080/ in a browser
-  - press Ctrl-C in the console to stop Tomcat again
+  - press Ctrl-C from within the Vagrant box to stop the app
 --------------------------------------------------------------------------------
