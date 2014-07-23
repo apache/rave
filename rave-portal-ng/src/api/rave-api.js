@@ -50,7 +50,7 @@
 	function raveAPIModule( $httpBackend ) {
 
 		function handleUnrelatedRequests() {
-			var matchAllRegex = /^\w+.*/;
+			var matchAllRegex = /(.*)+/;
 
 			$httpBackend.whenGET( matchAllRegex ).passThrough();
 			$httpBackend.whenDELETE( matchAllRegex ).passThrough();
