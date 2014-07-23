@@ -136,7 +136,7 @@ module.exports = function(grunt) {
           'sudo mvn cargo:run -f /rave/rave-portal/pom.xml',
         ],
         callback: function(grunt, output) {
-          grunt.log.writeln('The app is running at rave.dev:8080/portal.');
+          grunt.log.writeln('The app is running at localhost:8080/portal.');
         }
       }
     }

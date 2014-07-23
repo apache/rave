@@ -3,9 +3,9 @@
     '$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
       // Our profile states
-      $stateProvider.state('profile', {
+      $stateProvider.state('portal.profile', {
         url: '/profile',
-        templateUrl: 'profile/profile.html'
+        templateUrl: '/profile/profile.html'
       });
     }
   ]);

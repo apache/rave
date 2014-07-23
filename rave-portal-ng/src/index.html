@@ -8,12 +8,25 @@
   <link rel="stylesheet" href="/style.css">
   <link href="http://fonts.googleapis.com/css">
 </head>
-<body>
+<body ng-controller="appData">
   <div class="wrapper">
-    <ul class="nav">
-      <a ui-sref="home">Home</a>
-      <a ui-sref="profile">Profile</a>
-    </ul>
+  <div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+          <span class="brand">&nbsp;</span>
+          <div class="nav-collapse">
+            <ul class="nav pull-right">
+              <li ng-repeat="item in nav"><a ui-sref="{{ item.state }}">{{ item.name }}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <main ui-view></main>
   </div>
   <footer>
@@ -22,13 +35,65 @@
     </a>
   </footer>
 
+  <!-- The server will send this back with the initial page load -->
+  <script>
+    window._initialData = {
+      authorized: true,
+      user: {
+        name: "Jmeas",
+        id: 34,
+        authLevel: "admin"
+      },
+      nav: [
+        {
+          state: 'portal.home',
+          name: 'Home'
+        },
+        {
+          state: 'portal.profile',
+          name: 'Profile'
+        },
+        {
+          state: 'portal.widgetStore',
+          name: 'Widget Store'
+        },
+        {
+          state: 'portal.admin',
+          name: 'Admin Interface'
+        },
+        {
+          state: 'portal.logout',
+          name: 'Logout'
+        },
+      ]
+    };
+  </script>
+
   <!-- We should use usemin here to build the concatenated files -->
+  <script src="jquery/dist/jquery.js"></script>
+  <script src="bootstrap/js/bootstrap-affix.js"></script>
+  <script src="bootstrap/js/bootstrap-alert.js"></script>
+  <script src="bootstrap/js/bootstrap-button.js"></script>
+  <script src="bootstrap/js/bootstrap-carousel.js"></script>
+  <script src="bootstrap/js/bootstrap-collapse.js"></script>
+  <script src="bootstrap/js/bootstrap-transition.js"></script>
+  <script src="bootstrap/js/bootstrap-tooltip.js"></script>
+  <script src="bootstrap/js/bootstrap-typeahead.js"></script>
+  <script src="bootstrap/js/bootstrap-tab.js"></script>
+  <script src="bootstrap/js/bootstrap-modal.js"></script>
+  <script src="bootstrap/js/bootstrap-dropdown.js"></script>
+  <script src="bootstrap/js/bootstrap-scrollspy.js"></script>
+  <script src="underscore/underscore.js"></script>
   <script src="angular/angular.js"></script>
   <script src="angular-mocks/angular-mocks.js"></script>
   <script src="angular-ui-router/release/angular-ui-router.js"></script>
   <script src="app.js"></script>
-  <script src="home/config.js"></script>
-  <script src="profile/config.js"></script>
+  <script src="routes.js"></script>
+  <script src="home/routes.js"></script>
+  <script src="profile/routes.js"></script>
+  <script src="widget-store/routes.js"></script>
+  <script src="admin/routes.js"></script>
+  <script src="logout/routes.js"></script>
   <script src="api/rave-api.js"></script>
   <script src="home/home.js"></script>
   <script src="profile/profile.js"></script>
