@@ -12,6 +12,7 @@
       // the url '/portal' correspond to our home state.
       $stateProvider.state('portal.home', {
           url: '/home',
+          controller: 'homeController',
           templateUrl: 'home/home.html'
         });
       }

@@ -2,6 +2,7 @@
   "globals": {
     "angular" : true,
     "rave"    : true,
+    "api"     : true,
     "_"       : true
   },
 
