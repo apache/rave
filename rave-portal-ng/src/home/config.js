@@ -8,6 +8,7 @@
       // Set up our states
       $stateProvider.state('home', {
           url: '/home',
+          controller: 'homeController',
           templateUrl: 'home/home.html'
         });
       }
