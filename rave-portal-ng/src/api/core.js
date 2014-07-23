@@ -3,6 +3,7 @@ window.api = ( function( window, undefined ) {
 	'use strict';
 	var baseApiUrl = '/api/v1';
 	var registeredApiMethods = {};
+	var storage = {};
 
 	// route conversion utility pulled from backbone:
 	// https://github.com/jashkenas/backbone/blob/master/backbone.js#L1353 and
@@ -70,10 +71,20 @@ window.api = ( function( window, undefined ) {
 		return true;
 	}
 
+	function setStorage(name, value) {
+		storage[name] = value;
+	}
+
+	function getStorage(name) {
+		return storage[name];
+	}
+
 	// expose methods we want publicly available
 	return {
 		initialize: initializeApiModule,
-		register: registerApiMethod
+		register: registerApiMethod,
+		set: setStorage,
+		get: getStorage
 	};
 
 } )( window );
