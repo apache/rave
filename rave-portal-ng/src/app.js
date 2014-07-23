@@ -9,7 +9,8 @@
   // The dependencies of our application
   var raveDependencies = [
     'ui.router',
-    'profile'
+    'profile',
+    'ngMockE2E'
   ];
 
   var rave = angular.module('rave', raveDependencies);
