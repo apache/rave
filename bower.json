@@ -24,6 +24,7 @@
   "dependencies": {
     "angular": "~1.2.20",
     "angular-ui-router": "~0.2.10",
-    "bootstrap": "^2.0"
+    "bootstrap": "^2.0",
+    "angular-mocks": "~1.2.20"
   }
 }
