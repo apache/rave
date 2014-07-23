@@ -6,3 +6,5 @@ target/
 .vagrant/
 node_modules
 bower_components
+rave-portal-ng/dev
+rave-portal-ng/prod
