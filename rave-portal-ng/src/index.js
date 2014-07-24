@@ -17,6 +17,9 @@ define(function(require) {
   require('./profile/index');
   require('./widget-store/index');
 
+  // Our filters
+  require('./filters/start-from');
+
   var angular = require('angular');
 
   // Manually bootstrap the Angular app (necessary because of AMD)

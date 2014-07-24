@@ -1,0 +1,20 @@
+<a ui-sref="portal.admin.categories">« Back to Categories</a>
+<h2>Communications</h2>
+<div class="well">
+  <section>
+    <form id="deleteCategory" action="delete" method="POST">
+      <fieldset>
+        <legend>Delete Communications</legend>
+        <div>
+          <label class="checkbox">
+            <input type="checkbox" name="confirmdelete" id="confirmdelete" value="true">
+            Yes I want to delete this category
+          </label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <button class="btn btn-danger" type="submit" value="Delete Category">Delete Category</button>
+      </fieldset>
+    </form>
+  </section>
+</div>        

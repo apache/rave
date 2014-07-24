@@ -1,0 +1,154 @@
+<a ui-sref="portal.admin.widgets">
+  « Back to widgets
+</a>
+<h2>
+  Activity Stream
+</h2>
+<section class="formbox">
+  <form id="updateWidget" class="form-horizontal" action="update" method="POST">
+    <legend>
+      Edit widget data
+      <div class="control-group pull-right">
+        <div class="controls">
+          <a href="#" class="btn btn-warning storeItemButton" id="fetchMetadataButton">
+            Update widget metadata
+          </a>
+        </div>
+      </div>
+    </legend>
+    <p>
+      Field marked with * are required
+    </p>
+    <div class="control-group">
+      <label for="title" class="control-label">
+        Title *
+      </label>
+      <div class="controls">
+        <input id="title" name="title" class="long" autofocus="autofocus" required="required" type="text" value="Activity Stream">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="url" class="control-label">
+        Location (URL) *
+      </label>
+      <div class="controls">
+        <input type="url" name="url" id="url" placeholder="http://example.com/widget.xml" required="required" class="long" value="https://raw.github.com/OpenSocial/examples/master/gadgets/activitystream/gadget.xml">
+      </div>
+    </div>
+    <div class="control-group">
+        <label for="type1" class="control-label">
+          Type *
+        </label> 
+        <div class="controls">
+          <label for="type1" class="radio">
+            <input id="type1" name="type" type="radio" value="OpenSocial" checked="checked">
+            &nbsp; OpenSocial
+          </label> 
+          <label for="type2" class="radio">
+            <input id="type2" name="type" type="radio" value="W3C">
+            &nbsp; W3C Widget
+          </label>
+        </div>
+    </div>
+    <div class="control-group">
+      <label for="description" class="control-label">
+        Description *
+      </label>
+      <div class="controls">
+        <textarea id="description" name="description" class="long" required="required">
+          OpenSocial Activity Stream gadget with support for Embedded Experiences
+        </textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="featured" class="control-label">
+        Featured
+      </label>
+      <div class="controls">
+        <input id="featured" name="featured" type="checkbox" value="true" checked="checked">
+        <input type="hidden" name="_featured" value="on">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="disableRendering" class="control-label">
+        Disable Widget
+      </label>
+      <div class="controls">
+        <input id="disableRendering" name="disableRendering" type="checkbox" value="true">
+        <input type="hidden" name="_disableRendering" value="on">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="disableRenderingMessage" class="control-label">
+        Disable Widget Message
+      </label>
+      <div class="controls">
+        <input id="disableRenderingMessage" name="disableRenderingMessage" class="long" autofocus="autofocus" type="text" value="">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="widgetStatus" class="control-label">
+        Status
+      </label>
+      <div class="controls">
+        <select id="widgetStatus" name="widgetStatus">
+          <option value="PUBLISHED" selected="selected">PUBLISHED</option>
+          <option value="PREVIEW">PREVIEW</option>
+        </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="categories" class="control-label">Categories:</label>
+        <div class="controls">
+          <select id="categories" name="categories" multiple="multiple" size="10">
+            <option value="5">Communications</option>
+            <option value="2">News</option>
+            <option value="4">Projects</option>
+            <option value="1">Technology</option>
+            <option value="3">Travel</option>
+          </select>
+        <input type="hidden" name="_categories" value="1">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="thumbnailUrl" class="control-label">
+        Thumbnail</label>
+      <div class="controls">
+        <input type="url" name="thumbnailUrl" id="thumbnailUrl" placeholder="http://example.com/thumbnail.png" class="long" value="">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="screenshotUrl" class="control-label">
+        Screenshot
+      </label>
+      <div class="controls">
+        <input type="url" name="screenshotUrl" id="screenshotUrl" placeholder="http://example.com/screenshot.png" class="long" value="">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="titleUrl" class="control-label">
+        URL the widget title links to
+      </label>
+      <div class="controls">
+        <input type="url" name="titleUrl" id="titleUrl" class="long" value="">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="author" class="control-label">Author</label>
+      <div class="controls">
+        <input id="author" name="author" class="long" type="text" value="OpenSocial Foundation">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="authorEmail" class="control-label">
+        Author's email address
+      </label>
+      <div class="controls">
+        <input type="email" name="authorEmail" id="authorEmail" class="long" value="">
+      </div>
+    </div>
+    <fieldset>
+      <button class="btn btn-primary" type="submit" value="Update widget">Update widget</button>
+    </fieldset>
+  </form>
+</section>
