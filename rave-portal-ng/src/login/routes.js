@@ -1,4 +1,5 @@
-(function(rave) {
+define(function(require) {
+  var rave = require('rave');
   rave.config([
     '$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
@@ -9,4 +10,4 @@
       });
     }
   ]);
-})(rave);
+});

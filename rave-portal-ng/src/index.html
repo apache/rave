@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="rave">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -69,39 +69,15 @@
     };
   </script>
 
-  <!-- We should use usemin here to build the concatenated files -->
-  <script src="jquery/dist/jquery.js"></script>
-  <script src="bootstrap/js/bootstrap-affix.js"></script>
-  <script src="bootstrap/js/bootstrap-alert.js"></script>
-  <script src="bootstrap/js/bootstrap-button.js"></script>
-  <script src="bootstrap/js/bootstrap-carousel.js"></script>
-  <script src="bootstrap/js/bootstrap-collapse.js"></script>
-  <script src="bootstrap/js/bootstrap-transition.js"></script>
-  <script src="bootstrap/js/bootstrap-tooltip.js"></script>
-  <script src="bootstrap/js/bootstrap-typeahead.js"></script>
-  <script src="bootstrap/js/bootstrap-tab.js"></script>
-  <script src="bootstrap/js/bootstrap-modal.js"></script>
-  <script src="bootstrap/js/bootstrap-dropdown.js"></script>
-  <script src="bootstrap/js/bootstrap-scrollspy.js"></script>
-  <script src="underscore/underscore.js"></script>
-  <script src="angular/angular.js"></script>
-  <script src="angular-mocks/angular-mocks.js"></script>
-  <script src="angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="app.js"></script>
-  <script src="routes.js"></script>
-  <script src="home/routes.js"></script>
-  <script src="profile/routes.js"></script>
-  <script src="login/routes.js"></script>
-  <script src="widget-store/routes.js"></script>
-  <script src="admin/routes.js"></script>
-  <script src="logout/routes.js"></script>
-  <script src="home/home.js"></script>
-  <script src="profile/profile.js"></script>
+  <!-- Use grunt-preprocess in the future for dev and prod builds -->
+  <script data-main='config/startup', src='requirejs/require.js'></script>
 
   <!-- API modules -->
+  <!-- 
   <script src="core.js"></script>
   <script src="pages/pages.js"></script>
   <script src="login/login.js"></script>
   <script src="status/status.js"></script>
   <script src="bootstrap.js"></script>
+  -->
 </body>

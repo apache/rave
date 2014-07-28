@@ -3,7 +3,9 @@
     "angular" : true,
     "rave"    : true,
     "api"     : true,
-    "_"       : true
+    "_"       : true,
+    "define"  : true,
+    "require" : true
   },
 
   "bitwise"       : true,

@@ -94,6 +94,22 @@ module.exports = function(grunt) {
       }
     },
 
+    // Build our Javascript assets
+    requirejs: {
+      prod: {
+        options: {
+          mainConfigFile: '<%= rave.src %>/config/requirejs.js',
+          name: 'assets/bower_components/almond/almond',
+          out: '<%= rave.prod %>/script.js',
+          paths: {
+            templates: '../client.prod/js/templates'
+          },
+          deps: ['core/index'],
+          insertRequire: ['core/index']
+        }
+      }
+    },
+
     // Serve up our client-side code (for development in lieu of a Java server)
     // Also lets you test the production code, although it is not a replacement
     // for a production server.
@@ -188,7 +204,8 @@ module.exports = function(grunt) {
   grunt.registerTask('build-prod', 'Build a production version of Rave', [
     'jshint:prod',
     'clean:prod',
-    'less:prod'
+    'less:prod',
+    'requirejs'
   ]);
 
   grunt.registerTask('test', 'Lints code and unit tests', [
