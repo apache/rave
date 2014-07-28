@@ -28,6 +28,14 @@ import org.apache.rave.model.Person;
 
 
 public interface PersonRepository extends Repository<Person> {
+
+    /**
+     * Gets a list of all the people
+     *
+     * @return
+     */
+    List<Person> getAll();
+
     /**
      * Gets a user by their username
      *

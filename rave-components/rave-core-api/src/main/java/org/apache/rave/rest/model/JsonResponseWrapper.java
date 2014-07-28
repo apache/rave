@@ -22,17 +22,14 @@ package org.apache.rave.rest.model;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: erinnp
- * Date: 7/19/13
- * Time: 11:37 AM
- * To change this template use File | Settings | File Templates.
- */
 public class JsonResponseWrapper {
 
     private HashMap<String, String> metadata;
     private Object data;
+
+    public JsonResponseWrapper() {
+
+    }
 
     public JsonResponseWrapper(SearchResult searchResult) {
         this.metadata = new HashMap<String, String>();

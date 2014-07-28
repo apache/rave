@@ -305,7 +305,7 @@ public class MongoDbRegionWidgetRepositoryTest {
     }
 
     private Query getQuery(String id) {
-        return new Query(new Criteria().orOperator(where("subPages").elemMatch(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))),where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))));
+        return new Query(new Criteria().orOperator(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id))),where("subPages").elemMatch(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id))))));
     }
 
     @Test

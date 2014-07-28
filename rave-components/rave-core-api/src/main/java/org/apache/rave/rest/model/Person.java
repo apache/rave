@@ -35,12 +35,36 @@ public class Person  implements RestEntity{
     private String displayName;
     @XmlElement(name = "EmailAddress")
     private String emailAddress;
+    @XmlElement(name = "AboutMe")
+    private String aboutMe;
+    @XmlElement(name = "PreferredName")
+    private String preferredName;
+    @XmlElement(name = "Status")
+    private String status;
+    @XmlElement(name = "AdditionalName")
+    private String additionalName;
+    @XmlElement(name = "FamilyName")
+    private String familyName;
+    @XmlElement(name = "GivenName")
+    private String givenName;
+    @XmlElement(name = "HonorificPrefix")
+    private String honorificPrefix;
+    @XmlElement(name = "HonorificSuffix")
+    private String honorificSuffix;
 
     public Person(org.apache.rave.model.Person person) {
         id = person.getId();
         username = person.getUsername();
         displayName = person.getDisplayName();
         emailAddress = person.getEmail();
+        aboutMe = person.getAboutMe();
+        preferredName = person.getPreferredName();
+        status = person.getStatus();
+        additionalName = person.getAdditionalName();
+        familyName = person.getFamilyName();
+        givenName = person.getGivenName();
+        honorificPrefix = person.getHonorificPrefix();
+        honorificSuffix = person.getHonorificSuffix();
     }
 
     public Person() {
@@ -78,6 +102,70 @@ public class Person  implements RestEntity{
         this.emailAddress = emailAddress;
     }
 
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
+    public String getPreferredName() {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName) {
+        this.preferredName = preferredName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAdditionalName() {
+        return additionalName;
+    }
+
+    public void setAdditionalName(String additionalName) {
+        this.additionalName = additionalName;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getGivenName() {
+        return givenName;
+    }
+
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    public String getHonorificPrefix() {
+        return honorificPrefix;
+    }
+
+    public void setHonorificPrefix(String honorificPrefix) {
+        this.honorificPrefix = honorificPrefix;
+    }
+
+    public String getHonorificSuffix() {
+        return honorificSuffix;
+    }
+
+    public void setHonorificSuffix(String honorificSuffix) {
+        this.honorificSuffix = honorificSuffix;
+    }
+
     public void saveToPerson(org.apache.rave.model.Person person) {
         if (person.getId() != null && !person.getId().equals(id)) {
             throw new RuntimeException("You cannot change the ID of a Person object");
@@ -86,6 +174,13 @@ public class Person  implements RestEntity{
         if (username != null)  { person.setUsername(username); }
         if (displayName != null)  { person.setDisplayName(displayName); }
         if (emailAddress != null)  { person.setEmail(emailAddress); }
+        if (aboutMe != null) { person.setAboutMe(aboutMe); }
+        if (preferredName != null) { person.setPreferredName(preferredName); }
+        if (additionalName != null) { person.setAdditionalName(additionalName); }
+        if (familyName != null) { person.setFamilyName(familyName); }
+        if (givenName != null) { person.setGivenName(givenName); }
+        if (honorificPrefix != null) { person.setHonorificPrefix(honorificPrefix); }
+        if (honorificSuffix != null) { person.setHonorificSuffix(honorificSuffix); }
+        if (status != null) { person.setStatus(status); }
     }
-
 }

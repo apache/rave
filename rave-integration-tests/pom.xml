@@ -216,7 +216,7 @@
                                 </includes>
                                 <excludes />
                                 <generateViewAfterStories>true</generateViewAfterStories>
-                                <ignoreFailureInStories>true</ignoreFailureInStories>
+                                <ignoreFailureInStories>false</ignoreFailureInStories>
                                 <ignoreFailureInView>true</ignoreFailureInView>
                                 <metaFilters>
                                     <metaFilter>${meta.filter}</metaFilter>
@@ -232,6 +232,19 @@
         </pluginManagement>
     </build>
     <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>rave-webservice-tests</module>
+                <module>rave-core-tests</module>
+                <module>rave-newuser-tests</module>
+                <module>rave-admin-tests</module>
+                <module>rave-default-account-tests</module>
+            </modules>
+        </profile>
         <profile>
             <id>integration-tests</id>
             <build>
@@ -374,11 +387,11 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>webservice</id>
+            <modules>
+                <module>rave-webservice-tests</module>
+            </modules>
+        </profile>
     </profiles>
-    <modules>
-        <module>rave-core-tests</module>
-        <module>rave-newuser-tests</module>
-        <module>rave-admin-tests</module>
-        <module>rave-default-account-tests</module>
-    </modules>
 </project>
