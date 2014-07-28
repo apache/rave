@@ -100,7 +100,7 @@ module.exports = function(grunt) {
     connect: {
       dev: {
         options: {
-          base: ['<%= rave.bower %>', '<%= rave.dev %>'],
+          base: ['<%= rave.bower %>', '<%= rave.mockAPI %>', '<%= rave.dev %>'],
           livereload: true,
           keepalive: true
         }
