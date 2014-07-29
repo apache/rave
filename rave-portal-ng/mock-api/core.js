@@ -1,9 +1,10 @@
 define(function(require) {
 	'use strict';
 
+	var Storage = require('localStorageDB');
+	var database = new Storage('rave', localStorage);
 	var baseApiUrl = '/api/v1';
 	var registeredApiMethods = {};
-	var storage = {};
 
 	// route conversion utility pulled from backbone:
 	// https://github.com/jashkenas/backbone/blob/master/backbone.js#L1353 and
@@ -71,20 +72,38 @@ define(function(require) {
 		return true;
 	}
 
-	function setStorage(name, value) {
-		storage[name] = value;
+	function setSessionStorage(key, value) {
+		try {
+			value = JSON.stringify(value);
+			sessionStorage.setItem(key, value);
+		} catch (err) {}
 	}
 
-	function getStorage(name) {
-		return storage[name];
+	function getSessionStorage(key) {
+		var data = sessionStorage.getItem(key);
+		try {
+			data = JSON.parse(data);
+		} catch (err) {
+			data = null;
+		}
+
+		return data;
+	}
+
+	function removeSessionStorage(key) {
+		return sessionStorage.removeItem(key);
 	}
 
 	// expose methods we want publicly available
 	return {
 		initialize: initializeApiModule,
 		register: registerApiMethod,
-		set: setStorage,
-		get: getStorage
+		db: database,
+		session: {
+			set: setSessionStorage,
+			get: getSessionStorage,
+			remove: removeSessionStorage
+		}
 	};
 
 });

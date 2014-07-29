@@ -2,50 +2,26 @@ define(function(require) {
 	'use strict';
 
 	var api = require('../core.js');
-	var validLogins = {
-		'carldanley': {
-			id: 1,
-			authLevel: 'admin',
-			password: 'carldanley',
-			name: 'carl'
-		},
-		'jmeas': {
-			id: 34,
-			authLevel: 'admin',
-			password: 'jmeas',
-			name: 'jmeas'
-		}
-	};
 
-	function getSessionData() {
-		var session = api.get('session');
-		if (!session) {
-			session = {
-				authorized: false,
-				user: null,
-				nav: null
-			};
-			api.set('session', session);
+	function retrieveUser(username, password) {
+		var results = api.db.query('users', {
+			username: username,
+			password: password
+		});
+
+		if (results.length === 1) {
+			return results[0];
 		}
 
-		return session;
+		return false;
 	}
 
-	function isValidUser(username, password) {
-		if (!validLogins.hasOwnProperty(username)) {
-			return false;
-		} else if (validLogins[username].password !== password) {
-			return false;
+	function generateSessionToken() {
+		var length = 32, token = '';
+		for (var i = 0; i < length; i++) {
+			token += Math.random().toString(36).substr(2,1);
 		}
-
-		return true;
-	}
-
-	function setCurrentSessionUser( username ) {
-		var session = getSessionData();
-		session.authorized = true;
-		session.user = validLogins[username];
-		api.set('session', session);
+		return token;
 	}
 
 	function processLoginRequest(method, url, data) {
@@ -58,27 +34,38 @@ define(function(require) {
 		// now attempt to login the user
 		if (!data.hasOwnProperty('username') || !data.hasOwnProperty('password')) {
 			return [401,'Missing username and/or password field(s).'];
-		} else if (!isValidUser(data.username, data.password)) {
+		}
+
+		var user = retrieveUser(data.username, data.password);
+		if (!user) {
 			return [401,'Invalid login.'];
 		}
 
-		setCurrentSessionUser(data.username);
-		return [200,getSessionData()];
+		var token = generateSessionToken();
+		api.session.set('token', token);
+		api.session.set('currentUserId', user.id);
+		api.session.set('authorized', true);
+		return [200, {
+			authorized: true,
+			user: {
+				id: user.id,
+				password: user.password,
+				authLevel: 'admin',
+				name: user.nameSeenByOthers
+			}
+		}];
 	}
 
 	function processLogoutRequest(method, url, data) {
 		if (method !== 'POST') {
 			return [405,'Unknown request'];
-		}
-
-		var session = getSessionData();
-		if (!session.authorized) {
+		} else if (!api.session.get('authorized')) {
 			return [200,null];
 		}
 
-		session.authorized = false;
-		session.user = null;
-		api.set('session', session);
+		api.session.set('authorized', false);
+		api.session.remove('token');
+		api.session.remove('currentUserId');
 		return [200,null];
 	}
 
