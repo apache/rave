@@ -1,2 +1,119 @@
-<h1>Widget Store</h1>
-<hr>
+<section class="span8 pagination-header">
+<h2>Showing 1 - 10 of 30 widgets</h2>
+<div class="pagination">
+  <ul>
+    <li class="active"><a href="#">1</a></li>
+    <li><a href="?offset=10&amp;referringPageId=1">2</a></li>
+    <li><a href="?offset=20&amp;referringPageId=1">3</a></li>
+    <li><a href="?offset=10&amp;referringPageId=1">&gt;</a></li>
+  </ul>
+</div>
+  <ul id="storeItems" class="storeItems">
+    <li class="storeItem storeItemFeatured">
+      <div class="widget-title-bar">
+        Activity Stream
+      </div>
+      <div class="storeItemLeft">
+        <div id="widgetAdded_17" class="storeButton">
+          <button class="btn btn-small btn-primary widgetAddButton" id="addWidget_17" data-widget-id="17" data-referring-page-id="1" data-success="Added to Page">
+            Add to Page
+          </button>
+        </div>
+      </div>
+      <div class="storeItemCenter">
+          <h4><a id="widget-17-title" class="secondaryPageItemTitle" href="/portal/app/store/widget/17?referringPageId=1">
+              Activity Stream</a>
+          </h4>
+          <div class="storeWidgetAuthor">Author: OpenSocial Foundation</div>
+          <div class="storeWidgetDesc">OpenSocial Activity Stream gadget with support for Embedded Experiences...</div>
+          <div class="clearfix">
+            <div class="widgetRating">
+              <strong>Rate:</strong>
+              <form class="hidden">
+                <input type="hidden" id="rate-17" value="-1">
+              </form>
+              <div class="ratingCounts">
+                <span class="widgetLikeCount" style="width: 47px;">
+                  <span id="totalLikes-17" data-rave-widget-likes="0">
+                    <span class="like-text">0</span>
+                  </span>
+                  <i class="icon-thumbs-up" title="0&nbsp;people like this widget"></i>
+                </span>
+                <span class="widgetDislikeCount" style="width: 63px;">
+                  <span id="totalDislikes-17" data-rave-widget-dislikes="0">
+                    <span class="dislike-text">0</span>
+                  </span>
+                  <i class="icon-thumbs-down" title="0&nbsp;people dislike this widget"></i>
+                </span>
+              </div>
+              <div id="rating-17" class="ratingButtons" data-toggle="buttons-radio">
+                <button id="like-17" class="widgetLikeButton btn btn-mini " name="rating-17">
+                  I
+                <span>like</span>it</button>
+                <button id="dislike-17" class="widgetDislikeButton btn btn-mini " name="rating-17">
+                  I
+                <span>dislike</span>it</button>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <span class="widgetUserCount">
+            <a href="javascript:void(0);" class="displayUsersLink" data-widget-id="17">
+              1&nbsp;users
+            </a>
+          </span>
+      </div>
+      <div class="clear-float"></div>
+    </li>
+  </ul>
+
+  <div class="pagination">
+    <ul>
+      <li class="active"><a href="#">1</a></li>
+      <li><a href="?offset=10&amp;referringPageId=1">2</a></li>
+      <li><a href="?offset=20&amp;referringPageId=1">3</a></li>
+      <li><a href="?offset=10&amp;referringPageId=1">&gt;</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="span4">
+  <form class="form-inline" action="/portal/app/store/search" method="GET">
+    <fieldset>
+      <legend style="margin-bottom: 0;">Search in widget store</legend>
+      <div class="control-group" style="margin-bottom: 18px;">
+        <div class="input-append">
+          <input type="search" id="searchTerm" name="searchTerm" value="">
+          <button class="btn btn-primary" type="submit" value="Search">Search</button>
+        </div>
+      </div>
+      <legend>Filter Widget Store</legend>
+      <div class="control-group">
+        <label class="control-label" for="categoryList">By Category:</label>
+        <div class="controls">
+          <select name="categoryList" id="categoryList" class="x-large">
+            <option value="0"></option>
+            <option value="5">
+              Communications
+            </option>
+            <option value="2">
+              News
+            </option>
+            <option value="4">
+              Projects
+            </option>
+            <option value="1">
+              Technology
+            </option>
+            <option value="3">
+              Travel
+            </option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  <a href="/portal/app/store/mine?referringPageId=1">My Widgets</a>
+  <br>
+  <a href="/portal/app/store?referringPageId=1">All Widgets</a>
+</section>
