@@ -1,4 +1,7 @@
-(function(window, api, undefined) {
+define(function(require) {
+	'use strict';
+
+	var api = require('../core.js');
 
 	function processPagesRequest(method, url, data) {
 		var responseData = {
@@ -9,4 +12,4 @@
 
 	api.register('/pages', 'get', processPagesRequest);
 
-})(window, api);
+});

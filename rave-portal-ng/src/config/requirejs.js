@@ -8,6 +8,7 @@ require.config({
     jquery: 'jquery/dist/jquery',
     underscore: 'lodash/dist/lodash',
     angular: 'angular/angular',
+    angularMocks: 'angular-mocks/angular-mocks',
     uiRouter: 'angular-ui-router/release/angular-ui-router',
     bootstrap: '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min'
   },
@@ -24,6 +25,9 @@ require.config({
       deps: ['jquery']
     },
     uiRouter: {
+      deps: ['angular']
+    },
+    angularMocks: {
       deps: ['angular']
     }
   }

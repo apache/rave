@@ -3,7 +3,8 @@ define(function(require) {
 
   var raveDependencies = [
     'ui.router',
-    'profile'
+    'profile',
+    'ngMockE2E'
   ];
 
   var rave = angular.module('rave', raveDependencies);
