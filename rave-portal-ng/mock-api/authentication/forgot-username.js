@@ -11,7 +11,7 @@ define(function(require) {
 		data = angular.fromJson(data);
 
 		if (!data.hasOwnProperty('email')) {
-			return [400,'Missing email address field'];
+			return [400, 'Missing email address field'];
 		}
 
 		return [200, 'Email sent'];
