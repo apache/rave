@@ -51,7 +51,6 @@
 			return [405, 'Unknown request'];
 		}
 
-		var session = getSessionData();
 		data = angular.fromJson(data);
 
 		// now attempt to login the user

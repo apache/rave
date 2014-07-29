@@ -9,7 +9,8 @@ module.exports = function(grunt) {
       bower: 'bower_components',
       src: 'rave-portal-ng/src',
       dev: 'rave-portal-ng/dev',
-      prod: 'rave-portal-ng/prod'
+      prod: 'rave-portal-ng/prod',
+      mockAPI: 'rave-portal-ng/mock-api'
     },
 
     // Completely destroys the built version of our app
@@ -39,6 +40,12 @@ module.exports = function(grunt) {
         cwd: '<%= rave.src %>',
         src: ['images/**/*.{jpg,gif,png}'],
         dest: '<%= rave.dev %>'
+      },
+      devMockAPI: {
+        expand: true,
+        cwd: '<%= rave.mockAPI %>',
+        src: ['**/*.js'],
+        dest: '<%= rave.dev %>/api'
       }
     },
 
@@ -55,6 +62,12 @@ module.exports = function(grunt) {
           jshintrc: '.jshintrc-prod'
         },
         src: '<%= rave.src %>/**/*.js'
+      },
+      mockAPI: {
+        options: {
+          jshintrc: '.jshintrc-mock-api'
+        },
+        src: '<%= rave.mockAPI %>/**/*.js'
       },
       tests: {
 
@@ -87,7 +100,7 @@ module.exports = function(grunt) {
     connect: {
       dev: {
         options: {
-          base: ['<%= rave.bower %>', '<%= rave.dev %>'],
+          base: ['<%= rave.bower %>', '<%= rave.mockAPI %>', '<%= rave.dev %>'],
           livereload: true,
           keepalive: true
         }
@@ -118,6 +131,10 @@ module.exports = function(grunt) {
       js: {
         files: ['<%= rave.src %>/**/*.js'],
         tasks: ['jshint:dev', 'copy:devJs']
+      },
+      mockAPI: {
+        files: ['<%= rave.mockAPI %>/**/*.js'],
+        tasks: ['jshint:mockAPI', 'copy:devMockAPI']
       }
     },
 
@@ -159,10 +176,12 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build-dev', 'Build the development version of Rave', [
     'jshint:dev',
+    'jshint:mockAPI',
     'clean:dev',
     'copy:devHtml',
     'copy:devJs',
     'copy:devImg',
+    'copy:devMockAPI',
     'less:dev'
   ]);
 
