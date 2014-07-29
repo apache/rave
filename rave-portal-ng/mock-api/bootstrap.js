@@ -11,7 +11,8 @@ define(function(require) {
 	var api = require( './core.js');
 
 	// The decorator routes
-	require('./login/login.js');
+	require('./authentication/login.js');
+	require('./authentication/logout.js');
 	require('./pages/pages.js');
 	require('./status/status.js');
 
