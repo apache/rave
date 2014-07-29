@@ -14,6 +14,7 @@ define(function(require) {
 	require('./authentication/login.js');
 	require('./authentication/logout.js');
 	require('./authentication/forgot-password.js');
+	require('./authentication/forgot-username.js');
 	require('./pages/pages.js');
 	require('./status/status.js');
 
