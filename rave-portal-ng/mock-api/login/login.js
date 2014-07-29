@@ -1,5 +1,7 @@
-(function(window, api, angular, undefined) {
+define(function(require) {
+	'use strict';
 
+	var api = require('../core.js');
 	var validLogins = {
 		'carldanley': {
 			id: 1,
@@ -83,4 +85,4 @@
 	api.register('/auth/login', 'post', processLoginRequest);
 	api.register('/auth/logout', 'post', processLogoutRequest);
 
-})(window, api, angular);
+});

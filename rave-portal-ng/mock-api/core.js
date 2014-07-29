@@ -1,6 +1,6 @@
-window.api = ( function( window, undefined ) {
-
+define(function(require) {
 	'use strict';
+
 	var baseApiUrl = '/api/v1';
 	var registeredApiMethods = {};
 	var storage = {};
@@ -87,4 +87,4 @@ window.api = ( function( window, undefined ) {
 		get: getStorage
 	};
 
-} )( window );
+});

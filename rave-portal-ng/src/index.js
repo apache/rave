@@ -2,9 +2,13 @@ define(function(require) {
   // Initialize libraries
   require('bootstrap');
   require('uiRouter');
+  require('angularMocks');
 
   // Set up our application
   require('rave');
+
+  // The mock API
+  require('./api/bootstrap');
   
   // The base route
   require('./routes');
