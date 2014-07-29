@@ -14,15 +14,15 @@ define(function(require) {
   require('./routes');
 
   // The individual modules
-  require('./home/index');
-  require('./admin/index');
-  require('./login/index');
-  require('./logout/index');
-  require('./profile/index');
-  require('./widget-store/index');
+  require('./modules/home/index');
+  require('./modules/admin/index');
+  require('./modules/log-in/index');
+  require('./modules/log-out/index');
+  require('./modules/profile/index');
+  require('./modules/widget-store/index');
 
   // Our filters
-  require('./filters/start-from');
+  require('./tools/filters/index');
 
   var angular = require('angular');
 
