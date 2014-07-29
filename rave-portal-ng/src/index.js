@@ -16,8 +16,7 @@ define(function(require) {
   // The individual modules
   require('./modules/home/index');
   require('./modules/admin/index');
-  require('./modules/log-in/index');
-  require('./modules/log-out/index');
+  require('./modules/auth/index');
   require('./modules/profile/index');
   require('./modules/widget-store/index');
 

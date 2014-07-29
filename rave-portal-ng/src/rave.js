@@ -8,8 +8,7 @@ define(function(require) {
     'home',
     'widget-store',
     'profile',
-    'login',
-    'logout',
+    'auth',
     'admin',
     'filters'
   ];

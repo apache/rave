@@ -1,4 +1,5 @@
 define(function(require) {
   var angular = require('angular');
-  return angular.module('logout', []);
+
+  return angular.module('auth', []);
 });

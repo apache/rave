@@ -1,4 +1,4 @@
 define(function(require) {
-  require('./log-in');
+  require('./auth');
   require('./routes');
 });
