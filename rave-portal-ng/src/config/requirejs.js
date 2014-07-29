@@ -10,7 +10,8 @@ require.config({
     angular: 'angular/angular',
     angularMocks: 'angular-mocks/angular-mocks',
     uiRouter: 'angular-ui-router/release/angular-ui-router',
-    bootstrap: '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min'
+    bootstrap: '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min',
+    localStorageDB: 'localStorageDB/localstoragedb'
   },
 
   // load non-amd dependencies
@@ -29,6 +30,9 @@ require.config({
     },
     angularMocks: {
       deps: ['angular']
+    },
+    localStorageDB: {
+      exports: 'localStorageDB'
     }
   }
 });
