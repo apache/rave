@@ -1,16 +1,9 @@
-/*
- * rave
- * This file defines the main module, called rave.
- *
- */
+define(function(require) {
+  var angular = require('angular');
 
-(function() {
-
-  // The dependencies of our application
   var raveDependencies = [
     'ui.router',
-    'profile',
-    'ngMockE2E'
+    'profile'
   ];
 
   var rave = angular.module('rave', raveDependencies);
@@ -20,6 +13,9 @@
     $scope.nav = window._initialData.nav;
   }]);
 
-  // Exposed on the window *only* for debugging purposes.
+  // Exposed on the window *only* for debugging purposes
   window.rave = rave;
-})();
+
+  // Export rave from this module
+  return rave;
+});
