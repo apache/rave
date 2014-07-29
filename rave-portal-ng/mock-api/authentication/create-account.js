@@ -9,10 +9,10 @@ define(function(require) {
 		});
 
 		if (results.length === 0) {
-			return true;
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	function requiredFieldIsMissing(data) {
@@ -41,6 +41,7 @@ define(function(require) {
 			username: data.username,
 			password: data.password,
 			email: data.email,
+			openIdUrl: (data.hasOwnProperty('openIdUrl') ? data.openIdUrl : ''),
 			firstName: (data.hasOwnProperty('firstName') ? data.firstName : ''),
 			lastName: (data.hasOwnProperty('lastName') ? data.lastName : '' ),
 			nameSeenByOthers: (data.hasOwnProperty('nameSeenByOthers') ? data.nameSeenByOthers : ''),
