@@ -1,0 +1,61 @@
+<a ui-sref="portal.admin.users">
+  « Back to users
+</a>
+<h2>canonical</h2>
+<div>
+  <section>
+    <form id="updateUserProfile" class="form-horizontal" action="update" method="POST">
+      <fieldset>
+        <legend>Edit user data</legend>
+        <br>
+        <input id="username" name="username" type="hidden" value="canonical">
+        <div class="control-group">
+          <label class="control-label" for="email">Email address:</label>
+          <div class="controls">
+            <input type="email" name="email" id="email" value="canonical@example.com" class="long">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="openIdField">OpenID URL:</label>
+          <div class="controls">
+            <input type="url" id="openIdField" name="openId" value="" class="long">
+          </div>
+        </div>
+        <div class="control-group">
+          <span class="control-label">Account status:</span>
+          <ul class="checkboxlist">
+            <li>
+              <input id="enabled1" name="enabled" disabled="disabled" type="checkbox" value="true" checked="checked">
+              <label for="enabled1">Account enabled</label>
+            </li>
+            <li>
+              <input id="expired1" name="expired" disabled="disabled" type="checkbox" value="true">
+              <label for="expired1">Account expired</label>
+            </li>
+            <li>
+              <input id="locked1" name="locked" disabled="disabled" type="checkbox" value="true">
+              <label for="locked1">Account locked</label>
+            </li>
+          </ul>
+        </div>
+      </fieldset>
+      <fieldset>
+        <span class="control-label">Authorities:</span>
+        <ul class="checkboxlist">
+          <li>
+            <input id="authorities1" name="authorities" type="checkbox" value="ROLE_USER">
+            <label for="authorities1">ROLE_USER</label>
+          </li>
+          <li>
+            <input id="authorities2" name="authorities" type="checkbox" value="ROLE_ADMIN" checked="checked">
+            <label for="authorities2">ROLE_ADMIN</label>
+          </li>
+        </ul>
+      </fieldset>
+      <fieldset>
+        <button class="btn btn-primary" type="submit" value="Update profile">Update profile</button>
+      </fieldset>
+    </form>
+  </section>
+</div>
+<div class="clear-float"></div>

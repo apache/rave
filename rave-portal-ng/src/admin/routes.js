@@ -4,10 +4,15 @@ define(function(require) {
   rave.config([
     '$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
-      $stateProvider.state('portal.admin', {
-        url: '/app/admin',
-        templateUrl: '/admin/admin.html'
-      });
+      $stateProvider
+        .state('portal.admin', {
+          url: '/app/admin',
+          templateUrl: '/admin/admin.html'
+        })
+        .state('portal.admin.home', {
+          url: '/',
+          templateUrl: '/admin/home/home.html'
+        });
     }
   ]);
 });

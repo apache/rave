@@ -1,2 +1,37 @@
-<h1>Admin</h1>
-<hr>
+<div class="row-fluid">
+  <div class="span2">
+    <nav>
+      <div class="tabbable">
+        <ul class="nav nav-tabs nav-stacked">
+          <li ng-class="{ active: $state.includes('portal.admin.home') }">
+            <a ui-sref="portal.admin.home">
+              Home
+            </a>
+          </li>
+          <li ng-class="{ active: $state.includes('portal.admin.users') }">
+            <a ui-sref="portal.admin.users">
+              Users
+            </a>
+          </li>
+          <li ng-class="{ active: $state.includes('portal.admin.widgets') }">
+            <a ui-sref="portal.admin.widgets">
+              Widgets
+            </a>
+          </li>
+          <li ng-class="{ active: $state.includes('portal.admin.preferences') }">
+            <a ui-sref="portal.admin.preferences">
+              Preferences
+            </a>
+          </li>
+          <li ng-class="{ active: $state.includes('portal.admin.categories') }">
+            <a ui-sref="portal.admin.categories">
+              Categories
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="span10" ui-view>
+  </div>
+</div>
