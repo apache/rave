@@ -6,7 +6,8 @@ define(function(require) {
     function($stateProvider, $urlRouterProvider) {
       $stateProvider.state('portal.forgotPassword', {
         url: '/forgot-password',
-        templateUrl: '/modules/auth/forgot-password/forgot-password.html'
+        templateUrl: '/modules/auth/forgot-password/forgot-password.html',
+        authenticate: 'no'
       });
     }
   ]);

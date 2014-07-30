@@ -6,7 +6,8 @@ define(function(require) {
     function($stateProvider, $urlRouterProvider) {
       $stateProvider.state('portal.createAccount', {
         url: '/create-account',
-        templateUrl: '/modules/auth/create-account/create-account.html'
+        templateUrl: '/modules/auth/create-account/create-account.html',
+        authenticate: 'no'
       });
     }
   ]);
