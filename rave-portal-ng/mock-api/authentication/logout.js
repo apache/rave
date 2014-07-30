@@ -5,9 +5,9 @@ define(function(require) {
 
 	function processLogoutRequest(method, url, data) {
 		if (method !== 'POST') {
-			return [405,'Unknown request'];
+			return [405, 'Unknown request'];
 		} else if (!api.session.get('authorized')) {
-			return [200,null];
+			return [200, null];
 		}
 
 		api.session.set('authorized', false);
