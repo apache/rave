@@ -6,7 +6,8 @@ define(function(require) {
     function($stateProvider, $urlRouterProvider) {
       $stateProvider.state('portal.widgetStore', {
         url: '/app/widget-store',
-        templateUrl: '/modules/widget-store/widget-store.html'
+        templateUrl: '/modules/widget-store/widget-store.html',
+        authenticate: true
       });
     }
   ]);

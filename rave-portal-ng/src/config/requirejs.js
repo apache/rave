@@ -11,7 +11,8 @@ require.config({
     angularMocks: 'angular-mocks/angular-mocks',
     uiRouter: 'angular-ui-router/release/angular-ui-router',
     bootstrap: '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min',
-    localStorageDB: 'localStorageDB/localstoragedb'
+    localStorageDB: 'localStorageDB/localstoragedb',
+    angularCookies: 'angular-cookies/angular-cookies'
   },
 
   // load non-amd dependencies
@@ -29,6 +30,9 @@ require.config({
       deps: ['angular']
     },
     angularMocks: {
+      deps: ['angular']
+    },
+    angularCookies: {
       deps: ['angular']
     },
     localStorageDB: {

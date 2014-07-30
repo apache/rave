@@ -7,11 +7,13 @@ define(function(require) {
       $stateProvider
         .state('portal.admin.categories', {
           url: '/app/admin/categories',
-          templateUrl: '/modules/admin/categories/categories.html'
+          templateUrl: '/modules/admin/categories/categories.html',
+          authenticate: true
         })
         .state('portal.admin.categories.category', {
           url: '/app/admin/categories/category',
-          templateUrl: '/modules/admin/categories/category/category.html'
+          templateUrl: '/modules/admin/categories/category/category.html',
+          authenticate: true
         });
     }
   ]);

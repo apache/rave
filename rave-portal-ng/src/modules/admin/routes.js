@@ -7,11 +7,13 @@ define(function(require) {
       $stateProvider
         .state('portal.admin', {
           url: '/app/admin',
-          templateUrl: '/modules/admin/admin.html'
+          templateUrl: '/modules/admin/admin.html',
+          authenticate: true
         })
         .state('portal.admin.home', {
           url: '/',
-          templateUrl: '/modules/admin/home/home.html'
+          templateUrl: '/modules/admin/home/home.html',
+          authenticate: true
         });
     }
   ]);

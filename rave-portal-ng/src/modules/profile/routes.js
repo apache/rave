@@ -7,7 +7,8 @@ define(function(require) {
       // Our profile states
       $stateProvider.state('portal.profile', {
         url: '/profile',
-        templateUrl: '/modules/profile/profile.html'
+        templateUrl: '/modules/profile/profile.html',
+        authenticate: true
       });
     }
   ]);

@@ -7,11 +7,13 @@ define(function(require) {
       $stateProvider
         .state('portal.admin.preferences', {
           url: '/app/admin/preferences',
-          templateUrl: '/modules/admin/preferences/preferences.html'
+          templateUrl: '/modules/admin/preferences/preferences.html',
+          authenticate: true
         })
         .state('portal.admin.preferences.detail', {
           url: '/app/admin/preferences/detail',
-          templateUrl: '/modules/admin/preferences/detail/detail.html'
+          templateUrl: '/modules/admin/preferences/detail/detail.html',
+          authenticate: true
         });
     }
   ]);

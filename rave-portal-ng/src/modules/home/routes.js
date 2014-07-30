@@ -11,10 +11,11 @@ define(function(require) {
       // to our abstract base state. This makes
       // the url '/portal' correspond to our home state.
       $stateProvider.state('portal.home', {
-          url: '/home',
-          controller: 'homeController',
-          templateUrl: '/modules/home/home.html'
-        });
-      }
+        url: '/home',
+        controller: 'homeController',
+        templateUrl: '/modules/home/home.html',
+        authenticate: true
+      });
+    }
   ]);
 });

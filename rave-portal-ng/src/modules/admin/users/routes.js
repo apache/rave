@@ -8,6 +8,7 @@ define(function(require) {
         .state('portal.admin.users', {
           url: '/app/admin/users',
           templateUrl: '/modules/admin/users/users.html',
+          authenticate: true,
           controller: function($scope) {
             $scope.currentPage = 0;
             $scope.listSize = 5;
@@ -36,7 +37,8 @@ define(function(require) {
         })
         .state('portal.admin.users.detail', {
           url: '/app/admin/users/detail-:id',
-          templateUrl: '/modules/admin/users/detail/detail.html'
+          templateUrl: '/modules/admin/users/detail/detail.html',
+          authenticate: true
         });
     }
   ]);

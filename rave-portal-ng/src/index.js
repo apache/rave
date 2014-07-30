@@ -3,7 +3,8 @@ define(function(require) {
   require('bootstrap');
   require('uiRouter');
   require('angularMocks');
-
+  require('angularCookies');
+  
   // Set up our application
   require('rave');
 
