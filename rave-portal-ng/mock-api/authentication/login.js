@@ -33,7 +33,7 @@ define(function(require) {
 
 		// now attempt to login the user
 		if (!data.hasOwnProperty('username') || !data.hasOwnProperty('password')) {
-			return [401,'Missing username and/or password field(s).'];
+			return [401,'Missing username and/or password field(s)'];
 		}
 
 		var user = retrieveUser(data.username, data.password);
