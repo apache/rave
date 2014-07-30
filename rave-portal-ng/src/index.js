@@ -3,7 +3,8 @@ define(function(require) {
   require('bootstrap');
   require('uiRouter');
   require('angularMocks');
-
+  require('angularCookies');
+  
   // Set up our application
   require('rave');
 
@@ -14,15 +15,14 @@ define(function(require) {
   require('./routes');
 
   // The individual modules
-  require('./home/index');
-  require('./admin/index');
-  require('./login/index');
-  require('./logout/index');
-  require('./profile/index');
-  require('./widget-store/index');
+  require('./modules/home/index');
+  require('./modules/admin/index');
+  require('./modules/auth/index');
+  require('./modules/profile/index');
+  require('./modules/widget-store/index');
 
   // Our filters
-  require('./filters/start-from');
+  require('./tools/filters/index');
 
   var angular = require('angular');
 

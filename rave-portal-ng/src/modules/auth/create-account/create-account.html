@@ -1,0 +1,106 @@
+<div class="row-fluid">
+  <a ui-sref="portal.login">« Return to Login</a>
+  <h1>Create New Account</h1>
+  <!-- Login information (required) -->
+  <div class="well">
+    <h2>
+      Enter Login Information
+    </h2>
+    <form id="newAccountForm" class="form-horizontal" action="newaccount" method="POST">
+      <fieldset>
+        <p>All fields are required.</p>
+        <div class="control-group">
+          <label class="control-label" for="userNameField">Username:</label>
+          <div class="controls">
+            <input id="userNameField" name="username" autofocus="autofocus" autocorrect="off" required="required" autocapitalize="off" type="text" value="" class="valid">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="passwordField">Password:</label>
+          <div class="controls">
+            <input id="passwordField" name="password" required="required" type="password" value="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="passwordConfirmField">Confirm password:</label>
+          <div class="controls">
+            <input id="passwordConfirmField" name="confirmPassword" required="required" type="password" value="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="emailField">Email address:</label>
+          <div class="controls">
+            <input type="email" id="emailField" name="email" required="required" value="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="openIdField">OpenID URL:</label>
+          <div class="controls">
+            <input id="openIdField" name="openId" type="text" value="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="pageLayoutField">Select Page Layout:</label>
+          <div class="controls">
+            <select id="pageLayoutField" name="defaultPageLayoutCode">
+              <option id="columns_1_id" value="columns_1">One Column</option>
+              <option id="columns_2_id" value="columns_2">Two Columns</option>
+              <option id="columns_2wn_id" value="columns_2wn">Two Columns (wide/narrow)</option>
+              <option id="columns_3_id" value="columns_3">Three Columns</option>
+              <option id="columns_3nwn_id" value="columns_3nwn">Three Columns (narrow/wide/narrow)</option>
+              <option id="columns_4_id" value="columns_4">Four Columns</option>
+              <option id="columns_3nwn_1_bottom" value="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="control-group">
+          <div class="controls"></div>
+        </div>
+      </fieldset>
+      <h2>Enter Personal Information (optional)</h2>
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label" for="firstNameField">First Name:</label>
+          <div class="controls">
+            <input id="firstNameField" name="givenName" type="text" value="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="lastNameField">Last Name:</label>
+          <div class="controls">
+            <input id="lastNameField" name="familyName" type="text" value="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="displayNameField">Name seen by other users:</label>
+          <div class="controls">
+            <input id="displayNameField" name="displayName" type="text" value="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="statusField">Relationship Status:</label>
+          <div class="controls">
+            <select id="statusField" name="status">
+              <option id="single_id" value="Single">Single</option>
+              <option id="committed_id" value="Committed">Committed</option>
+              <option id="married_id" value="Married">Married</option>
+              <option id="other_id" value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="aboutMeField">Describe Yourself:</label>
+          <div class="controls">
+            <textarea id="aboutMeField" name="aboutMe"></textarea>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <input type="hidden" name="referringPageId" value="">
+        <button class="btn btn-primary" type="submit" value="Create Account">Create Account</button>
+      </fieldset>
+    </form>
+  </div>
+</div>

@@ -21,7 +21,8 @@
           <span class="brand">&nbsp;</span>
           <div class="nav-collapse">
             <ul class="nav pull-right">
-              <li ng-repeat="item in nav"><a ui-sref="{{ item.state }}">{{ item.name }}</a></li>
+              <li ng-if="authenticated" ng-repeat="item in nav" ng-cloak><a ui-sref="{{ item.state }}">{{ item.name }}</a></li>
+              <li ng-if="!authenticated" ng-repeat="item in loginNav" ng-cloak><a ui-sref="{{ item.state }}">{{ item.name }}</a></li>
             </ul>
           </div>
         </div>
@@ -65,7 +66,21 @@
         {
           state: 'portal.logout',
           name: 'Logout'
+        }
+      ],
+      loginNav: [
+        {
+          state: 'portal.forgotPassword',
+          name: 'Forgot password'
         },
+        {
+          state: 'portal.forgotUsername',
+          name: 'Forgot username'
+        },
+        {
+          state: 'portal.createAccount',
+          name: 'Create Account'
+        }
       ]
     };
   </script>
