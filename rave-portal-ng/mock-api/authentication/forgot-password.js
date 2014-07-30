@@ -16,7 +16,7 @@ define(function(require) {
 	}
 
 	function processForgotPasswordRequest(method, url, data) {
-		if (method !== 'GET') {
+		if (method !== 'POST') {
 			return [405, 'Unknown request'];
 		}
 
@@ -31,6 +31,6 @@ define(function(require) {
 		return [200, 'Email sent'];
 	}
 
-	api.register('/auth/forgot-password', 'get', processForgotPasswordRequest);
+	api.register('/auth/forgot-password', 'post', processForgotPasswordRequest);
 
 });
