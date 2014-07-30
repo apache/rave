@@ -17,19 +17,20 @@ define(function(require) {
   // It only checks on the first request to save on bandwidth.
   // One day we'll make an HTTP request in here
   auth.factory('authenticated', [
-    'authToken', '$cookies',
-    function(authToken, $cookies) {
+    '$rootScope', 'authToken', '$cookies',
+    function($rootScope, authToken, $cookies) {
+      var authenticated = false;
+
+      $rootScope.authenticated = authenticated;
 
       // For now, we're always authenticated. How nice!
       // In the future, it will destroy the token if we're not
-      // authorized.
-      if (false) {
+      // authenticated.
+      if (!authenticated) {
         $cookies.raveToken = null;
-        return false;
-      } else {
-        return true;
       }
 
+      return authenticated;
     }
   ]);
 

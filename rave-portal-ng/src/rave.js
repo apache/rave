@@ -20,6 +20,7 @@ define(function(require) {
     function($scope, $state, $stateParams) {
     $scope.user = window._initialData.user;
     $scope.nav = window._initialData.nav;
+    $scope.loginNav = window._initialData.loginNav;
 
     // The ui-router doesn't do everything, unfortunately. So we need to
     // store our state data so we can make new directives for it.
