@@ -19,7 +19,7 @@ define(function(require) {
   auth.factory('authenticated', [
     '$rootScope', 'authToken', '$cookies',
     function($rootScope, authToken, $cookies) {
-      var authenticated = false;
+      var authenticated = true;
 
       $rootScope.authenticated = authenticated;
 
@@ -41,7 +41,7 @@ define(function(require) {
 
       // Intercept every $stateChangeStart event.
       $rootScope.$on('$stateChangeStart', function(event, toState, toParams){
-        if (toState.authenticate && !authenticated){
+        if (toState.authenticate && !authenticated) {
 
           // Store their attempted state in a cache.
           // This way, once they log in we can redirect them to
@@ -55,7 +55,15 @@ define(function(require) {
           $state.transitionTo('portal.login');
 
           // Finally, prevent the intended state change
-          event.preventDefault(); 
+          event.preventDefault();
+        } else if (toState.authenticate === 'no' && authenticated) {
+
+          // Redirect them the home page if they're logged in
+          // already
+          $state.transitionTo('portal.home');
+
+          // Finally, prevent the intended state change
+          event.preventDefault();
         }
       });
     }

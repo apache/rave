@@ -7,7 +7,8 @@ define(function(require) {
       $stateProvider
         .state('portal.login', {
           url: '/login',
-          templateUrl: '/modules/auth/login.html'
+          templateUrl: '/modules/auth/login.html',
+          authenticate: 'no'
         })
         .state('portal.logout', {
           url: '/logout',
