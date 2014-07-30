@@ -14,13 +14,6 @@ define(function(require) {
   // The base route
   require('./routes');
 
-  // The individual modules
-  require('./modules/home/index');
-  require('./modules/admin/index');
-  require('./modules/auth/index');
-  require('./modules/profile/index');
-  require('./modules/widget-store/index');
-
   // Our filters
   require('./tools/filters/index');
 

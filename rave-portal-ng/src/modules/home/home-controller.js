@@ -1,4 +1,6 @@
 define(function(require) {
+  require('./home');
+  
   var angular = require('angular');
 
   angular.module('home').controller('homeController', function($http) {

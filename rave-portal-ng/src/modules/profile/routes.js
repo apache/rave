@@ -1,4 +1,6 @@
 define(function(require) {
+  require('./profile');
+  
   var angular = require('angular');
   
   angular.module('profile').config([

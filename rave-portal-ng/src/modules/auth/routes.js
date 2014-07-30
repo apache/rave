@@ -1,4 +1,6 @@
 define(function(require) {
+  require('./auth');
+  
   var angular = require('angular');
 
   angular.module('auth').config([

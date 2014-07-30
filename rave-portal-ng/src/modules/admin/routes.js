@@ -1,4 +1,5 @@
 define(function(require) {
+  require('./admin');
   var angular = require('angular');
 
   angular.module('admin').config([

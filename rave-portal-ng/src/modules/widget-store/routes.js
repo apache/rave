@@ -1,4 +1,6 @@
 define(function(require) {
+  require('./widget-store');
+  
   var angular = require('angular');
   
   angular.module('widget-store').config([
