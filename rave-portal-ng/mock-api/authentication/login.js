@@ -51,7 +51,8 @@ define(function(require) {
 				id: user.id,
 				password: user.password,
 				authLevel: 'admin',
-				name: user.nameSeenByOthers
+				name: user.nameSeenByOthers,
+				token: token
 			}
 		}];
 	}

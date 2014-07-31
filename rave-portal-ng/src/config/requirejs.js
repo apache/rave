@@ -3,7 +3,6 @@ require.config({
 
   // map bower components to nice paths
   paths: {
-    // bower components
     rave: 'rave',
     jquery: 'jquery/dist/jquery',
     underscore: 'lodash/dist/lodash',
@@ -12,7 +11,8 @@ require.config({
     uiRouter: 'angular-ui-router/release/angular-ui-router',
     bootstrap: '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min',
     localStorageDB: 'localStorageDB/localstoragedb',
-    angularCookies: 'angular-cookies/angular-cookies'
+    angularCookies: 'angular-cookies/angular-cookies',
+    angularResource: 'angular-resource/angular-resource'
   },
 
   // load non-amd dependencies
@@ -33,6 +33,9 @@ require.config({
       deps: ['angular']
     },
     angularCookies: {
+      deps: ['angular']
+    },
+    angularResource: {
       deps: ['angular']
     },
     localStorageDB: {
