@@ -24,6 +24,17 @@ define(function(require) {
 		return token;
 	}
 
+	function updateUserSessionToken(userID, token) {
+		var searchParams = {
+			id: userID
+		};
+		api.db.update('users', searchParams, function(row) {
+			row.sessionToken = token;
+			return row;
+		});
+		api.db.commit();
+	}
+
 	function processLoginRequest(method, url, data) {
 		if (method !== 'POST') {
 			return [405, 'Unknown request'];
@@ -41,15 +52,15 @@ define(function(require) {
 			return [401, 'Invalid login.'];
 		}
 
+		// update the user's token in the database
 		var token = generateSessionToken();
-		api.session.set('token', token);
-		api.session.set('currentUserId', user.id);
-		api.session.set('authorized', true);
+		updateUserSessionToken(user.id, token);
+
+		// return a record for the user
 		return [200, {
 			authorized: true,
 			user: {
 				id: user.id,
-				password: user.password,
 				authLevel: 'admin',
 				name: user.nameSeenByOthers,
 				token: token

@@ -12,7 +12,8 @@ define(function(require) {
 			'lastName': 'Danley',
 			'nameSeenByOthers': 'Carl',
 			'relationshipStatus': 'Single',
-			'description': 'I like JS.'
+			'description': 'I like JS.',
+			'sessionToken': ''
 		},
 		{
 			'id': 34,
@@ -24,7 +25,8 @@ define(function(require) {
 			'lastName': 'Smith',
 			'nameSeenByOthers': 'James',
 			'relationshipStatus': 'Single',
-			'description': 'I like JS.'
+			'description': 'I like JS.',
+			'sessionToken': ''
 		}
 	];
 });
