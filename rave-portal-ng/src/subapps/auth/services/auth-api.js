@@ -10,7 +10,7 @@
 
 define(function(require) {
   var auth = require('../auth');
-  require('./api-routes');
+  require('./auth-api-routes');
 
   auth.factory('authApi', [
     '$http', 'authApiRoutes',

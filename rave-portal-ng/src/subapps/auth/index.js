@@ -7,7 +7,16 @@ define(function(require) {
   require('./services/location-cache');
   require('./services/auth-cache');
   require('./services/auth-api');
-  require('./services/api-routes');
+  require('./services/auth-api-base');
+  require('./services/auth-api-routes');
+
+  require('./forgot-password/providers/forgot-password-api-routes');
+  require('./forgot-password/providers/forgot-password-api');
+  require('./forgot-password/controllers/forgot-password');
+
+  require('./forgot-username/providers/forgot-username-api-routes');
+  require('./forgot-username/providers/forgot-username-api');
+  require('./forgot-username/controllers/forgot-username');
   
   require('./route-intercept');
   require('./routes');

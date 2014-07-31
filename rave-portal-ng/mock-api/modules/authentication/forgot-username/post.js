@@ -3,6 +3,18 @@ define(function(require) {
 
 	var api = require('../../../core.js');
 
+	function userExists(email) {
+		var results = api.db.query('users', {
+			email: email
+		});
+
+		if (results.length === 1) {
+			return true;
+		}
+
+		return false;
+	}
+
 	function processForgotUsernameRequest(method, url, data) {
 		if (method !== 'POST') {
 			return [405, 'Unknown request'];
@@ -12,6 +24,8 @@ define(function(require) {
 
 		if (!data.hasOwnProperty('email')) {
 			return [400, 'Missing email address field'];
+		} else if (!userExists(data.email)) {
+			return [422, 'User with that email does not exist'];
 		}
 
 		return [200, 'Email sent'];
