@@ -3,7 +3,7 @@ define(function(require) {
   require('bootstrap');
   require('uiRouter');
   require('angularMocks');
-  require('angularCookies');
+  require('angularCookie');
   require('angularResource');
   
   // Set up our application

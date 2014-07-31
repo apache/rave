@@ -75,7 +75,7 @@ define(function(require) {
               var user = res.data.user;
               $rootScope.authenticated = true;
               authCache.put('verified', true);
-              authToken.set(user.token);
+              authToken.set(user.token, credentials.remember);
 
               var toState = locationCache.get('toState') || 'portal.home';
               var toParams = locationCache.get('toParams') || undefined;
@@ -88,7 +88,6 @@ define(function(require) {
 
         // Logs us out.
         logout: function() {
-          authApi.logout();
           $rootScope.authenticated = false;
           authCache.put('verified', false);
           authToken.destroy();
