@@ -12,7 +12,6 @@ define(function(require) {
 
 	// The decorator routes:
 	require('./modules/authentication/login/post.js');
-	require('./modules/authentication/logout/post.js');
 	require('./modules/authentication/verify/post.js');
 	require('./modules/authentication/forgot-password/post.js');
 	require('./modules/authentication/forgot-username/post.js');
