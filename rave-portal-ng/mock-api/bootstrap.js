@@ -5,20 +5,20 @@ define(function(require) {
 	require('rave');
 
 	// setup the mocked database
-	require('./install-database.js');
+	require('./database/install.js');
 
 	// The core API
 	var api = require( './core.js');
 
-	// The decorator routes
-	require('./authentication/login.js');
-	require('./authentication/logout.js');
-	require('./authentication/verify.js');
-	require('./authentication/forgot-password.js');
-	require('./authentication/forgot-username.js');
-	require('./authentication/create-account.js');
-	require('./pages/pages.js');
-	require('./status/status.js');
+	// The decorator routes:
+	require('./modules/authentication/login/post.js');
+	require('./modules/authentication/logout/post.js');
+	require('./modules/authentication/verify/post.js');
+	require('./modules/authentication/forgot-password/post.js');
+	require('./modules/authentication/forgot-username/post.js');
+	require('./modules/authentication/create-account/post.js');
+	require('./modules/pages/get.js');
+	require('./modules/status/get.js');
 
 	// bootstrap the API
 	rave.run(api.initialize);

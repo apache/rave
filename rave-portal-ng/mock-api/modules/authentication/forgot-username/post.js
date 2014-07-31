@@ -1,7 +1,7 @@
 define(function(require) {
 	'use strict';
 
-	var api = require('../core.js');
+	var api = require('../../../core.js');
 
 	function processForgotUsernameRequest(method, url, data) {
 		if (method !== 'POST') {
