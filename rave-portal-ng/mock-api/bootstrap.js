@@ -13,6 +13,7 @@ define(function(require) {
 	// The decorator routes
 	require('./authentication/login.js');
 	require('./authentication/logout.js');
+	require('./authentication/verify.js');
 	require('./authentication/forgot-password.js');
 	require('./authentication/forgot-username.js');
 	require('./authentication/create-account.js');

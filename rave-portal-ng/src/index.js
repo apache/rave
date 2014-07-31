@@ -4,6 +4,7 @@ define(function(require) {
   require('uiRouter');
   require('angularMocks');
   require('angularCookies');
+  require('angularResource');
   
   // Set up our application
   require('rave');
@@ -14,8 +15,9 @@ define(function(require) {
   // The base route
   require('./routes');
 
-  // Our filters
-  require('./tools/filters/index');
+  // Our things
+  require('./providers/filters/index');
+  require('./providers/values/api-route');
 
   var angular = require('angular');
 

@@ -1,12 +1,12 @@
 define(function(require) {
   var angular = require('angular');
 
-  // The individual modules
-  require('./modules/home/index');
-  require('./modules/admin/index');
-  require('./modules/auth/index');
-  require('./modules/profile/index');
-  require('./modules/widget-store/index');
+  // The individual subapps
+  require('./subapps/home/index');
+  require('./subapps/admin/index');
+  require('./subapps/auth/index');
+  require('./subapps/profile/index');
+  require('./subapps/widget-store/index');
 
   var raveDependencies = [
     'ui.router',
