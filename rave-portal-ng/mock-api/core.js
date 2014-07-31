@@ -25,7 +25,6 @@ define(function(require) {
 	}
 
 	function initializeApiModule($httpBackend) {
-
 		function registerRouteMethods(routeData) {
 			var pattern = routeData.pattern;
 			var methods = routeData.methods;

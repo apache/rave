@@ -5,7 +5,6 @@ require.config({
   paths: {
     rave: 'rave',
     jquery: 'jquery/dist/jquery',
-    underscore: 'lodash/dist/lodash',
     angular: 'angular/angular',
     angularMocks: 'angular-mocks/angular-mocks',
     uiRouter: 'angular-ui-router/release/angular-ui-router',

@@ -1,7 +1,7 @@
 define(function(require) {
 	'use strict';
 
-	var api = require('../core.js');
+	var api = require('../../../core.js');
 
 	function userExists(email) {
 		var results = api.db.query('users', {
