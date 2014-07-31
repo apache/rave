@@ -1,24 +1,28 @@
-<div class="row-fluid">
+<div class="row-fluid" ng-controller="forgotUsernameController">
   <a ui-sref="portal.login">« Return to Login</a>
   <h1>Request username</h1>
-  <form id="user" class="form-horizontal well" action="newpassword" method="post">
+  <form id="user" name="requestUsernameForm" class="form-horizontal well" ng-if="!success" ng-submit="submit(email)">
     <fieldset>
       <div class="control-group">
-        <label class="control-label" for="emailField">Email address:</label>
+        <label class="control-label" for="email">Email address:</label>
         <div class="controls">
-          <input type="email" name="email" id="emailField" required="required" autofocus="autofocus" value="">
+          <input type="email" name="email" id="email" autofocus="autofocus" ng-model="email" required>
+          <div ng-show="submitted && requestUsernameForm.email.$error.required">
+            An email is required.
+          </div>
         </div>
       </div>
     </fieldset>
     <fieldset>
-      <div class="control-group">
-        <div class="controls"></div>
-      </div>
-    </fieldset>
-    <fieldset>
-      <button type="submit" class="btn btn-primary" value="Request new password">
+      <button class="btn btn-primary" ng-click="submitted=true">
         Request username
       </button>
+      <div ng-show="invalid">
+        No user with that email exists.
+      </div>
     </fieldset>
   </form>
+  <div ng-if="success">
+    An email was sent to {{ email }} that includes your username.
+  </div>
 </div>

@@ -1,18 +1,17 @@
 /*
- * api-routes
+ * auth-api-routes
  * Defines our API routes in a single location.
  *
  */
 
 define(function(require) {
   var auth = require('../auth');
-
-  var AUTH_BASE = 'auth/';
+  require('./auth-api-base');
 
   auth.factory('authApiRoutes', [
-    'apiRoute',
-    function(apiRoute) {
-      var base = apiRoute + AUTH_BASE;
+    'apiRoute', 'authApiBase',
+    function(apiRoute, authApiBase) {
+      var base = apiRoute + authApiBase;
       return {
         login: base + 'login',
         logout: base + 'logout',
