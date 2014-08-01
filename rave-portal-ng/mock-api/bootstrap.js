@@ -36,6 +36,13 @@ define(function(require) {
 	require('./modules/category/put.js');
 	require('./modules/category/delete.js');
 
+	// preferences
+	require('./modules/preferences/get.js');
+
+	// preference
+	require('./modules/preference/get.js');	
+	require('./modules/preference/put.js');	
+
 	// pages
 	require('./modules/pages/get.js');
 

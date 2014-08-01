@@ -26,7 +26,7 @@ define(function(require) {
 		}
 
 		// attempt to parse the category ID
-		var categoryID = parseInt( url.replace( '/api/v1/category/', '' ), 10 );
+		var categoryID = parseInt(url.replace('/api/v1/category/', ''), 10);
 		if (!_.isNumber(categoryID) || _.isNaN(categoryID)) {
 			return [400, 'Invalid category ID'];
 		}

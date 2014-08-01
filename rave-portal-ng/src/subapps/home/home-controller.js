@@ -7,11 +7,13 @@ define(function(require) {
     /*
     var data = {
     	headers: {
-    		'Authorization': 'Basic p996b5k20s9dywdaipjenfddynnu55tl'
+    		'Authorization': 'Basic 9pe3labzk09v718atvivjnmy8b513k4u'
     	},
-      data: {},
-      url: '/api/v1/category/6',
-      method: 'DELETE'
+      data: {
+        values: 20
+      },
+      url: '/api/v1/preference/pageSize',
+      method: 'PUT'
     };
     $http(data).then( function(data, responseCode, headers, config) {
       console.log('data', data);

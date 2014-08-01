@@ -9,7 +9,8 @@ define(function(require) {
 	var database = new Storage('rave', localStorage);
 	var dataImport = {
 		users: require('./import-data/users.js'),
-		categories: require( './import-data/categories.js' )
+		categories: require( './import-data/categories.js' ),
+		preferences: require( './import-data/preferences.js' )
 	};
 
 	function importTables() {
