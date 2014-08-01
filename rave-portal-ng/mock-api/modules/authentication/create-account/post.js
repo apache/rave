@@ -15,10 +15,23 @@ define(function(require) {
 		return true;
 	}
 
+	function emailAlreadyExists(email) {
+		var results = api.db.query('users', {
+			email: email
+		});
+
+		if (results.length === 0) {
+			return false;
+		}
+
+		return true;
+	}
+
 	function requiredFieldIsMissing(data) {
 		var requiredFields = [
 			'username',
 			'password',
+			'confirmPassword',
 			'email'
 		];
 		for (var i = 0, len = requiredFields.length; i < len; i++) {
@@ -69,9 +82,19 @@ define(function(require) {
 		// now make sure this username doesn't exist
 		if (usernameAlreadyExists(data.username)) {
 			return [422, 'Username is not available'];
-		} else if (data.password.length < 8) {
+		}
+
+		// now make sure this username doesn't exist
+		else if (emailAlreadyExists(data.email)) {
+			return [422, 'Email is not available'];
+		}
+
+		// else...
+		else if (data.password.length < 8) {
 			return [422, 'Password is not long enough'];
-		} else if (!isValidEmail(data.email)) {
+		}
+
+		else if (!isValidEmail(data.email)) {
 			return [422, 'Email address is not valid'];
 		}
 

@@ -1,7 +1,10 @@
 define(function(require) {
   require('./auth');
 
+  require('./directives/password-check');
+
   require('./controllers/login-form');
+
   require('./services/security');
   require('./services/auth-token');
   require('./services/location-cache');
@@ -17,6 +20,10 @@ define(function(require) {
   require('./forgot-username/providers/forgot-username-api-routes');
   require('./forgot-username/providers/forgot-username-api');
   require('./forgot-username/controllers/forgot-username');
+
+  require('./create-account/providers/create-account-api-routes');
+  require('./create-account/providers/create-account-api');
+  require('./create-account/controllers/create-account');
   
   require('./route-intercept');
   require('./routes');

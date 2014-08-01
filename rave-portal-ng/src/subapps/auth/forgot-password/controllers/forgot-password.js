@@ -9,11 +9,6 @@ define(function(require) {
       // We call this method when they submit the form.
       $scope.submit = function(email) {
 
-        // Do nothing if they haven't included an email.
-        if (!email) {
-          return;
-        }
-
         forgotPasswordApi.forgotPassword(email)
 
           .then(function(res) {
