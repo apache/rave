@@ -5,7 +5,8 @@
     "api"     : true,
     "_"       : true,
     "define"  : true,
-    "require" : true
+    "require" : true,
+    "moment"  : true
   },
 
   "bitwise"       : true,
@@ -54,8 +55,8 @@
   "shadow"        : false,
   "sub"           : false,
   "supernew"      : false,
-  "validthis"     : false,
   "noyield"       : false,
+  "validthis"     : true,
 
   "browser"       : true,
   "couch"         : false,

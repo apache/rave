@@ -36,7 +36,7 @@ define(function(require) {
 		return [200, {
 			authorized: true,
 			user: {
-				id: user.id,
+				id: user.ID,
 				authLevel: 'admin',
 				name: user.nameSeenByOthers
 			}
