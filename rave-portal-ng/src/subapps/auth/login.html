@@ -14,7 +14,7 @@
       <form class="form well span6" name="loginForm" ng-controller="loginController" ng-submit="submit(credentials)">
         <div class="row-fluid">
           <div class="control-group span12" ng-class="{error: submitted && loginForm.username.$error.required}">
-            <label for="username">First Name</label>
+            <label for="username">Username</label>
             <input id="username" type="text" class="input-block-level" name="username" autofocus="autofocus" autocapitalize="off" autocorrect="off" ng-model="credentials.username" required>
             <div class="help-inline" ng-show="submitted && loginForm.username.$error.required">
               A username is required.
@@ -49,10 +49,10 @@
           </div>
         </div>
       </form>
-      <form class="form well span6">
+      <form class="form well span6" name="openIdLoginForm" ng-submit="submit(credentials)" action="j_spring_openid_security_check" method="post">
         <div class="row-fluid">
           <div class="control-group span12">
-            <label for="first-name">First Name</label>
+            <label for="first-name">Identity</label>
             <input id="first-name" type="text" class="input-block-level">
           </div>
         </div>
@@ -65,7 +65,9 @@
           </div>
         </div>
         <div class="form-actions">
+          <div class="control-group">
             <input class="btn btn-primary" name="commit" type="submit">
+          </div>
         </div>
       </form>
     </div>
