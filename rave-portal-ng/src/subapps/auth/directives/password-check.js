@@ -7,11 +7,12 @@ define(function(require) {
       require: 'ngModel',
       link: function (scope, elem, attrs, ctrl) {
         var firstPasswordEl = $('#' + attrs.pwCheck);
-        var els = $(elem).add(firstPasswordEl);
+        elem = $(elem);
+        var els = elem.add(firstPasswordEl);
         els.on('keyup', function () {
           scope.$apply(function () {
             var validity;
-            if (!firstPasswordEl.val()) {
+            if (!firstPasswordEl.val() || !elem.val()) {
               validity = true;
             } else {
               validity = elem.val() === firstPasswordEl.val();
