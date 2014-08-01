@@ -35,7 +35,8 @@
     "angular-mocks": "~1.2.20",
     "almond": "~0.2.9",
     "requirejs": "~2.1.14",
-    "localStorageDB": "knadh/localStorageDB"
+    "localStorageDB": "knadh/localStorageDB",
+    "moment": "~2.8.0"
   },
   "resolutions": {
     "angular": "1.2.21"

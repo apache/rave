@@ -11,7 +11,8 @@ require.config({
     bootstrap: '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min',
     localStorageDB: 'localStorageDB/localstoragedb',
     angularResource: 'angular-resource/angular-resource',
-    angularCookie: 'angular-cookie/angular-cookie'
+    angularCookie: 'angular-cookie/angular-cookie',
+    moment: 'moment'
   },
 
   // load non-amd dependencies

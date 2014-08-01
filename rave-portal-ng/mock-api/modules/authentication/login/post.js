@@ -24,9 +24,9 @@ define(function(require) {
 		return token;
 	}
 
-	function updateUserSessionToken(userID, token) {
+	function updateUserSessionToken(username, token) {
 		var searchParams = {
-			id: userID
+			username: username
 		};
 		api.db.update('users', searchParams, function(row) {
 			row.sessionToken = token;
@@ -54,13 +54,13 @@ define(function(require) {
 
 		// update the user's token in the database
 		var token = generateSessionToken();
-		updateUserSessionToken(user.id, token);
+		updateUserSessionToken(user.username, token);
 
 		// return a record for the user
 		return [200, {
 			authorized: true,
 			user: {
-				id: user.id,
+				id: user.ID,
 				authLevel: 'admin',
 				name: user.nameSeenByOthers,
 				token: token

@@ -3,7 +3,6 @@ define(function(require) {
 
 	return [
 		{
-			'id': 1,
 			'username': 'carldanley',
 			'password': 'carldanley',
 			'email': 'carl@bocoup.com',
@@ -13,10 +12,21 @@ define(function(require) {
 			'nameSeenByOthers': 'Carl',
 			'relationshipStatus': 'Single',
 			'description': 'I like JS.',
-			'sessionToken': ''
+			'sessionToken': '',
 		},
 		{
-			'id': 34,
+			'username': 'admin',
+			'password': 'admin',
+			'email': 'admin@admin.com',
+			'openIdUrl': '',
+			'firstName': 'Admin',
+			'lastName': 'Admin',
+			'nameSeenByOthers': 'Admin',
+			'relationshipStatus': 'Single',
+			'description': 'I\'m a BOSS.',
+			'sessionToken': '',
+		},
+		{
 			'username': 'jmeas',
 			'password': 'jmeas',
 			'email': 'james@bocoup.com',

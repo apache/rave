@@ -54,6 +54,44 @@ define(function(require) {
 		$httpBackend.whenJSONP(matchAllRegex).passThrough();
 	}
 
+	function buildApiScope(method, url, data, headers) {
+
+		function requestHasToken() {
+			if (!headers.Authorization) {
+				return false;
+			}
+
+			var token = headers.Authorization.replace( 'Basic ', '' );
+			if (token.length !== 32) {
+				return false;
+			}
+
+			return true;
+		}
+
+		function getCurrentUserFromToken() {
+			if (!requestHasToken(headers)) {
+				return false;
+			}
+
+			var searchParams = {
+				sessionToken: headers.Authorization.replace( 'Basic ', '' )
+			};
+			var results = database.query('users', searchParams);
+			if (results.length === 1) {
+				return results[0];
+			}
+
+			return false;
+		}
+
+		return {
+			requestHasToken: requestHasToken(),
+			userIsAuthenticated: ((getCurrentUserFromToken() !== false) ? true : false),
+			currentUser: getCurrentUserFromToken()
+		};
+	}
+
 	function registerApiMethod(route, method, callback) {
 		if (!(/^(get|delete|post|put|jsonp)$/.test(method.toLowerCase()))) {
 			throw new Error('Invalid API method.');
@@ -67,7 +105,14 @@ define(function(require) {
 				methods: {}
 			};
 		}
-		registeredApiMethods[route].methods[method.toUpperCase()] = callback;
+
+		// this is a really convenient hack to ensure that every HTTP callback
+		// gets our utility methods for authentication
+		var moddedCallback = function(method, url, data, headers) {
+			var scope = buildApiScope(method, url, data, headers);
+			return callback.bind(scope)(method, url, data, headers);
+		};
+		registeredApiMethods[route].methods[method.toUpperCase()] = moddedCallback;
 		return true;
 	}
 

@@ -4,8 +4,20 @@ define(function(require) {
   var angular = require('angular');
 
   angular.module('home').controller('homeController', function($http) {
-    // $http.get('/api/v1/status').success( function(data, responseCode, headers, config) {
-    //   console.log('got data for /status', data);
-    // });
+    /*
+    var data = {
+    	headers: {
+    		'Authorization': 'Basic p996b5k20s9dywdaipjenfddynnu55tl'
+    	},
+      data: {},
+      url: '/api/v1/category/6',
+      method: 'DELETE'
+    };
+    $http(data).then( function(data, responseCode, headers, config) {
+      console.log('data', data);
+    }).catch( function(err) {
+      console.log('err', err);
+    } );
+    */
   });
 });
