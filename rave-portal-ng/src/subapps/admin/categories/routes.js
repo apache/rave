@@ -12,7 +12,7 @@ define(function(require) {
           authenticate: true
         })
         .state('portal.admin.categories.category', {
-          url: '/categories/category',
+          url: '/categories/category-:id',
           templateUrl: '/subapps/admin/categories/category/category.html',
           authenticate: true
         });

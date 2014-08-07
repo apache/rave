@@ -24,7 +24,7 @@ define(function(require) {
 		api.db.update('categories', searchParams, function(row) {
 			row.text = text;
 			row.lastModifiedUserId = userID;
-			row.lastModifiedDate = moment().format('YYYY-MM-DD hh:mm:ss');
+			row.lastModifiedDate = moment().format();
 			return row;
 		});
 		api.db.commit();
