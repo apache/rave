@@ -3,32 +3,38 @@ define(function(require) {
 
 	return [
 		{
-			'key': 'titleSuffix',
-			'values': [ ' - Rave' ]
+			key: 'titleSuffix',
+      value: ' - Rave'
 		},
+
 		{
-			'key': 'pageSize',
-			'values': [ 10 ]
+			key: 'pageSize',
+      value: 10
 		},
+
 		{
-			'key': 'defaultWidgetHeight',
-			'values': [ 250 ]
+			key: 'defaultWidgetHeight',
+      value: 250
 		},
+
 		{
-			'key': 'javaScriptDebugMode',
-			'values': [ 1 ]
+			key: 'showStackTrace',
+      value: 0
 		},
+
 		{
-			'key': 'showStackTrace',
-			'values': [ 1 ]
+			key: 'javascriptDebugMode',
+      value: 0
 		},
+
 		{
-			'key': 'initialWidgetStatus',
-			'values': [ 'PREVIEW' ]
+			key: 'initialWidgetStatus',
+			value: 'preview'
 		},
+
 		{
-			'key': 'externalMarketplaceUrl',
-			'values': [ '' ]
+			key: 'externalMarketplaceUrl',
+			value: ''
 		}
 	];
 });

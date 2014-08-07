@@ -1,7 +1,7 @@
 define(function(require) {
 
   // The API endpoint for categories
-  var URL = '/api/v1/categories';
+  var URL = '/api/v1/preferences';
 
   // Return the categories resource
   return ['$resource', 'authToken',
@@ -11,16 +11,15 @@ define(function(require) {
     };
 
     return $resource(URL, {}, {
-      save: {
-        method: 'POST',
+      get: {
+        method: 'GET',
         headers: authHeader
       },
 
-      query: {
-        method: 'GET',
-        isArray: true,
+      update: {
+        method: 'PUT',
         headers: authHeader
-      }
+      },
     });
   }];
 });

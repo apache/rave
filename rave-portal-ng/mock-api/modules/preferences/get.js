@@ -6,13 +6,13 @@ define(function(require) {
 
 	function getPreferences() {
 		var results = api.db.query('preferences');
-		results = _.map(results, function(item) {
-			if (item.values.length === 1) {
-				item.values = item.values[0];
-			}
-			return item;
+		var preferences = {};
+
+		_.each(results, function(item) {
+			preferences[item.key] = item.value;
 		});
-		return results;
+
+		return preferences;
 	}
 
 	function processRequest(method, url, data, headers) {

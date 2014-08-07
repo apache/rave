@@ -3,6 +3,7 @@ define(function(require) {
 
   var admin = angular.module('admin', ['ngResource']);
 
+  // Categories
   var categoriesResource = require('./categories/resources/categories');
   admin.factory('categoriesResource', categoriesResource);
 
@@ -14,6 +15,13 @@ define(function(require) {
 
   var categoryCtrl = require('./categories/controllers/category');
   admin.controller('categoryCtrl', categoryCtrl);
+
+  // Preferences
+  var preferencesResource = require('./preferences/resources/preferences');
+  admin.factory('preferencesResource', preferencesResource);
+
+  var preferencesCtrl = require('./preferences/controllers/preferences');
+  admin.controller('preferencesCtrl', preferencesCtrl);
 
   return admin;
 });
