@@ -1,6 +1,7 @@
 define(function(require) {
   require('../admin');
   var angular = require('angular');
+  var preferencesCtrl = require('./controllers/preferences');
 
   angular.module('admin').config([
     '$stateProvider', '$urlRouterProvider',
@@ -9,7 +10,8 @@ define(function(require) {
         .state('portal.admin.preferences', {
           url: '/preferences',
           templateUrl: '/subapps/admin/preferences/preferences.html',
-          authenticate: true
+          authenticate: true,
+          controller: preferencesCtrl
         });
     }
   ]);
