@@ -1,20 +1,14 @@
-<a ui-sref="portal.admin.categories">« Back to Categories</a>
-<h2>Communications</h2>
-<div class="well">
-  <section>
-    <form id="deleteCategory" action="delete" method="POST">
-      <fieldset>
-        <legend>Delete Communications</legend>
-        <div>
-          <label class="checkbox">
-            <input type="checkbox" name="confirmdelete" id="confirmdelete" value="true">
-            Yes I want to delete this category
-          </label>
-        </div>
-      </fieldset>
-      <fieldset>
-        <button class="btn btn-danger" type="submit" value="Delete Category">Delete Category</button>
-      </fieldset>
-    </form>
-  </section>
-</div>        
+<div ng-controller="categoryCtrl">
+  <a ui-sref="portal.admin.categories">« Back to Categories</a>
+  <h2>Category – "{{ category.text }}"</h2>
+  <div class="well">
+    <section>
+      <label for="text">Name: </label>
+      <input id="text" name="text" type="text" ng-model="text">
+      <br><br>
+      <button class="btn" ng-click="onSave()">Save</button>
+      <button class="btn btn-danger" ng-click="onDelete()">Delete</button>
+    </section>
+  </div>  
+</div>
+      

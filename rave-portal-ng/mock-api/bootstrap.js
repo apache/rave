@@ -38,10 +38,7 @@ define(function(require) {
 
 	// preferences
 	require('./modules/preferences/get.js');
-
-	// preference
-	require('./modules/preference/get.js');	
-	require('./modules/preference/put.js');	
+	require('./modules/preferences/put.js');
 
 	// pages
 	require('./modules/pages/get.js');

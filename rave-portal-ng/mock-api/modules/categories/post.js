@@ -16,17 +16,22 @@ define(function(require) {
 		return false;
 	}
 
-	function createCategory(text, userID) {
+	function createCategory(text, user) {
 		var newData = {
 			text: text,
-			createdUserId: userID,
-			createdDate: moment().format('YYYY-MM-DD hh:mm:ss'),
-			lastModifiedUserId: userID,
-			lastModifiedDate: moment().format('YYYY-MM-DD hh:mm:ss')
+			createdUserId: user.ID,
+			createdUserName: user.username,
+			createdDate: moment().format(),
+			lastModifiedUserId: user.ID,
+			lastModifiedUserName: user.username,
+			lastModifiedDate: moment().format()
 		};
 		api.db.insert('categories', newData);
 		api.db.commit();
-		return newData;
+		var result = api.db.query('categories', {
+			text: text
+		});
+		return result[0];
 	}
 
 	function processRequest(method, url, data, headers) {
@@ -50,7 +55,7 @@ define(function(require) {
 			return [409, 'This category already exists'];
 		}
 
-		return [200, createCategory(data.text, this.currentUser.ID)];
+		return [200, createCategory(data.text, this.currentUser)];
 	}
 
 	api.register('/categories', 'post', processRequest);

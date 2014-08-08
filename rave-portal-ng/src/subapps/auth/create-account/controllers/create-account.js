@@ -12,7 +12,6 @@ define(function(require) {
         createAccountApi.createAccount(accountInfo)
 
           .then(function(res) {
-            console.log('success');
             $scope.invalid = false;
             $scope.success = true;
             $scope.username = accountInfo.username;
