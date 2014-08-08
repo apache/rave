@@ -1,52 +1,62 @@
 <article ui-view>
-  <h2>
-    Showing {{ firstItem() }} - {{ lastItem() }} of {{ users.length }} results
-  </h2>
-  <div class="searchHeading paginationHeading">
-    <div class="pagination">
+  <div ng-controller="usersCtrl">
+    <h2>
+      Showing {{ firstItem() }} - {{ lastItem() }} of {{ users.length }} results
+    </h2>
+    <div class="searchHeading paginationHeading">
+      <div class="pagination">
       <ul>
-        <li class="active"><a href="#">1</a></li>
-        <li><a href="?offset=10&amp;referringPageId=1">2</a></li>
-        <li><a href="?offset=20&amp;referringPageId=1">3</a></li>
-        <li><a href="?offset=10&amp;referringPageId=1">&gt;</a></li>
+        <li ng-class="prevPageDisabled()">
+          <a ui-sref="portal.admin.users({page:currentPage-1})">&lt;</a>
+        </li>
+        <li ng-repeat="n in paginationPages(currentPage, pageCount)" ng-class="{ active: n == currentPage }">
+          <a ui-sref="portal.admin.users({page:n})">{{ n }}</a>
+        </li>
+        <li ng-class="nextPageDisabled()">
+          <a ui-sref="portal.admin.users({page:currentPage+1})">&gt;</a>
+        </li>
       </ul>
     </div>
-    <form class="form-horizontal search-form" action="/portal/app/admin/users/search" method="get">
-      <fieldset>
-        <div class="input-append">
-          <input class="input-medium" type="search" id="searchTerm" name="searchTerm" value="" placeholder="Search Users">
-          <button class="btn btn-primary" type="submit" value="Search">Search</button>
-        </div>
-      </fieldset>
-    </form>
-  </div>
-  <table class="table table-striped table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Account Enabled</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="user in users | startFrom:currentPage*listSize | limitTo:listSize">
-        <td>
-          <a ui-sref="portal.admin.users.detail({id: {{ user.id }}})">
-            {{ user.name }}
-          </a>
-        </td>
-        <td>OpenSocial</td>
-        <td>published</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="pagination">
+      <form class="form-horizontal search-form" action="/portal/app/admin/users/search" method="get">
+        <fieldset>
+          <div class="input-append">
+            <input class="input-medium" type="search" id="searchTerm" name="searchTerm" value="" placeholder="Search Users">
+            <button class="btn btn-primary" type="submit" value="Search">Search</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Account Enabled</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in users">
+          <td>
+            <a ui-sref="portal.admin.users.detail">
+              Username
+            </a>
+          </td>
+          <td>OpenSocial</td>
+          <td>published</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
     <ul>
-      <li class="active"><a href="#">1</a></li>
-      <li><a href="?offset=10&amp;referringPageId=1">2</a></li>
-      <li><a href="?offset=20&amp;referringPageId=1">3</a></li>
-      <li><a href="?offset=10&amp;referringPageId=1">&gt;</a></li>
+      <li ng-class="prevPageDisabled()">
+        <a ui-sref="portal.admin.users({page:currentPage-1})">&lt;</a>
+      </li>
+      <li ng-repeat="n in paginationPages(currentPage, pageCount)" ng-class="{ active: n == currentPage }">
+        <a ui-sref="portal.admin.users({page:n})">{{ n }}</a>
+      </li>
+      <li ng-class="nextPageDisabled()">
+        <a ui-sref="portal.admin.users({page:currentPage+1})">&gt;</a>
+      </li>
     </ul>
   </div>
-
 </article>

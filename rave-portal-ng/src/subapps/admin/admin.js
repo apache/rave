@@ -1,7 +1,13 @@
 define(function(require) {
-  var angular = require('angular');
+  var ng = require('angular');
+  require('../../providers/pagination/pagination');
 
-  var admin = angular.module('admin', ['ngResource']);
+  var adminDependencies = [
+    'ngResource',
+    'pagination'
+  ];
+
+  var admin = ng.module('admin', adminDependencies);
 
   // Categories
   var categoriesResource = require('./categories/resources/categories');
@@ -22,6 +28,10 @@ define(function(require) {
 
   var preferencesCtrl = require('./preferences/controllers/preferences');
   admin.controller('preferencesCtrl', preferencesCtrl);
+
+  // Users
+  var usersCtrl = require('./users/controllers/users');
+  admin.controller('usersCtrl', usersCtrl);
 
   return admin;
 });

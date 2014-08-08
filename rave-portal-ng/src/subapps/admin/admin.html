@@ -9,12 +9,12 @@
             </a>
           </li>
           <li ng-class="{ active: $state.includes('portal.admin.users') }">
-            <a ui-sref="portal.admin.users">
+            <a ui-sref="portal.admin.users({page:1})">
               Users
             </a>
           </li>
           <li ng-class="{ active: $state.includes('portal.admin.widgets') }">
-            <a ui-sref="portal.admin.widgets">
+            <a ui-sref="portal.admin.widgets({page:1})">
               Widgets
             </a>
           </li>
