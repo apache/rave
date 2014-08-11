@@ -224,7 +224,8 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         List<PageUser> members = trustedPage.getMembers();
         if (members != null) {
             for (PageUser pageUser : members){
-                if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
+                User user = userRepository.get(pageUser.getUserId());
+                if (user != null && user.getUsername().equals(viewer)){
                     log.info("User "+viewer+" is a member of page "+trustedPage.getId());
                     if(checkEditorStatus){
                         log.info("checking editor:"+trustedPage.getId()+"@"+viewer+"@"+pageUser.isEditor());
