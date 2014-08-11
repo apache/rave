@@ -328,8 +328,9 @@ public class DefaultPageService implements PageService {
         return pageRepository.save(page);
     }
 
+    @Override
     @Transactional
-    public Boolean clonePageForUser(String pageId, String userId, String pageName) {
+    public Page clonePageForUser(String pageId, String userId, String pageName) {
         Page page = getPage(pageId);
         if(pageName == null || pageName.equals("null")){
             // try to use the original page name if none supplied
@@ -363,16 +364,16 @@ public class DefaultPageService implements PageService {
             }
         }
         clonedPage = getFromRepository(clonedPage.getId(), pageRepository);
+        if (clonedPage.getSubPages() == null) {
+            // Subpages should always be a list (even an empty one)
+            clonedPage.setSubPages(new ArrayList<Page>());
+        }
         clonedPage.setProperties(page.getProperties());
         // newly created page - so only one pageUser
         PageUser pageUser = clonedPage.getMembers().get(0);
         // update status to pending
         pageUser.setPageStatus(PageInvitationStatus.PENDING);
-        if(pageRepository.save(clonedPage) != null){
-            return Boolean.TRUE;
-        }else{
-            return Boolean.FALSE;
-        }
+        return pageRepository.save(clonedPage);
     }
 
     @Transactional

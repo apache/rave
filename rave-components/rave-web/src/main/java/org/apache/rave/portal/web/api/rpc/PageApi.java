@@ -264,10 +264,10 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/clone", method = RequestMethod.POST)
-    public RpcResult<Boolean> clonePageForUser(@PathVariable final String pageId, @RequestParam final String userId, @RequestParam final String pageName) {
-        return new RpcOperation<Boolean>() {
+    public RpcResult<Page> clonePageForUser(@PathVariable final String pageId, @RequestParam final String userId, @RequestParam final String pageName) {
+        return new RpcOperation<Page>() {
              @Override
-             public Boolean execute() {
+             public Page execute() {
                return pageService.clonePageForUser(pageId, userId, pageName);
              }
         }.getResult();

@@ -46,6 +46,7 @@ import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Before;
@@ -1452,5 +1453,45 @@ public class DefaultPageServiceTest {
         replay(pageRepository,regionWidgetRepository);
 
         pageService.moveRegionWidgetToPage(VALID_REGION_WIDGET_ID, TO_PAGE_ID);
+    }
+
+    @Test
+    public void clonePage_noRegions() {
+        PageLayout layout = new PageLayoutImpl("foobar");
+        layout.setNumberOfRegions(0L);
+        layout.setRenderSequence(1L);
+        page.setPageLayout(layout);
+        page.setRegions(new ArrayList<Region>());
+        page.setSubPages(new ArrayList<Page>());
+
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(pageRepository.get(PAGE_ID)).andReturn(page);
+        List<Page> pages = Lists.newLinkedList();
+        pages.add(page);
+        expect(pageRepository.getAllPagesForUserType(user.getId(), "user")).andReturn(pages);
+        final Capture<Page> pageCapture = new Capture<Page>();
+        expect(pageRepository.save(capture(pageCapture))).andAnswer(new IAnswer<Page>() {
+            @Override
+            public Page answer() throws Throwable {
+                Page savedPage = (Page) EasyMock.getCurrentArguments()[0];
+                savedPage.setId("42");
+                return savedPage;
+            }
+        }).anyTimes();
+        expect(pageRepository.get("42")).andAnswer(new IAnswer<Page>() {
+            @Override
+            public Page answer() throws Throwable {
+                return pageCapture.getValue();
+            }
+        });
+
+        expect(pageLayoutRepository.getByPageLayoutCode("foobar")).andReturn(layout);
+        expect(userService.getUserById(user.getId())).andReturn(user);
+        replay(pageLayoutRepository, pageRepository, userService);
+
+        Page clonedPage = pageService.clonePageForUser(PAGE_ID, user.getId(), null);
+        assertEquals("ID matches", "42", clonedPage.getId());
+        assertEquals("Owner ID is set", user.getId(), clonedPage.getOwnerId());
+        assertEquals("Layout is set", "foobar", clonedPage.getPageLayout().getCode());
     }
 }
