@@ -206,7 +206,8 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         String viewer = ((User)authentication.getPrincipal()).getUsername();
         do {
             for (PageUser pageUser:containerPage.getMembers()){
-                if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
+                User user = userRepository.get(pageUser.getUserId());
+                if (user != null && user.getUsername().equals(viewer)){
                     log.info("User "+viewer+" is a member of page "+containerPage.getId());
                     if(checkEditorStatus){
                         return pageUser.isEditor();
