@@ -46,6 +46,7 @@ public class Region  implements RestEntity{
         this.locked = source.isLocked();
         this.regionWidgets = createRegionWidgets(source);
         this.id = source.getId();
+        this.properties = source.getProperties();
     }
 
     public boolean isLocked() {
