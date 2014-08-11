@@ -76,7 +76,8 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
             " locked: %10$s," +
             " hideChrome: %11$s," +
             " subPage: {id: %12$s, name: '%13$s', isDefault: %14$s}," +
-            " properties: %15$s" +
+            " properties: %15$s," +
+            " regionProperties: %16$s," +
             "})});</script>";
     private static final String MARKUP = "<!-- RegionWidget '%1$s' placeholder -->";
 
@@ -157,7 +158,8 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
                 pageId,
                 pageName,
                 isDefault,
-                JsonUtils.stringify(widget.getProperties())
+                JsonUtils.stringify(widget.getProperties()),
+                JsonUtils.stringify(item.getRegion().getProperties()),
                 );
     }
 

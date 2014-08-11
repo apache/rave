@@ -24,6 +24,7 @@ import org.apache.rave.model.RegionWidget;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.util.List;
+import java.util.Map;
 
 public class RegionImpl implements Region {
     private String id;
@@ -31,6 +32,7 @@ public class RegionImpl implements Region {
     private Boolean locked = false;
     private Integer renderOrder = 0;
     private List<RegionWidget> regionWidgets;
+    private Map<String, Object> properties;
 
     public RegionImpl() {
 
@@ -94,6 +96,16 @@ public class RegionImpl implements Region {
     @Override
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return this.properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     @Override

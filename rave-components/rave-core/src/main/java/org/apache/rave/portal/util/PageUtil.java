@@ -82,6 +82,7 @@ public class PageUtil {
             region.setPage(page);
             region.setLocked(ptr.isLocked());
             region.setRegionWidgets(convertWidgets(ptr.getPageTemplateWidgets(), region, createIds));
+            region.setProperties(ptr.getProperties());
             regions.add(region);
         }
         return regions;

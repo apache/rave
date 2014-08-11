@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.common.collect.Maps;
 import org.apache.rave.model.Page;
 import org.apache.rave.model.Region;
 import org.apache.rave.model.RegionWidget;
@@ -33,6 +34,7 @@ import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A region of a page, which can contain widget instances {@link RegionWidget}
@@ -190,6 +192,16 @@ public class JpaRegion implements BasicEntity, Serializable, Region {
     @Override
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return Maps.newHashMap();
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        // TODO: Implement this
     }
 
     @Override
