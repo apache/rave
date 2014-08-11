@@ -299,7 +299,7 @@ public interface PageService {
      * @param pageName = name of the page
      * @return true or false whether the user was added
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'read')")
     Boolean clonePageForUser(String pageId, String userId, String pageName);
 
     /**
