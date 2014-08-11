@@ -1,11 +1,15 @@
-define(function(require) {
-  require('./home');
-  
-  var angular = require('angular');
+/*
+ * routes
+ * Routes for this subapp. Rave uses the Angular-UI UI-Router
+ * library for routing, so be sure to familiarize yourself
+ * with that library.
+ *
+ */
 
-  angular.module('home').config([
-    '$stateProvider', '$urlRouterProvider',
+define(function(require) {
+  return ['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
+
       // Make this our default route
       $urlRouterProvider.otherwise('/portal/home');
 
@@ -14,10 +18,9 @@ define(function(require) {
       // the url '/portal' correspond to our home state.
       $stateProvider.state('portal.home', {
         url: '/home',
-        controller: 'homeController',
-        templateUrl: '/subapps/home/home.html',
+        templateUrl: '/subapps/home/templates/home.html',
         authenticate: true
       });
     }
-  ]);
+  ];
 });

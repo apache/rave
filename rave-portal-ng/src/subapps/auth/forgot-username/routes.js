@@ -1,15 +1,17 @@
-define(function(require) {
-  require('../auth');
-  var angular = require('angular');
+/*
+ * routes
+ * The Angular UI-Router states for this section of the application.
+ *
+ */
 
-  angular.module('auth').config([
-    '$stateProvider', '$urlRouterProvider',
+define(function(require) {
+  return ['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
       $stateProvider.state('portal.forgotUsername', {
         url: '/forgot-username',
-        templateUrl: '/subapps/auth/forgot-username/forgot-username.html',
+        templateUrl: '/subapps/auth/forgot-username/templates/forgot-username.html',
         authenticate: 'no'
       });
     }
-  ]);
+  ];
 });

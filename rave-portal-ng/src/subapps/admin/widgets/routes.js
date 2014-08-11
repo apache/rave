@@ -1,14 +1,18 @@
-define(function(require) {
-  require('../admin');
-  var angular = require('angular');
+/*
+ * routes
+ * Routes for this subapp. Rave uses the Angular-UI UI-Router
+ * library for routing, so be sure to familiarize yourself
+ * with that library.
+ *
+ */
 
-  angular.module('admin').config([
-    '$stateProvider', '$urlRouterProvider',
+define(function(require) {
+  return ['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
       $stateProvider
         .state('portal.admin.widgets', {
           url: '/widgets',
-          templateUrl: '/subapps/admin/widgets/widgets.html',
+          templateUrl: '/subapps/admin/widgets/templates/widgets.html',
           authenticate: true,
           controller: function($scope) {
             $scope.currentPage = 0;
@@ -40,9 +44,9 @@ define(function(require) {
         })
         .state('portal.admin.widgets.detail', {
           url: '/widgets/detail-:id',
-          templateUrl: '/subapps/admin/widgets/detail/detail.html',
+          templateUrl: '/subapps/admin/widgets/templates/detail.html',
           authenticate: true
         });
     }
-  ]);
+  ];
 });

@@ -1,37 +1,42 @@
+/*
+ * routes
+ * The containing module for the admin section of Rave.
+ *
+ */
+
 define(function(require) {
   var ng = require('angular');
+
+  // Our dependencies
+  require('uiRouter');
   require('../../providers/pagination/pagination');
 
+  // Our sub-subapps
+  var categories = require('./categories/categories');
+  var home = require('./home/home');
+  var preferences = require('./preferences/preferences');
+  var widgets = require('./widgets/widgets');
+  var users = require('./users/users');
+
+  // An array of our dependencies for Angular's DI
   var adminDependencies = [
+    'ui.router',
     'ngResource',
-    'pagination'
+    'pagination',
+    preferences.name,
+    categories.name,
+    home.name,
+    widgets.name,
+    users.name
   ];
 
+  // Create our admin subapp as a module
   var admin = ng.module('admin', adminDependencies);
 
-  // Categories
-  var categoriesResource = require('./categories/resources/categories');
-  admin.factory('categoriesResource', categoriesResource);
+  // Register our routes
+  var routes = require('./routes');
+  admin.config(routes);
 
-  var categoryResource = require('./categories/resources/category');
-  admin.factory('categoryResource', categoryResource);
-
-  var categoriesCtrl = require('./categories/controllers/categories');
-  admin.controller('categoriesCtrl', categoriesCtrl);
-
-  var categoryCtrl = require('./categories/controllers/category');
-  admin.controller('categoryCtrl', categoryCtrl);
-
-  // Preferences
-  var preferencesResource = require('./preferences/resources/preferences');
-  admin.factory('preferencesResource', preferencesResource);
-
-  var preferencesCtrl = require('./preferences/controllers/preferences');
-  admin.controller('preferencesCtrl', preferencesCtrl);
-
-  // Users
-  var usersCtrl = require('./users/controllers/users');
-  admin.controller('usersCtrl', usersCtrl);
-
+  // Export the admin module
   return admin;
 });

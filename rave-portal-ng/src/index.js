@@ -1,28 +1,28 @@
+/*
+ * index
+ * Bootstraps our app, loading libraries (like Bootstrap) that aren't Angular modules,
+ * but need to be booted up separately.
+ * It also pulls in the Rave Angular module and manually bootstraps it.
+ *
+ */
+
 define(function(require) {
-  // Initialize libraries
+
+  // Initialize any non-Angular Javascript libraries here
   require('bootstrap');
-  require('uiRouter');
-  require('angularMocks');
-  require('angularCookie');
-  require('angularResource');
   
-  // Set up our application
+  // Create our application
   require('rave');
 
-  // The mock API
+  // Load the mock API (development only)
   require('./api/bootstrap');
   
-  // The base route
-  require('./routes');
-
   // Our things
   require('./providers/filters/index');
-  require('./providers/values/api-route');
-
-  var angular = require('angular');
 
   // Manually bootstrap the Angular app (necessary because of AMD)
-  angular.element(document).ready(function() {
-    angular.bootstrap(document, ['rave']);
+  var ng = require('angular');
+  ng.element(document).ready(function() {
+    ng.bootstrap(document, ['rave']);
   });
 });

@@ -1,9 +1,11 @@
-define(function(require) {
-  var auth = require('../../auth');
-  require('../providers/forgot-password-api');
+/*
+ * forgotPasswordController
+ * Sends off a completed form to our forgotPasswordApi
+ *
+ */
 
-  auth.controller('forgotPasswordController', [
-    '$scope', 'forgotPasswordApi',
+define(function(require) {
+  return ['$scope', 'forgotPasswordApi',
     function($scope, forgotPasswordApi) {
 
       // We call this method when they submit the form.
@@ -22,5 +24,5 @@ define(function(require) {
           });
       };
     }
-  ]);
+  ];
 });

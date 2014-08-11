@@ -1,3 +1,9 @@
+/*
+ * usersController
+ * Sets up our data & pagination.
+ *
+ */
+
 define(function(require) {
   return ['$scope', '$stateParams', 'pagination',
   function($scope, $stateParams, pagination) {

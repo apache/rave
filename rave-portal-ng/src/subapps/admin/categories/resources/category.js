@@ -1,3 +1,9 @@
+/*
+ * categoryResource
+ * A resource for a single category
+ *
+ */
+
 define(function(require) {
 
   // The API endpoint for categories
