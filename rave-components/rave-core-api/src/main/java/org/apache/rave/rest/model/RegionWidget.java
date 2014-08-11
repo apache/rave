@@ -54,7 +54,7 @@ public class RegionWidget  implements RestEntity{
     @XmlElement(name = "userPrefs")
     protected HashMap<String, String> userPrefs;
     @XmlElement(name = "properties")
-    private Map<String,Object> properties;
+    protected Map<String,Object> properties;
 
     public RegionWidget() {  }
 

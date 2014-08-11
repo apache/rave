@@ -54,6 +54,7 @@ public class OpenSocialRegionWidget extends RegionWidget {
         this.hideChrome = base.isHideChrome();
         this.ownerId = base.getOwnerId();
         this.userPrefs = base.getUserPrefs();
+        this.properties = base.getProperties();
     }
 
     public String getSecurityToken() {
