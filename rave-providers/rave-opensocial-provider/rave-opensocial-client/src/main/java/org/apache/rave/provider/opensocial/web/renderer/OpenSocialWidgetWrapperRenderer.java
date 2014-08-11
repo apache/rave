@@ -78,6 +78,7 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
             " subPage: {id: %12$s, name: '%13$s', isDefault: %14$s}," +
             " properties: %15$s," +
             " regionProperties: %16$s," +
+            " regionWidgetProperties: %17$s" +
             "})});</script>";
     private static final String MARKUP = "<!-- RegionWidget '%1$s' placeholder -->";
 
@@ -160,6 +161,7 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
                 isDefault,
                 JsonUtils.stringify(widget.getProperties()),
                 JsonUtils.stringify(item.getRegion().getProperties()),
+                JsonUtils.stringify(item.getProperties())
                 );
     }
 

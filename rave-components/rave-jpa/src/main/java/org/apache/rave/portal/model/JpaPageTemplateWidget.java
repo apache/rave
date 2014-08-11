@@ -18,12 +18,14 @@
  */
 package org.apache.rave.portal.model;
 
+import com.google.common.collect.Maps;
 import org.apache.rave.model.PageTemplateRegion;
 import org.apache.rave.model.PageTemplateWidget;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Map;
 
 @Entity
 @Table(name= "page_template_widget")
@@ -126,5 +128,15 @@ public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTem
     @Override
     public void setHideChrome(boolean hideChrome) {
         this.hideChrome = hideChrome;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return Maps.newHashMap();
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        // TODO: Implement this
     }
 }

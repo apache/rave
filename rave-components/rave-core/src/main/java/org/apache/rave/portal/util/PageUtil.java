@@ -111,6 +111,7 @@ public class PageUtil {
             regionWidget.setHideChrome(ptw.isHideChrome());
             regionWidget.setRenderOrder((int) ptw.getRenderSeq());
             regionWidget.setWidgetId(ptw.getWidgetId());
+            regionWidget.setProperties(ptw.getProperties());
             widgets.add(regionWidget);
         }
         return widgets;

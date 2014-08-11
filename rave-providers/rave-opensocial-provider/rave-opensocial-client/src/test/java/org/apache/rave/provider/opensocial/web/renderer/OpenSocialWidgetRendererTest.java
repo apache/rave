@@ -19,6 +19,7 @@
 
 package org.apache.rave.provider.opensocial.web.renderer;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.*;
@@ -114,6 +115,7 @@ public class OpenSocialWidgetRendererTest {
         rw.setPreferences(Arrays.asList((RegionWidgetPreference) new RegionWidgetPreferenceImpl("1", "color", "blue"),
                 new RegionWidgetPreferenceImpl("1", "speed", "fast"),
                 new RegionWidgetPreferenceImpl("1", null, null)));
+        rw.setProperties(ImmutableMap.<String, Object>of("rwFoo", "rwBar"));
 
         final String markup =
                 "<script>require(['rave'], function(rave){" +
@@ -130,6 +132,7 @@ public class OpenSocialWidgetRendererTest {
                         " subPage: {id: '" + VALID_SUBPAGE_ID + "', name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}," +
                         " properties: {\"foo\":\"bar\"}," +
                         " regionProperties: {\"regionFoo\":\"regionBar\"}," +
+                        " regionWidgetProperties: {\"rwFoo\":\"rwBar\"}" +
                         "})" +
                         "});</script>";
 
@@ -182,6 +185,7 @@ public class OpenSocialWidgetRendererTest {
                         " subPage: {id: null, name: '', isDefault: false}," +
                         " properties: null," +
                         " regionProperties: null," +
+                        " regionWidgetProperties: null" +
                         "})" +
                         "});</script>";
 

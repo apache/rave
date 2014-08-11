@@ -24,6 +24,7 @@ import org.apache.rave.model.RegionWidgetPreference;
 import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RegionWidget", propOrder = {
@@ -52,6 +53,8 @@ public class RegionWidget  implements RestEntity{
     protected String ownerId;
     @XmlElement(name = "userPrefs")
     protected HashMap<String, String> userPrefs;
+    @XmlElement(name = "properties")
+    private Map<String,Object> properties;
 
     public RegionWidget() {  }
 
@@ -64,6 +67,7 @@ public class RegionWidget  implements RestEntity{
         this.ownerId = widget.getRegion().getPage().getOwnerId();
         this.hideChrome = widget.isHideChrome();
         this.userPrefs = createPrefs(widget);
+        this.properties = widget.getProperties();
     }
 
     public String getId() {
@@ -144,6 +148,14 @@ public class RegionWidget  implements RestEntity{
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public Map<String, Object> getProperties() {
+        return this.properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     protected HashMap<String, String> createPrefs(org.apache.rave.model.RegionWidget widget) {

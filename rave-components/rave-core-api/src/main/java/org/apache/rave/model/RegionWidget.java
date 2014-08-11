@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
+import java.util.Map;
 
 @XmlTransient
 public interface RegionWidget {
@@ -60,4 +61,20 @@ public interface RegionWidget {
     boolean isHideChrome();
 
     void setHideChrome(boolean hideChrome);
+
+    /**
+     * Generic property bag for extension of the region widget object.
+     *
+     * Rave makes no attempt to understand the shape of properties in the bag.
+     *
+     * @return a valid Map of String to JSON Serializable Object.
+     */
+    Map<String, Object> getProperties();
+
+    /**
+     * Overrides the current properties with a new set.
+     *
+     * @param properties a non-null map of string to JSON serializable objects
+     */
+    void setProperties(Map<String, Object> properties);
 }
