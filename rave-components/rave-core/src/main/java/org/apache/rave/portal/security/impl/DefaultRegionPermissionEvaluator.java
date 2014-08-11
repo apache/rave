@@ -196,17 +196,20 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         }
         //
         // Check that the viewer is a member
+        // Make sure we check parent page permissions as well
         //
         String viewer = ((User)authentication.getPrincipal()).getUsername();
-        for (PageUser pageUser:containerPage.getMembers()){
-            if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
-                log.info("User "+viewer+" is a member of page "+containerPage.getId());
-                if(checkEditorStatus){
-                    return pageUser.isEditor();
+        do {
+            for (PageUser pageUser:containerPage.getMembers()){
+                if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
+                    log.info("User "+viewer+" is a member of page "+containerPage.getId());
+                    if(checkEditorStatus){
+                        return pageUser.isEditor();
+                    }
+                    return true;
                 }
-                return true;
             }
-        }
+        } while((containerPage = containerPage.getParentPage()) != null);
         return false;
     }
 
