@@ -1,9 +1,13 @@
-define(function(require) {
-  var auth = require('../../auth');
-  require('../providers/forgot-username-api');
+/*
+ * forgotUsernameController
+ * Processes the forgot username form by making requests
+ * through the forgotUsernameApi
+ *
+ */
 
-  auth.controller('forgotUsernameController', [
-    '$scope', 'forgotUsernameApi',
+
+define(function(require) {
+  return ['$scope', 'forgotUsernameApi',
     function($scope, forgotUsernameApi) {
 
       // We call this method when they submit the form.
@@ -29,5 +33,5 @@ define(function(require) {
           });
       };
     }
-  ]);
+  ];
 });

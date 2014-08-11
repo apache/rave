@@ -1,3 +1,9 @@
+/*
+ * preferencesController
+ * Manages submission of our form; also handles the data binding.
+ *
+ */
+
 define(function(require) {
   var _ = require('underscore');
 

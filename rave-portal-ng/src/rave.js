@@ -1,27 +1,44 @@
+/*
+ * rave
+ * The main Angular module for Rave.
+ * This module is mainly a container for the other modules that
+ * make up the application.
+ *
+ */
+
 define(function(require) {
-  var angular = require('angular');
+  var ng = require('angular');
 
-  // The individual subapps
-  require('./subapps/home/index');
-  require('./subapps/admin/index');
-  require('./subapps/auth/index');
-  require('./subapps/profile/index');
-  require('./subapps/widget-store/index');
+  // Our module dependencies
+  require('uiRouter');
+  require('angularMocks');
+  require('angularCookie');
+  require('angularResource');
 
+  // Our 'subapp' dependencies
+  var home = require('./subapps/home/home');
+  var profile = require('./subapps/profile/profile');
+  var widgetStore = require('./subapps/widget-store/widget-store');
+  var admin = require('./subapps/admin/admin');
+  var auth = require('./subapps/auth/auth');
+
+  // Create an array out of our dependencies for Angular's DI
   var raveDependencies = [
     'ui.router',
     'profile',
     'ngMockE2E',
-    'home',
-    'widget-store',
-    'profile',
-    'auth',
-    'admin',
+    home.name,
+    widgetStore.name,
+    profile.name,
+    auth.name,
+    admin.name,
     'filters'
   ];
 
-  var rave = angular.module('rave', raveDependencies);
+  // Create Rave as an Angular module
+  var rave = ng.module('rave', raveDependencies);
 
+  // Some fake data until the mock API adds the Bootstrap route.
   rave.controller('appData', [
     '$scope', '$state', '$stateParams',
     function($scope, $state, $stateParams) {
@@ -34,6 +51,10 @@ define(function(require) {
     $scope.$state = $state;
     $scope.$stateParams = $stateParams;
   }]);
+
+  // Routes
+  var routes = require('./routes');
+  rave.config(routes);
 
   // Exposed on the window *only* for debugging purposes
   window.rave = rave;

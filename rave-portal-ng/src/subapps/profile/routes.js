@@ -1,17 +1,21 @@
+/*
+ * routes
+ * Routes for this subapp. Rave uses the Angular-UI UI-Router
+ * library for routing, so be sure to familiarize yourself
+ * with that library.
+ *
+ */
+
 define(function(require) {
-  require('./profile');
-  
-  var angular = require('angular');
-  
-  angular.module('profile').config([
-    '$stateProvider', '$urlRouterProvider',
+  return ['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
-      // Our profile states
+
+      // Our profile states. This is configuration from Angular's ui-router.
       $stateProvider.state('portal.profile', {
         url: '/profile',
-        templateUrl: '/subapps/profile/profile.html',
+        templateUrl: '/subapps/profile/templates/profile.html',
         authenticate: true
       });
     }
-  ]);
+  ];
 });

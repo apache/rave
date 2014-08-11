@@ -1,3 +1,9 @@
+/*
+ * categoriesResource
+ * The resource for the categories list
+ *
+ */
+
 define(function(require) {
 
   // The API endpoint for categories
@@ -6,7 +12,7 @@ define(function(require) {
   // Return the categories resource
   return ['$resource', 'authToken',
   function($resource, authToken) {
-    var authHeader = {
+    var authHeader = { 
       Authorization: 'Basic ' + authToken.get()
     };
 

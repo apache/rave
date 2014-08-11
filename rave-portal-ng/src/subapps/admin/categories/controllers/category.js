@@ -1,3 +1,9 @@
+/*
+ * category
+ * Handles submission of our form
+ *
+ */
+
 define(function(require) {
   return ['$scope', 'categoryResource', '$state', '$stateParams',
   function($scope, categoryResource, $state, $stateParams) {

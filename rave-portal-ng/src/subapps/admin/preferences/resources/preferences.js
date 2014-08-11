@@ -1,3 +1,9 @@
+/*
+ * preferences-resource
+ * A resource for the Rave preferences.
+ *
+ */
+
 define(function(require) {
 
   // The API endpoint for categories

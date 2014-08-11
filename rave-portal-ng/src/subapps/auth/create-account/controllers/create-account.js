@@ -1,9 +1,11 @@
-define(function(require) {
-  var auth = require('../../auth');
-  require('../providers/create-account-api');
+/*
+ * createAccountController
+ * Passes our form off to the createAccountApi when the form is submitted
+ *
+ */
 
-  auth.controller('createAccountController', [
-    '$scope', 'createAccountApi',
+define(function(require) {
+  return ['$scope', 'createAccountApi',
     function($scope, createAccountApi) {
 
       // We call this method when they submit the form.
@@ -24,5 +26,5 @@ define(function(require) {
           });
       };
     }
-  ]);
+  ];
 });

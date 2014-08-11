@@ -1,15 +1,17 @@
-define(function(require) {
-  require('../auth');
-  var angular = require('angular');
+/*
+ * routes
+ * The Angular UI-Router states for this section of the application.
+ *
+ */
 
-  angular.module('auth').config([
-    '$stateProvider', '$urlRouterProvider',
+define(function(require) {
+  return ['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
       $stateProvider.state('portal.createAccount', {
         url: '/create-account',
-        templateUrl: '/subapps/auth/create-account/create-account.html',
+        templateUrl: '/subapps/auth/create-account/templates/create-account.html',
         authenticate: 'no'
       });
     }
-  ]);
+  ];
 });

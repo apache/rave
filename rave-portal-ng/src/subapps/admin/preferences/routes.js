@@ -1,18 +1,25 @@
+/*
+ * routes
+ * Routes for this subapp. Rave uses the Angular-UI UI-Router
+ * library for routing, so be sure to familiarize yourself
+ * with that library.
+ *
+ */
+
 define(function(require) {
-  require('../admin');
-  var angular = require('angular');
   var preferencesCtrl = require('./controllers/preferences');
 
-  angular.module('admin').config([
+  return [
     '$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
-      $stateProvider
-        .state('portal.admin.preferences', {
+
+      // Our preferences state
+      $stateProvider.state('portal.admin.preferences', {
           url: '/preferences',
-          templateUrl: '/subapps/admin/preferences/preferences.html',
+          templateUrl: '/subapps/admin/preferences/templates/preferences.html',
           authenticate: true,
           controller: preferencesCtrl
         });
     }
-  ]);
+  ];
 });
