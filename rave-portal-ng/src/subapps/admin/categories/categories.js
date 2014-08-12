@@ -31,6 +31,9 @@ define(function(require) {
   var categoryCtrl = require('./controllers/category');
   categories.controller('categoryCtrl', categoryCtrl);
 
+  var createCtrl = require('./controllers/create');
+  categories.controller('createCtrl', createCtrl);
+
   // Register the routes
   var routes = require('./routes');
   categories.config(routes);

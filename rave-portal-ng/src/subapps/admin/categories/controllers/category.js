@@ -5,14 +5,31 @@
  */
 
 define(function(require) {
-  return ['$scope', 'categoryResource', '$state', '$stateParams',
-  function($scope, categoryResource, $state, $stateParams) {
-    $scope.category = categoryResource.get({id: $stateParams.id});
+  return ['$scope', 'categoryResource', '$state', '$stateParams', 'category',
+  function($scope, categoryResource, $state, $stateParams, category) {
+    $scope.category = category;
 
     $scope.category.$promise.then(function(res) {
       $scope.text = res.text;
     }).catch(function(err) {
     });
+
+    // Remove the category from the list of categories in the scope
+    this.removeFromList = function() {
+      var oldCategory = _.findWhere($scope.categories, {ID:+$stateParams.id});
+      var oldIndex = _.indexOf($scope.categories, oldCategory);
+      $scope.categories.splice(oldIndex, 1);
+    };
+
+    // Replace the old item in the list with the new
+    this.updateList = function(newResource) {
+      var oldCategory = _.findWhere($scope.categories, {ID:+$stateParams.id});
+      var oldIndex = _.indexOf($scope.categories, oldCategory);
+      $scope.categories[oldIndex] = newResource;
+      $scope.category = newResource;
+    };
+
+    var ctrl = this;
 
     $scope.onSave = function() {
       var savedResource = categoryResource.update({
@@ -21,9 +38,7 @@ define(function(require) {
       });
       
       savedResource.$promise
-        .then(function() {
-          $scope.category = savedResource;
-        })
+        .then(ctrl.updateList)
         .catch(function() {
         });
     };
@@ -35,6 +50,7 @@ define(function(require) {
 
       deletedResource.$promise
         .then(function() {
+          ctrl.removeFromList();
           $state.transitionTo('portal.admin.categories');
         })
         .catch(function() {

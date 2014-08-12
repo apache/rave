@@ -10,7 +10,7 @@ define(function(require) {
   // Our list of preferences. You must put any
   // new preferences here for Angular to auto-update
   // the ng-model.
-  var preferences = [
+  var preferencesKeys = [
     'titleSuffix',
     'pageSize',
     'defaultWidgetHeight',
@@ -20,17 +20,17 @@ define(function(require) {
     'javascriptDebugMode'
   ];
 
-  return ['$scope', 'preferencesResource',
-  function($scope, preferencesResource) {
+  return ['$scope', 'preferencesResource', 'preferences',
+  function($scope, preferencesResource, preferences) {
 
     // Create our preferences object on the scope.
     $scope.preferences = {};
 
     // Try to get the current preferences to show the user
-    $scope.currentPreferences = preferencesResource.get();
+    $scope.currentPreferences = preferences;
     $scope.currentPreferences.$promise
       .then(function(res) {
-        var currentPrefs = _.pick(res, preferences);
+        var currentPrefs = _.pick(res, preferencesKeys);
         _.each(currentPrefs, function(value, key) {
           $scope.preferences[key] = value;
         });
