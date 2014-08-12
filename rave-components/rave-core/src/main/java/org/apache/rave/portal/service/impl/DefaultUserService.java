@@ -252,7 +252,10 @@ public class DefaultUserService implements UserService {
             person.setId(user.getId());
             people.add(person);
         }
-        return new SearchResult<Person>(people, count);
+        SearchResult<Person> searchResult = new SearchResult<Person>(people, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
     }
 
     @Override
