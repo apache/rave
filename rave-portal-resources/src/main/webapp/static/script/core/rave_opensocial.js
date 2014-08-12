@@ -218,6 +218,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
         exports.renderWidget = function (widget, el, opts) {
             if (widget.error) {
                 widget.renderError(el, widget.error.message);
+                opts && opts.callback && opts.callback({'error' : widget.error});
                 return;
             }
             opts = opts || {};
