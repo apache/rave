@@ -372,7 +372,12 @@ public class DefaultPageService implements PageService {
         // newly created page - so only one pageUser
         PageUser pageUser = clonedPage.getMembers().get(0);
         // update status to pending
-        pageUser.setPageStatus(PageInvitationStatus.PENDING);
+        User currentUser = userService.getAuthenticatedUser();
+        if (currentUser.getId().equals(user.getId())) {
+            pageUser.setPageStatus(PageInvitationStatus.OWNER);
+        } else {
+            pageUser.setPageStatus(PageInvitationStatus.PENDING);
+        }
         return pageRepository.save(clonedPage);
     }
 
