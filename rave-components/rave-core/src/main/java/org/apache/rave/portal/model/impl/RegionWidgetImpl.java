@@ -24,6 +24,7 @@ import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
 
 import java.util.List;
+import java.util.Map;
 
 public class RegionWidgetImpl implements RegionWidget {
     private String id;
@@ -34,6 +35,7 @@ public class RegionWidgetImpl implements RegionWidget {
     private List<RegionWidgetPreference> preferences;
     private Boolean locked = false;
     private Boolean hideChrome = false;
+    private Map<String,Object> properties;
 
     @JsonBackReference
     private Region region;
@@ -146,6 +148,16 @@ public class RegionWidgetImpl implements RegionWidget {
     @Override
     public void setHideChrome(boolean hideChrome) {
         this.hideChrome = hideChrome;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return this.properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     @Override

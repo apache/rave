@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import com.google.common.collect.Maps;
 import org.apache.rave.model.Region;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
@@ -29,6 +30,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A widget within a region
@@ -259,6 +261,16 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
     @Override
     public void setHideChrome(boolean hideChrome) {
         this.hideChrome = hideChrome;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return Maps.newHashMap();
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        // TODO: Implement this
     }
 
     @Override

@@ -19,6 +19,7 @@
 package org.apache.rave.model;
 
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.Map;
 
 /**
  */
@@ -46,4 +47,20 @@ public interface PageTemplateWidget {
     boolean isHideChrome();
 
     void setHideChrome(boolean hideChrome);
+
+    /**
+     * Generic property bag for extension of the page template widget object.
+     *
+     * Rave makes no attempt to understand the shape of properties in the bag.
+     *
+     * @return a valid Map of String to JSON Serializable Object.
+     */
+    Map<String, Object> getProperties();
+
+    /**
+     * Overrides the current properties with a new set.
+     *
+     * @param properties a non-null map of string to JSON serializable objects
+     */
+    void setProperties(Map<String, Object> properties);
 }

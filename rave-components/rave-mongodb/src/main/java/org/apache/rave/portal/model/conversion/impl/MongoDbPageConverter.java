@@ -169,6 +169,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         String regionId = region.getId() == null ? generateId() : region.getId();
         Region converted = new RegionImpl(regionId, null, region.getRenderOrder());
         converted.setLocked(region.isLocked());
+        converted.setProperties(region.getProperties());
         if (region.getRegionWidgets() != null) {
             List<RegionWidget> convertedWidgets = Lists.newArrayList();
             for (RegionWidget widget : region.getRegionWidgets()) {

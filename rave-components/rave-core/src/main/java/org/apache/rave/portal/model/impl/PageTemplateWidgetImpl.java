@@ -21,6 +21,8 @@ package org.apache.rave.portal.model.impl;
 import org.apache.rave.model.PageTemplateRegion;
 import org.apache.rave.model.PageTemplateWidget;
 
+import java.util.Map;
+
 public class PageTemplateWidgetImpl implements PageTemplateWidget {
     private String id;
     private PageTemplateRegion pageTemplateRegion;
@@ -28,6 +30,7 @@ public class PageTemplateWidgetImpl implements PageTemplateWidget {
     private String widgetId;
     private boolean locked;
     private boolean hideChrome;
+    private Map<String, Object> properties;
 
     public PageTemplateWidgetImpl() {
 
@@ -83,6 +86,16 @@ public class PageTemplateWidgetImpl implements PageTemplateWidget {
 
     public void setHideChrome(boolean hideChrome) {
         this.hideChrome = hideChrome;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return this.properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     @Override

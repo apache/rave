@@ -23,6 +23,7 @@ import org.apache.rave.model.PageTemplateRegion;
 import org.apache.rave.model.PageTemplateWidget;
 
 import java.util.List;
+import java.util.Map;
 
 public class PageTemplateRegionImpl implements PageTemplateRegion {
     private String id;
@@ -30,6 +31,7 @@ public class PageTemplateRegionImpl implements PageTemplateRegion {
     private PageTemplate pageTemplate;
     private List<PageTemplateWidget> pageTemplateWidgets;
     private boolean locked;
+    private Map<String, Object> properties;
 
     public PageTemplateRegionImpl() {
 
@@ -77,6 +79,16 @@ public class PageTemplateRegionImpl implements PageTemplateRegion {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return this.properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     @Override

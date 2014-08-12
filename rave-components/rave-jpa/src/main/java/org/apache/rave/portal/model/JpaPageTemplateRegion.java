@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import com.google.common.collect.Maps;
 import org.apache.rave.model.PageTemplate;
 import org.apache.rave.model.PageTemplateRegion;
 import org.apache.rave.model.PageTemplateWidget;
@@ -29,6 +30,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "page_template_region")
@@ -126,5 +128,15 @@ public class JpaPageTemplateRegion implements BasicEntity, Serializable, PageTem
     @Override
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return Maps.newHashMap();
+    }
+
+    @Override
+    public void setProperties(Map<String, Object> properties) {
+        // TODO: Implement this
     }
 }

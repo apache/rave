@@ -30,6 +30,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -200,7 +201,17 @@ public class MongoDbPageTemplateConverterTest {
                 public void setLocked(boolean locked) {
                     //To change body of implemented methods use File | Settings | File Templates.
                 }
-            };
+
+                @Override
+                public Map<String, Object> getProperties() {
+                    return null;
+                }
+
+                @Override
+                public void setProperties(Map<String, Object> properties) {
+
+                }
+        };
     }
 
     @Test

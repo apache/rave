@@ -19,6 +19,7 @@
 
 package org.apache.rave.provider.opensocial.web.renderer;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.*;
@@ -103,6 +104,7 @@ public class OpenSocialWidgetRendererTest {
         props.put("foo","bar");
 
         Region region = new RegionImpl(REGION_ID);
+        region.setProperties(ImmutableMap.<String, Object>of("regionFoo", "regionBar"));
         region.setPage(subPage);
         RegionWidget rw = new RegionWidgetImpl(REGION_WIDGET_ID);
         rw.setCollapsed(VALID_COLLAPSED);
@@ -113,6 +115,7 @@ public class OpenSocialWidgetRendererTest {
         rw.setPreferences(Arrays.asList((RegionWidgetPreference) new RegionWidgetPreferenceImpl("1", "color", "blue"),
                 new RegionWidgetPreferenceImpl("1", "speed", "fast"),
                 new RegionWidgetPreferenceImpl("1", null, null)));
+        rw.setProperties(ImmutableMap.<String, Object>of("rwFoo", "rwBar"));
 
         final String markup =
                 "<script>require(['rave'], function(rave){" +
@@ -127,7 +130,9 @@ public class OpenSocialWidgetRendererTest {
                         " locked: " + VALID_LOCKED + "," +
                         " hideChrome: " + VALID_HIDE_CHROME + "," +
                         " subPage: {id: '" + VALID_SUBPAGE_ID + "', name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}," +
-                        " properties: {\"foo\":\"bar\"}" +
+                        " properties: {\"foo\":\"bar\"}," +
+                        " regionProperties: {\"regionFoo\":\"regionBar\"}," +
+                        " regionWidgetProperties: {\"rwFoo\":\"rwBar\"}" +
                         "})" +
                         "});</script>";
 
@@ -178,7 +183,9 @@ public class OpenSocialWidgetRendererTest {
                         " locked: false," +
                         " hideChrome: false," +
                         " subPage: {id: null, name: '', isDefault: false}," +
-                        " properties: null" +
+                        " properties: null," +
+                        " regionProperties: null," +
+                        " regionWidgetProperties: null" +
                         "})" +
                         "});</script>";
 

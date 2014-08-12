@@ -22,6 +22,8 @@ package org.apache.rave.rest.model;
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Region", propOrder = {
         "locked", "regionWidgets"
@@ -35,6 +37,8 @@ public class Region  implements RestEntity{
     @XmlElementWrapper(name = "regionWidgets")
     @XmlElement(name="RegionWidget")
     private List<RegionWidget> regionWidgets;
+    @XmlElement(name = "properties")
+    private Map<String, Object> properties;
 
     public Region() { }
 
@@ -42,6 +46,7 @@ public class Region  implements RestEntity{
         this.locked = source.isLocked();
         this.regionWidgets = createRegionWidgets(source);
         this.id = source.getId();
+        this.properties = source.getProperties();
     }
 
     public boolean isLocked() {
@@ -66,6 +71,14 @@ public class Region  implements RestEntity{
 
     public void setRegionWidgets(List<RegionWidget> regionWidgets) {
         this.regionWidgets = regionWidgets;
+    }
+
+    public Map<String, Object> getProperties() {
+        return this.properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 
     private List<RegionWidget> createRegionWidgets(org.apache.rave.model.Region source) {
