@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model.impl;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.rave.model.*;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class PageImpl implements Page {
     private String name;
     private String ownerId;
     private String contextId;
-    private Page parentPage;
-    private List<Page> subPages;
+    @JsonBackReference private Page parentPage;
+    @JsonManagedReference private List<Page> subPages;
     private PageLayout pageLayout;
     private List<Region> regions;
     private String pageType;
