@@ -19,7 +19,13 @@ define(function(require) {
           url: '/categories',
           templateUrl: '/subapps/admin/categories/templates/categories.html',
           authenticate: true,
-          controller: categoriesCtrl
+          controller: categoriesCtrl,
+          resolve: {
+            categoriesList: ['categoriesResource',
+              function(categoriesResource) {
+                return categoriesResource.query();
+              }]
+          }
         })
 
         // The detail page for a single category
@@ -27,7 +33,13 @@ define(function(require) {
           url: '/categories/category-:id',
           templateUrl: '/subapps/admin/categories/templates/category.html',
           authenticate: true,
-          controller: categoryCtrl
+          controller: categoryCtrl,
+          resolve: {
+            category: ['categoryResource', '$stateParams',
+              function(categoryResource, $stateParams) {
+                return categoryResource.get({id: $stateParams.id});
+              }]
+          }
         });
     }
   ];

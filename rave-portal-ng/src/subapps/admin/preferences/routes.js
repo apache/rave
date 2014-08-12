@@ -18,7 +18,12 @@ define(function(require) {
           url: '/preferences',
           templateUrl: '/subapps/admin/preferences/templates/preferences.html',
           authenticate: true,
-          controller: preferencesCtrl
+          controller: preferencesCtrl,
+          resolve: {
+            preferences: ['preferencesResource', function(preferencesResource) {
+             return preferencesResource.get(); 
+            }]
+          }
         });
     }
   ];
