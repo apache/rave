@@ -972,7 +972,7 @@ define(["jquery", "underscore", "rave",
             } else {
                 elem = "<a>" + label + "</a>";
             }
-            return $(elem).attr("tooltip", tooltip);
+            return $(elem).attr("title", tooltip);
         }
 
         function insertWidgetToolbarAction(widgetId, label, image, tooltip, id, onSelected) {
