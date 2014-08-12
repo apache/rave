@@ -100,7 +100,7 @@ define(["jquery", "underscore", "rave",
 
                 search: function (e) {
                     //allow search function to trigger from enter keypress or button click
-                    if (e.which == 13 || _.isUndefined(e.which)) {
+                    if ((e.type == 'keypress' && e.which == 13) || e.type == 'click') {
                         var term = $('#searchTerm', this.$el).val();
 
                         this.models.users.filter(term);
@@ -133,7 +133,7 @@ define(["jquery", "underscore", "rave",
                         'editor:add': '',
                         'editor:remove': '',
                         'clone': 'success.clone.page'
-                    }
+                    };
 
                     var msg = eventsToMessages[event];
 
