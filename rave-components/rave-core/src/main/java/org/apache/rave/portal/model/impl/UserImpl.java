@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 
 public class UserImpl extends PersonImpl implements User, Serializable {
-    private String id;
     private String password;
     private boolean expired;
     private boolean credsExpired;
