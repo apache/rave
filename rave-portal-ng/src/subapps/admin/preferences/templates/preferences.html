@@ -1,5 +1,8 @@
 <article ui-view>
   <h2>Preferences</h2>
+  <div class="alert" ng-class="messages.messageClassName()" ng-show="messages.showMessage()">
+    {{ messages.messageText() }}
+  </div>
   <form id="preferenceForm" class="form-horizontal">
     <p>Field marked with * are required</p>
     <div class="control-group">
@@ -15,7 +18,7 @@
         Number of items per page (list) *
       </label>
       <div class="controls">
-        <input id="pageSize" name="pageSize.value" type="number" step="1" ng-model="preferences.pageSize">
+        <input id="pageSize" name="pageSize.value" type="number" step="1" ng-model="preferences.pageSize" required>
       </div>
     </div>
     <div class="control-group">
@@ -23,7 +26,7 @@
         Default widget height *
       </label>
       <div class="controls">
-        <input id="defaultWidgetHeight" name="defaultWidgetHeight.value" type="number" step="1" ng-model="preferences.defaultWidgetHeight">
+        <input id="defaultWidgetHeight" name="defaultWidgetHeight.value" type="number" step="1" ng-model="preferences.defaultWidgetHeight" required>
       </div>
     </div>
     <div class="control-group">
@@ -31,7 +34,7 @@
         JavaScript Debug Mode *
       </label>
       <div class="controls">
-        <select id="javaScriptDebugMode" name="javaScriptDebugMode.value" ng-model="preferences.javascriptDebugMode">
+        <select id="javaScriptDebugMode" name="javaScriptDebugMode.value" ng-model="preferences.javascriptDebugMode" required>
           <option value="0">Disabled</option>
           <option value="1">Enabled</option>
         </select>
@@ -42,7 +45,7 @@
         Initial status to use for new widgets *
       </label>
       <div class="controls">
-        <select id="initialWidgetStatus" name="initialWidgetStatus.value" ng-model="preferences.initialWidgetStatus">
+        <select id="initialWidgetStatus" name="initialWidgetStatus.value" ng-model="preferences.initialWidgetStatus" required>
           <option value="preview">
             Preview
           </option>
@@ -61,7 +64,7 @@
       </div>
     </div>
     <fieldset>
-      <button class="btn" ng-click="onSubmit()">Update preferences</button>
+      <button class="btn btn-primary" ng-click="onSubmit()">Update preferences</button>
     </fieldset>
   </form>
 </article>
