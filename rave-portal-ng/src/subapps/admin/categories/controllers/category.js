@@ -5,6 +5,8 @@
  */
 
 define(function(require) {
+  var $ = require('jquery');
+  
   return ['$scope', 'categoryResource', '$state', '$stateParams', 'category',
   function($scope, categoryResource, $state, $stateParams, category) {
     $scope.category = category;
@@ -51,6 +53,7 @@ define(function(require) {
       deletedResource.$promise
         .then(function() {
           ctrl.removeFromList();
+          $('#confirm-modal').modal('hide');
           $state.transitionTo('portal.admin.categories');
         })
         .catch(function() {

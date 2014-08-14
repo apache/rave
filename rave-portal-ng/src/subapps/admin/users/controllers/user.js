@@ -4,9 +4,9 @@
  *
  */
 
-var $ = require('jquery');
-
 define(function(require) {
+  var $ = require('jquery');
+
   return ['$scope', 'userResource', '$state', '$stateParams', 'user',
   function($scope, userResource, $state, $stateParams, user) {
 
