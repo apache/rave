@@ -16,6 +16,8 @@ define(function(require) {
 
   // Load the mock API (development only)
   require('./api/bootstrap');
+  // Load the mock bootstrap response (development only)
+  require('./api/bootstrap-data');
   
   // Our things
   require('./providers/filters/index');

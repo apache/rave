@@ -42,15 +42,16 @@ define(function(require) {
   rave.controller('appData', [
     '$scope', '$state', '$stateParams',
     function($scope, $state, $stateParams) {
-    $scope.user = window._initialData.user;
-    $scope.nav = window._initialData.nav;
-    $scope.loginNav = window._initialData.loginNav;
+      $scope.nav = window._initialData.nav;
+      $scope.loginNav = window._initialData.loginNav;
 
-    // The ui-router doesn't do everything, unfortunately. So we need to
-    // store our state data so we can make new directives for it.
-    $scope.$state = $state;
-    $scope.$stateParams = $stateParams;
-  }]);
+      $scope.preferences = window.initialData.preferences;
+
+      // The ui-router doesn't do everything, unfortunately. So we need to
+      // store our state data so we can make new directives for it.
+      $scope.$state = $state;
+      $scope.$stateParams = $stateParams;
+    }]);
 
   // Routes
   var routes = require('./routes');

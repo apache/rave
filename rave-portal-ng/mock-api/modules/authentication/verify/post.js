@@ -4,6 +4,21 @@ define(function(require) {
 	require('underscore/underscore');
 	var api = require('../../../core.js');
 
+	// The keys we want to send back when we're verified
+	var userKeys = [
+    'ID',
+    'username',
+    'description',
+    'firstName',
+    'lastName',
+    'locked',
+    'enabled',
+    'expired',
+    'authorities',
+    'openIdUrl',
+    'email'
+  ];
+
 	// All of these 'helper' methods should be abstracted into (a) separate module(s).
 	function retrieveUserByToken(token) {
 		var results = api.db.query('users', {
@@ -32,14 +47,12 @@ define(function(require) {
 			return [401, 'Invalid token'];
 		}
 
+		user = _.pick(user, userKeys);
+
 		// return the user object
 		return [200, {
 			authorized: true,
-			user: {
-				id: user.ID,
-				authLevel: 'admin',
-				name: user.nameSeenByOthers
-			}
+			user: user
 		}];
 	}
 

@@ -42,6 +42,7 @@ define(function(require) {
           else {
             authApi.verify(myToken)
               .then(function(res) {
+                $rootScope.currentUser = res.data.user;
                 $rootScope.authenticated = true;
                 authCache.put('verified', true);
                 response.resolve(true);
@@ -67,8 +68,9 @@ define(function(require) {
             .then(function(res) {
               var user = res.data.user;
               $rootScope.authenticated = true;
+              $rootScope.currentUser = user;
               authCache.put('verified', true);
-              authToken.set(user.token, credentials.remember);
+              authToken.set(res.data.token, credentials.remember);
 
               var toState = locationCache.get('toState') || 'portal.home';
               var toParams = locationCache.get('toParams') || undefined;

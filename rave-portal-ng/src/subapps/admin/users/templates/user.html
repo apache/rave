@@ -1,0 +1,76 @@
+<a ui-sref="portal.admin.users">
+  « Back to users
+</a>
+<h2>{{ user.username }}</h2>
+<div class="alert alert-info" ng-show="isCurrentUser">
+  This user is you! Note that Administrators are unable to change their account status nor delete their account through the admin interface.
+</div>
+<div>
+  <section>
+    <form id="updateUserProfile" class="form-horizontal">
+      <fieldset>
+        <legend>Edit user data</legend>
+        <br>
+        <input id="username" name="username" type="hidden" value="canonical">
+        <div class="control-group">
+          <label class="control-label" for="email">Email address:</label>
+          <div class="controls">
+            <input type="email" name="email" id="email" class="long" ng-model="email">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="openIdField">OpenID URL:</label>
+          <div class="controls">
+            <input type="url" id="openIdField" name="openId" class="long" ng-model="openIdUrl">
+          </div>
+        </div>
+        <div class="control-group">
+          <span class="control-label">Account status:</span>
+          <ul class="checkboxlist">
+            <li>
+              <input id="enabled" name="enabled" type="checkbox" value="true" ng-model="enabled" ng-disabled="isCurrentUser">
+              <label for="enabled">Account enabled</label>
+            </li>
+            <li>
+              <input id="expired" name="expired" type="checkbox" value="true" ng-model="expired" ng-disabled="isCurrentUser">
+              <label for="expired">Account expired</label>
+            </li>
+            <li>
+              <input id="locked" name="locked" type="checkbox" value="true" ng-model="locked" ng-disabled="isCurrentUser">
+              <label for="locked">Account locked</label>
+            </li>
+          </ul>
+        </div>
+      </fieldset>
+      <fieldset>
+        <span class="control-label">Authorities:</span>
+        <ul class="checkboxlist">
+          <li>
+            <input id="role-user" name="role-user" type="checkbox" value="ROLE_USER" ng-model="roleUser">
+            <label for="role-user">ROLE_USER</label>
+          </li>
+          <li>
+            <input id="role-admin" name="role-admin" type="checkbox" value="ROLE_ADMIN" ng-model="roleAdmin">
+            <label for="role-admin">ROLE_ADMIN</label>
+          </li>
+        </ul>
+      </fieldset>
+      <fieldset>
+        <button class="btn" ng-click="onSave()">Update profile</button>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#confirm-modal" ng-disabled="isCurrentUser">Delete User</button>
+      </fieldset>
+      <div id="confirm-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-body">
+          <div class="alert alert-danger">
+            Are you sure? This cannot be undone.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          <button class="btn btn-danger" ng-click="onDelete()">Delete User</button>
+        </div>
+      </div>
+    </form>
+  </section>
+</div>
+<div class="clear-float"></div>
