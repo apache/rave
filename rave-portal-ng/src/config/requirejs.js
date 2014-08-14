@@ -12,6 +12,7 @@ require.config({
     localStorageDB: 'localStorageDB/localstoragedb',
     angularResource: 'angular-resource/angular-resource',
     angularCookie: 'angular-cookie/angular-cookie',
+    angularSanitize: 'angular-sanitize/angular-sanitize',
     moment: 'moment'
   },
 
@@ -36,6 +37,9 @@ require.config({
       deps: ['angular']
     },
     angularResource: {
+      deps: ['angular']
+    },
+    angularSanitize: {
       deps: ['angular']
     },
     localStorageDB: {

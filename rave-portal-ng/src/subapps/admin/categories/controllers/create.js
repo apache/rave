@@ -5,8 +5,8 @@
  */
 
 define(function(require) {
-  return ['$scope', 'categoriesResource',
-  function($scope, categoriesResource) {
+  return ['$scope', 'categoriesResource', 'categoriesMessages',
+  function($scope, categoriesResource, categoriesMessages) {
     $scope.onCreate = function() {
       var newResource = categoriesResource.save({
         text: $scope.newText
@@ -14,9 +14,12 @@ define(function(require) {
 
       newResource.$promise
         .then(function() {
+          categoriesMessages.createMessage($scope.newText);
+          $scope.newText = '';
           $scope.categories.push(newResource);
         })
-        .catch(function() {
+        .catch(function(err) {
+          categoriesMessages.errorMessage(err.data);
         });
     };
   }];
