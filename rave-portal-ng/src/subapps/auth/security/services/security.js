@@ -14,8 +14,8 @@
  */
 
 define(function(require) {
-  return ['$rootScope', 'authToken', '$q', 'authApi', 'authCache', '$state', 'locationCache',
-    function($rootScope, authToken, $q, authApi, authCache, $state, locationCache) {
+  return ['$rootScope', 'authToken', '$q', 'authApi', 'authCache', '$state', 'locationCache', '$http',
+    function($rootScope, authToken, $q, authApi, authCache, $state, locationCache, $http) {
       return {
 
         // Returns a promise that resolves true or rejects false.
@@ -43,6 +43,7 @@ define(function(require) {
             authApi.verify(myToken)
               .then(function(res) {
                 $rootScope.currentUser = res.data.user;
+                $http.defaults.headers.common.Authorization = 'Basic ' + myToken;
                 $rootScope.authenticated = true;
                 authCache.put('verified', true);
                 response.resolve(true);
@@ -71,6 +72,8 @@ define(function(require) {
               $rootScope.currentUser = user;
               authCache.put('verified', true);
               authToken.set(res.data.token, credentials.remember);
+
+              $http.defaults.headers.common.Authorization = 'Basic ' + res.data.token;
 
               var toState = locationCache.get('toState') || 'portal.home';
               var toParams = locationCache.get('toParams') || undefined;

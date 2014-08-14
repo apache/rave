@@ -23,7 +23,7 @@ define(function(require) {
           resolve: {
             usersList: ['usersResource',
               function(usersResource) {
-                return usersResource().query();
+                return usersResource.query();
               }]
           }
         })
