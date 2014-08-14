@@ -40,15 +40,6 @@
   <!-- The server will send this back with the initial page load -->
   <script>
     window._initialData = {
-      authorized: true,
-      user: {
-        name: "Jmeas",
-        id: 34,
-        authLevel: "admin"
-      },
-      preferences: {
-        pageSize: 10
-      },
       nav: [
         {
           state: 'portal.home',
@@ -90,13 +81,4 @@
 
   <!-- Use grunt-preprocess in the future for dev and prod builds -->
   <script data-main='config/startup', src='requirejs/require.js'></script>
-
-  <!-- API modules -->
-  <!-- 
-  <script src="core.js"></script>
-  <script src="pages/pages.js"></script>
-  <script src="login/login.js"></script>
-  <script src="status/status.js"></script>
-  <script src="bootstrap.js"></script>
-  -->
 </body>

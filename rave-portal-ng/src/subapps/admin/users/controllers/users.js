@@ -5,17 +5,15 @@
  */
 
 define(function(require) {
-  return ['$scope', '$stateParams', 'pagination',
-  function($scope, $stateParams, pagination) {
+  return ['$scope', '$stateParams', 'pagination', 'usersList',
+  function($scope, $stateParams, pagination, usersList) {
 
     $scope.currentPage = +$stateParams.page || 0;
 
     // How many items to show per page
     $scope.itemsPerPage = 10;
 
-    // Some fake users for us to display.
-    $scope.users = [];
-    $scope.users.push({},{},{},{},{},{},{},{},{},{},{});
+    $scope.users = usersList;
 
     // Our total number of users.
     $scope.totalUsers = 1000;

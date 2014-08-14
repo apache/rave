@@ -59,7 +59,11 @@ define(function(require) {
 			lastName: (data.hasOwnProperty('lastName') ? data.lastName : '' ),
 			nameSeenByOthers: (data.hasOwnProperty('nameSeenByOthers') ? data.nameSeenByOthers : ''),
 			relationshipStatus: (data.hasOwnProperty('relationshipStatus') ? data.relationshipStatus: ''),
-			description: (data.hasOwnProperty('description') ? data.description: '')
+			description: (data.hasOwnProperty('description') ? data.description: ''),
+			locked: false,
+			enabled: true,
+			expired: false,
+			authorities: ['ROLE_USER']
 		};
 
 		api.db.insert('users', newUserData);

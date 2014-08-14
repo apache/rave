@@ -13,6 +13,10 @@ define(function(require) {
 			'relationshipStatus': 'Single',
 			'description': 'I like JS.',
 			'sessionToken': '',
+			'locked': false,
+			'enabled': true,
+			'expired': false,
+			'authorities': ['ROLE_USER', 'ROLE_ADMIN']
 		},
 		{
 			'username': 'admin',
@@ -23,8 +27,44 @@ define(function(require) {
 			'lastName': 'Admin',
 			'nameSeenByOthers': 'Admin',
 			'relationshipStatus': 'Single',
-			'description': 'I\'m a BOSS.',
+			'description': 'Pizza is good.',
 			'sessionToken': '',
+			'locked': false,
+			'enabled': true,
+			'expired': false,
+			'authorities': ['ROLE_ADMIN']
+		},
+		{
+			'username': 'disabled',
+			'password': 'disabled',
+			'email': 'disabled@disabled.com',
+			'openIdUrl': '',
+			'firstName': 'Dis',
+			'lastName': 'Abled',
+			'nameSeenByOthers': 'Disabled',
+			'relationshipStatus': 'Single',
+			'description': 'I cannot login.',
+			'sessionToken': '',
+			'locked': false,
+			'enabled': false,
+			'expired': false,
+			'authorities': ['ROLE_USER']
+		},
+		{
+			'username': 'canonical',
+			'password': 'canonical',
+			'email': 'canonical@canonical.com',
+			'openIdUrl': '',
+			'firstName': 'Canon',
+			'lastName': 'Ical',
+			'nameSeenByOthers': 'Canonical',
+			'relationshipStatus': 'Single',
+			'description': 'Remember me?',
+			'sessionToken': '',
+			'locked': false,
+			'enabled': true,
+			'expired': false,
+			'authorities': ['ROLE_ADMIN']
 		},
 		{
 			'username': 'jmeas',
@@ -36,7 +76,27 @@ define(function(require) {
 			'nameSeenByOthers': 'James',
 			'relationshipStatus': 'Single',
 			'description': 'I like JS.',
-			'sessionToken': ''
-		}
+			'sessionToken': '',
+			'locked': false,
+			'enabled': true,
+			'expired': false,
+			'authorities': ['ROLE_ADMIN', 'ROLE_USER']
+		},
+		{
+			'username': 'jane.doe',
+			'password': 'jane.doe',
+			'email': 'jane.doe@gmail.com',
+			'openIdUrl': '',
+			'firstName': 'Jane',
+			'lastName': 'Doe',
+			'nameSeenByOthers': 'Jane',
+			'relationshipStatus': 'Single',
+			'description': 'Rave test user.',
+			'sessionToken': '',
+			'locked': false,
+			'enabled': true,
+			'expired': false,
+			'authorities': ['ROLE_USER']
+		},
 	];
 });

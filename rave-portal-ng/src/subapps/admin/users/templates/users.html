@@ -36,12 +36,12 @@
     <tbody>
       <tr ng-repeat="user in users">
         <td>
-          <a ui-sref="portal.admin.users.detail">
-            Username
+          <a ui-sref="portal.admin.users.detail({id: user.ID, page: null})">
+            {{ user.username }}
           </a>
         </td>
-        <td>OpenSocial</td>
-        <td>published</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.enabled }}</td>
       </tr>
     </tbody>
   </table>

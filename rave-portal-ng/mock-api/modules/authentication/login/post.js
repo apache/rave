@@ -3,6 +3,21 @@ define(function(require) {
 
 	var api = require('../../../core.js');
 
+	// The keys we want to send back when we're verified
+	var userKeys = [
+    'ID',
+    'username',
+    'description',
+    'firstName',
+    'lastName',
+    'locked',
+    'enabled',
+    'expired',
+    'authorities',
+    'openIdUrl',
+    'email'
+  ];
+
 	function retrieveUser(username, password) {
 		var results = api.db.query('users', {
 			username: username,
@@ -52,6 +67,8 @@ define(function(require) {
 			return [401, 'Invalid login.'];
 		}
 
+		user = _.pick(user, userKeys);
+
 		// update the user's token in the database
 		var token = generateSessionToken();
 		updateUserSessionToken(user.username, token);
@@ -59,12 +76,8 @@ define(function(require) {
 		// return a record for the user
 		return [200, {
 			authorized: true,
-			user: {
-				id: user.ID,
-				authLevel: 'admin',
-				name: user.nameSeenByOthers,
-				token: token
-			}
+			user: user,
+			token: token
 		}];
 	}
 
