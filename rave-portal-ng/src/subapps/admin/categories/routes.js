@@ -20,6 +20,9 @@ define(function(require) {
           templateUrl: '/subapps/admin/categories/templates/categories.html',
           authenticate: true,
           controller: categoriesCtrl,
+          onExit: ['categoriesMessages', function(categoriesMessages) {
+            categoriesMessages.clearMessage();
+          }],
           resolve: {
             categoriesList: ['categoriesResource',
               function(categoriesResource) {
@@ -34,6 +37,9 @@ define(function(require) {
           templateUrl: '/subapps/admin/categories/templates/category.html',
           authenticate: true,
           controller: categoryCtrl,
+          onEnter: ['categoriesMessages', function(categoriesMessages) {
+            categoriesMessages.clearMessage();
+          }],
           resolve: {
             category: ['categoryResource', '$stateParams',
               function(categoryResource, $stateParams) {

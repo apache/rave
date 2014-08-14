@@ -9,16 +9,21 @@ define(function(require) {
 
   // Our module dependencies
   require('uiRouter');
+  require('angularSanitize');
 
   // The array of names for Angular's dependency injection
   var categoriesDependencies = [
-    'ui.router'
+    'ui.router',
+    'ngSanitize'
   ];
 
   // Create our module
   var categories = ng.module('admin.categories', categoriesDependencies);
 
   // Register the providers for categories
+  var categoriesMessages = require('./services/categories-messages');
+  categories.factory('categoriesMessages', categoriesMessages);
+
   var categoriesResource = require('./resources/categories');
   categories.factory('categoriesResource', categoriesResource);
 

@@ -29,7 +29,8 @@
     "jquery": "^1.0",
     "angular-cookies": "~1.2.21",
     "angular-resource": "~1.2.21",
-    "angular-cookie": "~4.0.2"
+    "angular-cookie": "~4.0.2",
+    "angular-sanitize": "~1.2.22"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.20",
@@ -39,6 +40,6 @@
     "moment": "~2.8.0"
   },
   "resolutions": {
-    "angular": "1.2.21"
+    "angular": "~1.2.20"
   }
 }

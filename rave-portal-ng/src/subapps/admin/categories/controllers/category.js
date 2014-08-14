@@ -7,14 +7,19 @@
 define(function(require) {
   var $ = require('jquery');
   
-  return ['$scope', 'categoryResource', '$state', '$stateParams', 'category',
-  function($scope, categoryResource, $state, $stateParams, category) {
+  return ['$scope', 'categoryResource', '$state', '$stateParams', 'category', 'categoriesMessages',
+  function($scope, categoryResource, $state, $stateParams, category, categoriesMessages) {
     $scope.category = category;
 
     $scope.category.$promise.then(function(res) {
       $scope.text = res.text;
     }).catch(function(err) {
     });
+
+    // Whether or not the user has updated the text of the category
+    $scope.isUpdated = function() {
+      return $scope.text !== $scope.category.text;
+    };
 
     // Remove the category from the list of categories in the scope
     this.removeFromList = function() {
@@ -34,14 +39,23 @@ define(function(require) {
     var ctrl = this;
 
     $scope.onSave = function() {
+
       var savedResource = categoryResource.update({
         id: $stateParams.id,
         text: $scope.text
       });
       
       savedResource.$promise
-        .then(ctrl.updateList)
-        .catch(function() {
+        .then(function(updatedResource) {
+          categoriesMessages.updateMessage({
+            newText: $scope.text,
+            oldText: $scope.category.text
+          });
+          ctrl.updateList(updatedResource);
+          $state.transitionTo('portal.admin.categories');
+        })
+        .catch(function(err) {
+          categoriesMessages.errorMessage(err.data);
         });
     };
 
@@ -52,11 +66,13 @@ define(function(require) {
 
       deletedResource.$promise
         .then(function() {
+          categoriesMessages.deleteMessage($scope.category.text);
           ctrl.removeFromList();
           $('#confirm-modal').modal('hide');
           $state.transitionTo('portal.admin.categories');
         })
-        .catch(function() {
+        .catch(function(err) {
+          categoriesMessages.errorMessage(err.data);
         });
     };
   }];

@@ -2,13 +2,13 @@
   <a ui-sref="portal.admin.categories">« Back to Categories</a>
   <h2>Category – "{{ category.text }}"</h2>
   <div class="well">
-    <section>
+    <form>
       <label for="text">Name: </label>
       <input id="text" name="text" type="text" ng-model="text">
       <br><br>
-      <button class="btn" ng-click="onSave()">Save</button>
+      <button class="btn btn-primary" ng-click="onSave()" ng-disabled="!isUpdated()">Save</button>
       <button class="btn btn-danger" data-toggle="modal" data-target="#confirm-modal">Delete</button>
-    </section>
+    </form>
   </div>  
   <div id="confirm-modal" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-body">
