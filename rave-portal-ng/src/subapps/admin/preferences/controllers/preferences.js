@@ -20,8 +20,10 @@ define(function(require) {
     'javascriptDebugMode'
   ];
 
-  return ['$scope', 'preferencesResource', 'preferences',
-  function($scope, preferencesResource, preferences) {
+  return ['$scope', 'preferencesResource', 'preferences', 'preferencesMessages',
+  function($scope, preferencesResource, preferences, preferencesMessages) {
+
+    $scope.messages = preferencesMessages;
 
     // Create our preferences object on the scope.
     $scope.preferences = {};
@@ -35,7 +37,8 @@ define(function(require) {
           $scope.preferences[key] = value;
         });
       })
-      .catch(function() {
+      .catch(function(err) {
+        preferencesMessages.showError(err);
       });
 
     $scope.onSubmit = function() {
@@ -44,9 +47,10 @@ define(function(require) {
       );
       updatedPreferences.$promise
         .then(function(res) {
-
+          preferencesMessages.showSuccess();
         })
         .catch(function(err) {
+          preferencesMessages.showError(err);
         });
     };
   }];

@@ -19,6 +19,9 @@ define(function(require) {
   var preferences = ng.module('admin.preferences', preferencesDependencies);
 
   // Register our providers for the preferences
+  var preferencesMessages = require('./services/preferences-messages');
+  preferences.factory('preferencesMessages', preferencesMessages);
+
   var preferencesResource = require('./resources/preferences');
   preferences.factory('preferencesResource', preferencesResource);
 

@@ -1,10 +1,10 @@
 <article ui-view>
   <h2>Categories</h2>
   <div class="alert" ng-class="messageClassName()" ng-bind-html="messageHtml()" ng-show="showMessage()"></div>
-  <div class="alert alert-info" ng-show="!showTable()">
+  <div class="alert alert-info" ng-show="!showTable()" ng-cloak>
     There are no categories. Create one using the form below.
   </div>
-  <table id="categoryList" class="table table-striped table-bordered table-condensed" ng-show="showTable()">
+  <table id="categoryList" class="table table-striped table-bordered table-condensed" ng-show="showTable()" ng-cloak>
     <thead>
       <tr>
         <th>Text</th>

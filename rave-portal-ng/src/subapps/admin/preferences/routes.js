@@ -19,6 +19,9 @@ define(function(require) {
           templateUrl: '/subapps/admin/preferences/templates/preferences.html',
           authenticate: true,
           controller: preferencesCtrl,
+          onExit: ['preferencesMessages', function(messages) {
+            messages.clearMessage();
+          }],
           resolve: {
             preferences: ['preferencesResource', function(preferencesResource) {
              return preferencesResource.get(); 
