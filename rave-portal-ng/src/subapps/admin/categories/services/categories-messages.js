@@ -13,17 +13,17 @@ define(function() {
 
     return {
       createMessage: function(createdText) {
-        html = 'Created category "<b>' + createdText + '</b>."';
+        html = 'Created category "<b>' + createdText + '</b>"';
         className = 'alert-success';
       },
 
       updateMessage: function(updateData) {
-        html = 'Renamed "<b>' + updateData.oldText + '</b>" to "<b>' + updateData.newText + '</b>."';
+        html = 'Renamed "<b>' + updateData.oldText + '</b>" to "<b>' + updateData.newText + '</b>"';
         className = 'alert-success';
       },
 
       deleteMessage: function(deletedText) {
-        html = 'Deleted "<b>' + deletedText + '</b>".';
+        html = 'Deleted "<b>' + deletedText + '</b>"';
         className = 'alert-success';
       },
 
