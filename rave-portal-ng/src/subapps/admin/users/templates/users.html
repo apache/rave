@@ -1,18 +1,20 @@
 <article ui-view>
   <h2>
-    Showing {{ firstItem() }} - {{ lastItem() }} of {{ users.length }} results
+    Showing {{ usersMeta.start }} - {{ usersMeta.end }} of {{ usersMeta.totalUsers }} results
   </h2>
   <div class="searchHeading paginationHeading">
     <div class="pagination">
     <ul>
-      <li ng-class="prevPageDisabled()">
-        <a ui-sref="portal.admin.users({page:currentPage-1})">&lt;</a>
+      <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
+        <a ng-switch-when="disabled">&lt;</a>
+        <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.page-1})">&lt;</a>
       </li>
-      <li ng-repeat="n in paginationPages(currentPage, pageCount)" ng-class="{ active: n == currentPage }">
+      <li ng-repeat="n in paginationPages(usersMeta.page, usersMeta.pageCount)" ng-class="{ active: n == usersMeta.page }">
         <a ui-sref="portal.admin.users({page:n})">{{ n }}</a>
       </li>
-      <li ng-class="nextPageDisabled()">
-        <a ui-sref="portal.admin.users({page:currentPage+1})">&gt;</a>
+      <li ng-switch on="nextPageDisabled()" ng-class="nextPageDisabled()">
+        <a ng-switch-when="disabled">&gt;</a>
+        <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.page+1})">&gt;</a>
       </li>
     </ul>
   </div>
@@ -47,14 +49,16 @@
   </table>
   <div class="pagination">
   <ul>
-    <li ng-class="prevPageDisabled()">
-      <a ui-sref="portal.admin.users({page:currentPage-1})">&lt;</a>
+    <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
+      <a ng-switch-when="disabled">&lt;</a>
+      <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.page-1})">&lt;</a>
     </li>
-    <li ng-repeat="n in paginationPages(currentPage, pageCount)" ng-class="{ active: n == currentPage }">
+    <li ng-repeat="n in paginationPages(usersMeta.page, usersMeta.pageCount)" ng-class="{ active: n == usersMeta.page }">
       <a ui-sref="portal.admin.users({page:n})">{{ n }}</a>
     </li>
-    <li ng-class="nextPageDisabled()">
-      <a ui-sref="portal.admin.users({page:currentPage+1})">&gt;</a>
+    <li ng-switch on="nextPageDisabled()" ng-class="nextPageDisabled()">
+      <a ng-switch-when="disabled">&gt;</a>
+      <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.page+1})">&gt;</a>
     </li>
   </ul>
 </article>
