@@ -16,6 +16,12 @@
 define(function(require) {
   return ['$rootScope', 'authToken', '$q', 'authApi', 'authCache', '$state', 'locationCache', '$http',
     function($rootScope, authToken, $q, authApi, authCache, $state, locationCache, $http) {
+
+      // Naive setting of our token. This is for resources that are requested on page load;
+      // it's unverified, though, so it might not even work, and, in those cases, the resource
+      // pages are set up to display the proper error.
+      $http.defaults.headers.common.Authorization = 'Basic ' + authToken.get();
+
       return {
 
         // Returns a promise that resolves true or rejects false.

@@ -24,7 +24,7 @@ define(function(require) {
           }],
           resolve: {
             preferences: ['preferencesResource', function(preferencesResource) {
-             return preferencesResource.get(); 
+              return preferencesResource.get(); 
             }]
           }
         });
