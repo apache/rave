@@ -14,7 +14,10 @@ define(function(require) {
       $stateProvider.state('portal.login', {
         url: '/login',
         templateUrl: '/subapps/auth/login/templates/login.html',
-        authenticate: 'no'
+        authenticate: 'no',
+        data: {
+          title: 'Login'
+        }
       });
     }
   ];

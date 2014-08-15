@@ -14,7 +14,10 @@ define(function(require) {
       $stateProvider.state('portal.admin', {
           url: '/app/admin',
           templateUrl: '/subapps/admin/templates/admin.html',
-          authenticate: true
+          authenticate: true,
+          data: {
+            title: 'Admin'
+          }
         });
     }
   ];

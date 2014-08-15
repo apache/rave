@@ -20,8 +20,8 @@ define(function(require) {
     'javascriptDebugMode'
   ];
 
-  return ['$scope', 'preferencesResource', 'preferences', 'preferencesMessages',
-  function($scope, preferencesResource, preferences, preferencesMessages) {
+  return ['$scope', 'preferencesResource', 'preferences', 'preferencesMessages', '$rootScope',
+  function($scope, preferencesResource, preferences, preferencesMessages, $rootScope) {
 
     $scope.messages = preferencesMessages;
 
@@ -47,6 +47,7 @@ define(function(require) {
       );
       updatedPreferences.$promise
         .then(function(res) {
+          $rootScope.preferences = res;
           preferencesMessages.showSuccess();
         })
         .catch(function(err) {

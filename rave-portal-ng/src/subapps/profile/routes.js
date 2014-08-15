@@ -14,7 +14,10 @@ define(function(require) {
       $stateProvider.state('portal.profile', {
         url: '/profile',
         templateUrl: '/subapps/profile/templates/profile.html',
-        authenticate: true
+        authenticate: true,
+        data: {
+          title: 'Profile'
+        }
       });
     }
   ];

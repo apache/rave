@@ -14,7 +14,10 @@ define(function(require) {
       $stateProvider.state('portal.widgetStore', {
         url: '/app/widget-store',
         templateUrl: '/subapps/widget-store/templates/widget-store.html',
-        authenticate: true
+        authenticate: true,
+        data: {
+          title: 'Widget Store'
+        }
       });
     }
   ];

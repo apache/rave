@@ -21,6 +21,7 @@ define(function(require) {
   var widgetStore = require('./subapps/widget-store/widget-store');
   var admin = require('./subapps/admin/admin');
   var auth = require('./subapps/auth/auth');
+  var pageTitle = require('./providers/page-title/page-title');
 
   // Create an array out of our dependencies for Angular's DI
   var raveDependencies = [
@@ -32,6 +33,7 @@ define(function(require) {
     profile.name,
     auth.name,
     admin.name,
+    pageTitle.name,
     'filters'
   ];
 
@@ -40,12 +42,12 @@ define(function(require) {
 
   // Some fake data until the mock API adds the Bootstrap route.
   rave.controller('appData', [
-    '$scope', '$state', '$stateParams',
-    function($scope, $state, $stateParams) {
+    '$scope', '$state', '$stateParams', '$rootScope',
+    function($scope, $state, $stateParams, $rootScope) {
       $scope.nav = window._initialData.nav;
       $scope.loginNav = window._initialData.loginNav;
 
-      $scope.preferences = window.initialData.preferences;
+      $rootScope.preferences = window.initialData.preferences;
 
       // The ui-router doesn't do everything, unfortunately. So we need to
       // store our state data so we can make new directives for it.

@@ -10,7 +10,10 @@ define(function(require) {
       $stateProvider.state('portal.createAccount', {
         url: '/create-account',
         templateUrl: '/subapps/auth/create-account/templates/create-account.html',
-        authenticate: 'no'
+        authenticate: 'no',
+        data: {
+          title: 'Create Account'
+        }
       });
     }
   ];

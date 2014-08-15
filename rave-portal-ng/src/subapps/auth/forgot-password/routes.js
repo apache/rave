@@ -10,7 +10,10 @@ define(function(require) {
       $stateProvider.state('portal.forgotPassword', {
         url: '/forgot-password',
         templateUrl: '/subapps/auth/forgot-password/templates/forgot-password.html',
-        authenticate: 'no'
+        authenticate: 'no',
+        data: {
+          title: 'Forgot Password'
+        }
       });
     }
   ];
