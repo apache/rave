@@ -19,7 +19,10 @@ define(function(require) {
       $stateProvider.state('portal.home', {
         url: '/home',
         templateUrl: '/subapps/home/templates/home.html',
-        authenticate: true
+        authenticate: true,
+        data: {
+          title: 'Home'
+        }
       });
     }
   ];

@@ -10,7 +10,10 @@ define(function(require) {
       $stateProvider.state('portal.forgotUsername', {
         url: '/forgot-username',
         templateUrl: '/subapps/auth/forgot-username/templates/forgot-username.html',
-        authenticate: 'no'
+        authenticate: 'no',
+        data: {
+          title: 'Forgot Username'
+        }
       });
     }
   ];
