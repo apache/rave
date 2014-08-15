@@ -21,9 +21,11 @@ define(function(require) {
           authenticate: true,
           controller: usersCtrl,
           resolve: {
-            usersList: ['usersResource',
-              function(usersResource) {
-                return usersResource.query();
+            usersList: ['usersResource', '$stateParams',
+              function(usersResource, $stateParams) {
+                return usersResource.get({
+                  page: $stateParams.page
+                });
               }]
           }
         })

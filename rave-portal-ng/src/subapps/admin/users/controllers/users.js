@@ -5,31 +5,39 @@
  */
 
 define(function(require) {
-  return ['$scope', '$stateParams', 'pagination', 'usersList',
-  function($scope, $stateParams, pagination, usersList) {
+  return ['$scope', '$stateParams', 'pagination', 'usersList', '$rootScope',
+  function($scope, $stateParams, pagination, usersList, $rootScope) {
 
     $scope.currentPage = +$stateParams.page || 0;
 
-    // How many items to show per page
-    $scope.itemsPerPage = 10;
+    usersList.$promise.then(function() {
+      $scope.users = usersList.data;
 
-    $scope.users = usersList;
+      var usersMeta = usersList.metadata;
 
-    // Our total number of users.
-    $scope.totalUsers = 1000;
+      // Coerce each piece of metadata to a number.
+      _.each(usersMeta, function(val, key) {
+        usersMeta[key] = +val;
+      });
 
-    // The generated pageCount.
-    $scope.pageCount = Math.ceil($scope.totalUsers / $scope.itemsPerPage);
+      $scope.usersMeta = usersMeta;
+    });
 
     // Our paginationPages
     $scope.paginationPages = pagination.paginationPages;
 
     $scope.prevPageDisabled = function() {
+      if (!$scope.currentPage) {
+        return 'disabled';
+      }
       return $scope.currentPage === 1 ? 'disabled' : '';
     };
 
     $scope.nextPageDisabled = function() {
-      return $scope.currentPage === $scope.pageCount ? 'disabled' : '';
+      if (!$scope.usersMeta) {
+        return 'disabled';
+      }
+      return $scope.currentPage === $scope.usersMeta.pageCount ? 'disabled' : '';
     };
   }];
 });
