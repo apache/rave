@@ -145,6 +145,42 @@ define(function(require) {
 		return true;
 	}
 
+	// Parse an endpoint for registration with the mock API. Eventually,
+	// this should be the only thing that's in the core.
+	function registerEndpoint(endpoint) {
+
+		// Get our callback and url from the endpoint
+		var callback = endpoint.callback;
+		var url = endpoint.url;
+
+		// The endpoint methods that we will register
+		var methods = ['get', 'put', 'post', 'delete'];
+
+		// Register each method
+		_.each(methods, function(method) {
+			if (endpoint[method]) {
+				registerEndpointCallback(endpoint, url, method, callback);
+			}
+		});
+	}
+
+	// Once the endpoint has been parsed, we actually make the registration here
+	function registerEndpointCallback(endpoint, route, method, callback) {
+		if (!registeredApiMethods.hasOwnProperty(route)) {
+			registeredApiMethods[route] = {
+				pattern: convertRouteToRegex(baseApiUrl+route),
+				methods: {}
+			};
+		}
+
+		// Bind the callback to the endpoint
+		var moddedCallback = function(method, url, data, headers) {
+			return callback.bind(endpoint)(method, url, data, headers);
+		};
+
+		registeredApiMethods[route].methods[method.toUpperCase()] = moddedCallback;
+	}
+
 	function setSessionStorage(key, value) {
 		try {
 			value = JSON.stringify(value);
@@ -171,6 +207,7 @@ define(function(require) {
 	return {
 		initialize: initializeApiModule,
 		register: registerApiMethod,
+		registerEndpoint: registerEndpoint,
 		db: database,
 		session: {
 			set: setSessionStorage,
