@@ -37,8 +37,7 @@ define(function(require) {
 	require('./modules/category/delete.js');
 
 	// preferences
-	require('./modules/preferences/get.js');
-	require('./modules/preferences/put.js');
+	require('./modules/preferences/index');
 
 	// users
 	require('./modules/users/get.js');
