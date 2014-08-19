@@ -1,5 +1,5 @@
 /*
- * db
+ * preferences-util
  * Methods for getting and setting preferences data. Anytime
  * you need to hit the DB in reference to preferences it should
  * go through this file.
@@ -7,14 +7,14 @@
  */
 
 define(function(require) {
-  var api = require('../../core.js');
+  var api = require('../../core');
 
-  var prefsDb = {
+  var preferencesUtil = {
 
     // Retrieve all of your preferences from the database.
     // Although they're stored in the DB an array of objects with two
     // properties each, key and value, this method transforms that data into an object.
-    get: function() {
+    getAll: function() {
       var results = api.db.query('preferences');
       var preferences = {};
 
@@ -23,6 +23,20 @@ define(function(require) {
       });
 
       return preferences;
+    },
+
+    // Get a specific preference by name.
+    // Returns null if it doesn't exist.
+    getPreference: function(preferenceName) {
+
+      // Get all of our preferences
+      var prefs = preferencesUtil.getAll();
+
+      // Find the one that matches the name
+      var preference = prefs[preferenceName];
+
+      // Return it if it exists; otherwise, null
+      return (typeof preference !== 'undefined') ? preference : null;
     },
 
     // Update the data in the database
@@ -42,11 +56,8 @@ define(function(require) {
 
       // Save our data
       api.db.commit();
-
-      // Lastly, return the updated data
-      return prefsDb.get();
     }
   };
 
-  return prefsDb;
+  return preferencesUtil;
 });

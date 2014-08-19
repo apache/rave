@@ -54,97 +54,6 @@ define(function(require) {
 		$httpBackend.whenJSONP(matchAllRegex).passThrough();
 	}
 
-	function parseQueryString(str) {
-		str = str.split('?')[1];
-    if(typeof str !== 'string' || str.length === 0) {
-    	return {};
-    }
-    var s = str.split('&');
-    var sLength = s.length;
-    var bit, query = {}, first, second;
-    for (var i = 0; i < sLength; i++) {
-      bit = s[i].split('=');
-      first = decodeURIComponent(bit[0]);
-      if(first.length === 0) {
-      	continue;
-      }
-      second = decodeURIComponent(bit[1]);
-      if(typeof query[first] === 'undefined') {
-      	query[first] = second;
-      }
-      else if(query[first] instanceof Array) {
-      	query[first].push(second);
-      }
-      else {
-      	query[first] = [query[first], second];
-      }
-    }
-    return query;
-  }
-
-	function buildApiScope(method, url, data, headers) {
-
-		function requestHasToken() {
-			if (!headers.Authorization) {
-				return false;
-			}
-
-			var token = headers.Authorization.replace( 'Basic ', '' );
-			if (token.length !== 32) {
-				return false;
-			}
-
-			return true;
-		}
-
-		function getCurrentUserFromToken() {
-			if (!requestHasToken(headers)) {
-				return false;
-			}
-
-			var searchParams = {
-				sessionToken: headers.Authorization.replace( 'Basic ', '' )
-			};
-			var results = database.query('users', searchParams);
-			if (results.length === 1) {
-				return results[0];
-			}
-
-			return false;
-		}
-
-		return {
-			requestHasToken: requestHasToken(),
-			userIsAuthenticated: ((getCurrentUserFromToken() !== false) ? true : false),
-			currentUser: getCurrentUserFromToken(),
-			parseQueryString: parseQueryString
-		};
-	}
-
-	function registerApiMethod(route, method, callback) {
-		if (!(/^(get|delete|post|put|jsonp)$/.test(method.toLowerCase()))) {
-			throw new Error('Invalid API method.');
-		} else if (typeof callback !== 'function') {
-			throw new Error('Callback must be a valid function.');
-		}
-
-		if (!registeredApiMethods.hasOwnProperty(route)) {
-			registeredApiMethods[route] = {
-				pattern: convertRouteToRegex(baseApiUrl+route),
-				methods: {}
-			};
-		}
-
-		// this is a really convenient hack to ensure that every HTTP callback
-		// gets our utility methods for authentication
-		var moddedCallback = function(method, url, data, headers) {
-			var scope = buildApiScope(method, url, data, headers);
-			return callback.bind(scope)(method, url, data, headers);
-		};
-		registeredApiMethods[route].methods[method.toUpperCase()] = moddedCallback;
-		return true;
-	}
-
 	// Parse an endpoint for registration with the mock API. Eventually,
 	// this should be the only thing that's in the core.
 	function registerEndpoint(endpoint) {
@@ -206,7 +115,6 @@ define(function(require) {
 	// expose methods we want publicly available
 	return {
 		initialize: initializeApiModule,
-		register: registerApiMethod,
 		registerEndpoint: registerEndpoint,
 		db: database,
 		session: {

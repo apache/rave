@@ -6,10 +6,11 @@
 
 define(function(require) {
   var _ = require('underscore');
+  var ng = require('angular');
   var paramsFromUrl = require('./params');
   var ErrorResponse = require('./error-response');
   var tokenUtil = require('./token-util');
-  var userDb = require('../modules/user/db');
+  var userUtil = require('../modules/user/user-util');
 
   // These are the valid options that you can pass into
   // a new endpoint
@@ -36,6 +37,10 @@ define(function(require) {
     // What is ultimately returned from the endpoint.
     callback: function(method, url, data, headers) {
 
+      // This is a JSON endpoint, so let's convert our
+      // data to JSON
+      data = ng.fromJson(data);
+
       // Our current user, if there is one.
       var currentUser;
 
@@ -51,7 +56,7 @@ define(function(require) {
         }
 
         // Otherwise, we try to get the user from the token
-        var user = userDb.get({
+        var user = userUtil.get({
           sessionToken: token
         });
 

@@ -5,6 +5,7 @@ require.config({
   paths: {
     rave: 'rave',
     jquery: 'jquery/dist/jquery',
+    underscore: 'underscore/underscore',
     angular: 'angular/angular',
     angularMocks: 'angular-mocks/angular-mocks',
     uiRouter: 'angular-ui-router/release/angular-ui-router',
@@ -13,7 +14,7 @@ require.config({
     angularResource: 'angular-resource/angular-resource',
     angularCookie: 'angular-cookie/angular-cookie',
     angularSanitize: 'angular-sanitize/angular-sanitize',
-    moment: 'moment'
+    moment: 'moment/moment'
   },
 
   // load non-amd dependencies

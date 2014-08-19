@@ -2,11 +2,12 @@ define(function(require) {
 	'use strict';
 
 	// dependencies
-	require('underscore/underscore');
+	var _ = require('underscore');
 	var Storage = require('localStorageDB');
 
 	// setup vars
 	var database = new Storage('rave', localStorage);
+
 	var dataImport = {
 		users: require('./import-data/users.js'),
 		categories: require( './import-data/categories.js' ),

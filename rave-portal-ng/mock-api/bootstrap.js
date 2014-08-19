@@ -6,50 +6,36 @@ define(function(require) {
 
 	// setup the mocked database
 	require('./database/install.js');
+	var api = require('./core');
 
-	// The core API
-	var api = require( './core.js');
-
-	// The decorator routes:
-	
 	// auth/login
-	require('./modules/authentication/login/post.js');
+	api.registerEndpoint(require('./modules/authentication/login/endpoint'));
 
 	// auth/logout
-	require('./modules/authentication/verify/post.js');
+	api.registerEndpoint(require('./modules/authentication/verify/endpoint'));
 
 	// auth/forgot-password
-	require('./modules/authentication/forgot-password/post.js');
+	api.registerEndpoint(require('./modules/authentication/forgot-password/endpoint'));
 
 	// auth/forgot-username
-	require('./modules/authentication/forgot-username/post.js');
+	api.registerEndpoint(require('./modules/authentication/forgot-username/endpoint'));
 
 	// auth/create-account
-	require('./modules/authentication/create-account/post.js');
+	api.registerEndpoint(require('./modules/authentication/create-account/endpoint'));
 
-	// categories
-	require('./modules/categories/get.js');
-	require('./modules/categories/post.js');
-
-	// category
-	require('./modules/category/get.js');
-	require('./modules/category/put.js');
-	require('./modules/category/delete.js');
+	// categories & category
+	api.registerEndpoint(require('./modules/categories/endpoint'));
+	api.registerEndpoint(require('./modules/category/endpoint'));
 
 	// preferences
-	require('./modules/preferences/index');
+	api.registerEndpoint(require('./modules/preferences/endpoint'));
 
-	// users
-	require('./modules/users/get.js');
-	require('./modules/user/get.js');
-	require('./modules/user/put.js');
-	require('./modules/user/delete.js');
-
-	// pages
-	require('./modules/pages/get.js');
+	// users & user
+	api.registerEndpoint(require('./modules/users/endpoint'));
+	api.registerEndpoint(require('./modules/user/endpoint'));
 
 	// status
-	require('./modules/status/get.js');
+	api.registerEndpoint(require('./modules/status/endpoint'));
 
 	// bootstrap the API
 	rave.run(api.initialize);

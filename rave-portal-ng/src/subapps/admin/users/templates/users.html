@@ -7,14 +7,14 @@
     <ul>
       <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
         <a ng-switch-when="disabled">&lt;</a>
-        <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.page-1})">&lt;</a>
+        <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage-1})">&lt;</a>
       </li>
-      <li ng-repeat="n in paginationPages(usersMeta.page, usersMeta.pageCount)" ng-class="{ active: n == usersMeta.page }">
+      <li ng-repeat="n in paginationPages(usersMeta.currentPage, usersMeta.pageCount)" ng-class="{ active: n == usersMeta.currentPage }">
         <a ui-sref="portal.admin.users({page:n})">{{ n }}</a>
       </li>
       <li ng-switch on="nextPageDisabled()" ng-class="nextPageDisabled()">
         <a ng-switch-when="disabled">&gt;</a>
-        <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.page+1})">&gt;</a>
+        <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage+1})">&gt;</a>
       </li>
     </ul>
   </div>
@@ -51,14 +51,14 @@
   <ul>
     <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
       <a ng-switch-when="disabled">&lt;</a>
-      <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.page-1})">&lt;</a>
+      <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage-1})">&lt;</a>
     </li>
-    <li ng-repeat="n in paginationPages(usersMeta.page, usersMeta.pageCount)" ng-class="{ active: n == usersMeta.page }">
+    <li ng-repeat="n in paginationPages(usersMeta.currentPage, usersMeta.pageCount)" ng-class="{ active: n == usersMeta.currentPage }">
       <a ui-sref="portal.admin.users({page:n})">{{ n }}</a>
     </li>
     <li ng-switch on="nextPageDisabled()" ng-class="nextPageDisabled()">
       <a ng-switch-when="disabled">&gt;</a>
-      <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.page+1})">&gt;</a>
+      <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage+1})">&gt;</a>
     </li>
   </ul>
 </article>

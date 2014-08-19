@@ -9,8 +9,8 @@
 
 define(function(require) {
 
-  var api = require('./core.js');
-  require('underscore/underscore');
+  var api = require('./core');
+  require('underscore');
 
   function getPreferences() {
     var results = api.db.query('preferences');
