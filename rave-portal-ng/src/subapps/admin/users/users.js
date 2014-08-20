@@ -31,6 +31,9 @@ define(function(require) {
   var userCtrl = require('./controllers/user');
   users.controller('userCtrl', userCtrl);
 
+  var searchCtrl = require('./controllers/search-form');
+  users.controller('searchCtrl', searchCtrl);
+
   // Register the routes
   var routes = require('./routes');
   users.config(routes);

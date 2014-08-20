@@ -1,13 +1,12 @@
 /*
  * usersController
- * Sets up our data & pagination.
+ * This controller sets up our initial data.
  *
  */
 
 define(function(require) {
-  return ['$scope', '$stateParams', 'pagination', 'usersList', '$rootScope',
-  function($scope, $stateParams, pagination, usersList, $rootScope) {
-
+  return ['$scope', '$stateParams', 'pagination', 'usersList', 'usersResource',
+  function($scope, $stateParams, pagination, usersList, usersResource) {
     $scope.currentPage = +$stateParams.page || 0;
 
     usersList.$promise.then(function() {
@@ -22,22 +21,5 @@ define(function(require) {
 
       $scope.usersMeta = usersMeta;
     });
-
-    // Our paginationPages
-    $scope.paginationPages = pagination.paginationPages;
-
-    $scope.prevPageDisabled = function() {
-      if (!$scope.currentPage) {
-        return 'disabled';
-      }
-      return $scope.currentPage === 1 ? 'disabled' : '';
-    };
-
-    $scope.nextPageDisabled = function() {
-      if (!$scope.usersMeta) {
-        return 'disabled';
-      }
-      return $scope.currentPage === $scope.usersMeta.pageCount ? 'disabled' : '';
-    };
   }];
 });
