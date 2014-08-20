@@ -12,6 +12,11 @@ define(function() {
     var className = '';
 
     return {
+      createMessage: function(username) {
+        html = 'Created user "<b>' + username + '</b>"';
+        className = 'alert-success';
+      },
+
       updateMessage: function(username) {
         html = 'Updated user "<b>' + username + '</b>"';
         className = 'alert-success';

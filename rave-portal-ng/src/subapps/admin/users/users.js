@@ -24,6 +24,7 @@ define(function(require) {
   users.factory('userResource', require('./resources/user'));
   users.controller('usersCtrl', require('./controllers/users'));
   users.controller('userCtrl', require('./controllers/user'));
+  users.controller('createUserCtrl', require('./controllers/create-user'));
   users.controller('searchCtrl', require('./controllers/search-form'));
 
   // Register the routes

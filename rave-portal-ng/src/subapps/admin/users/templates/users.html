@@ -4,7 +4,7 @@
     <h2>
       Showing {{ usersMeta.start }} - {{ usersMeta.end }} of {{ usersMeta.totalUsers }} results
     </h2>
-    <div class="searchHeading paginationHeading">
+    <div class="searchHeading paginationHeading clearfix">
       <div class="pagination">
         <ul>
           <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
@@ -67,7 +67,7 @@
     <fieldset>
       <legend>Add New User</legend>
       <br>
-        <button class="btn btn-primary" href="/portal/app/admin/adduser?referringPageId=1"><i class="icon-plus icon-white"></i> Add user</button>
+        <button class="btn btn-primary" ui-sref="portal.admin.users.create"><i class="icon-plus icon-white"></i> Add user</button>
       <br>
     </fieldset>
   </form>

@@ -52,6 +52,7 @@ define(function(require) {
 
       usersList.$promise
         .then(function(response) {
+          $scope.filter = '';
           $scope.users = response.data;
 
           var usersMeta = usersList.metadata;
