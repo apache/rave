@@ -19,7 +19,7 @@ define(function(require) {
           $scope.categories.push(newResource);
         })
         .catch(function(err) {
-          categoriesMessages.errorMessage(err.data);
+          categoriesMessages.errorMessage(err.data.message);
         });
     };
   }];

@@ -6,7 +6,7 @@
 
 define(function(require) {
   var Endpoint = require('../../util/endpoint');
-  var prefsDb = require('./db');
+  var preferencesUtil = require('./preferences-util');
 
   var endpoint = new Endpoint({
 
@@ -15,12 +15,13 @@ define(function(require) {
     // Our get endpoint. All that it does is return our
     // of preferences as a simple object.
     get: function(url, data, headers, params, currentUser) {
-      return [200, prefsDb.get()];
+      return [200, preferencesUtil.getAll()];
     },
 
     // Puts our data into the database.
     put: function(url, data, headers, params, currentUser) {
-      return [200, prefsDb.put(data)];
+      preferencesUtil.put(data);
+      return [200, preferencesUtil.getAll()];
     }
   });
 

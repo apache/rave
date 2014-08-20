@@ -55,7 +55,7 @@ define(function(require) {
           $state.transitionTo('portal.admin.categories');
         })
         .catch(function(err) {
-          categoriesMessages.errorMessage(err.data);
+          categoriesMessages.errorMessage(err.data.message);
         });
     };
 
@@ -72,7 +72,7 @@ define(function(require) {
           $state.transitionTo('portal.admin.categories');
         })
         .catch(function(err) {
-          categoriesMessages.errorMessage(err.data);
+          categoriesMessages.errorMessage(err.data.message);
         });
     };
   }];

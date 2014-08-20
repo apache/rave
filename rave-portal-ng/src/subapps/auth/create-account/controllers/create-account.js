@@ -22,7 +22,7 @@ define(function(require) {
 
           .catch(function(res) {
             $scope.invalid = true;
-            $scope.error = res.data;
+            $scope.error = res.data.message;
           });
       };
     }
