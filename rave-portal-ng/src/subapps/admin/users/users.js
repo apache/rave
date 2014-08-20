@@ -19,20 +19,12 @@ define(function(require) {
   var users = ng.module('admin.users', usersDependencies);
 
   // Register our providers for the users
-  var usersResource = require('./resources/users');
-  users.factory('usersResource', usersResource);
-
-  var userResource = require('./resources/user');
-  users.factory('userResource', userResource);
-  
-  var usersCtrl = require('./controllers/users');
-  users.controller('usersCtrl', usersCtrl);
-
-  var userCtrl = require('./controllers/user');
-  users.controller('userCtrl', userCtrl);
-
-  var searchCtrl = require('./controllers/search-form');
-  users.controller('searchCtrl', searchCtrl);
+  users.factory('usersMessages', require('./services/users-messages'));
+  users.factory('usersResource', require('./resources/users'));
+  users.factory('userResource', require('./resources/user'));
+  users.controller('usersCtrl', require('./controllers/users'));
+  users.controller('userCtrl', require('./controllers/user'));
+  users.controller('searchCtrl', require('./controllers/search-form'));
 
   // Register the routes
   var routes = require('./routes');

@@ -5,8 +5,8 @@
  */
 
 define(function(require) {
-  return ['$scope', '$stateParams', 'pagination', 'usersList', 'usersResource',
-  function($scope, $stateParams, pagination, usersList, usersResource) {
+  return ['$scope', '$stateParams', 'pagination', 'usersList', 'usersResource', 'usersMessages',
+  function($scope, $stateParams, pagination, usersList, usersResource, usersMessages) {
     $scope.currentPage = +$stateParams.page || 0;
 
     usersList.$promise.then(function() {
@@ -20,6 +20,10 @@ define(function(require) {
       });
 
       $scope.usersMeta = usersMeta;
+
+      $scope.showMessage = usersMessages.showMessage;
+      $scope.messageHtml = usersMessages.messageHtml;
+      $scope.messageClassName = usersMessages.messageClassName;
     });
   }];
 });

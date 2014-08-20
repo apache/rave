@@ -26,8 +26,9 @@ define(function(require) {
         return 'disabled';
       }
       var maxPage = $scope.currentPage === $scope.usersMeta.pageCount;
-      var noPages = !$scope.usersMeta.pageCount;
-      return maxPage || noPages ? 'disabled' : '';
+      var noPages = $scope.usersMeta.pageCount === 0;
+      var onePage = $scope.usersMeta.pageCount === 1;
+      return maxPage || noPages || onePage ? 'disabled' : '';
     };
 
     // Whether or not we show the table

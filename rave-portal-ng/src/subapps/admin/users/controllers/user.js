@@ -7,8 +7,8 @@
 define(function(require) {
   var $ = require('jquery');
 
-  return ['$scope', 'userResource', '$state', '$stateParams', 'user',
-  function($scope, userResource, $state, $stateParams, user) {
+  return ['$scope', 'userResource', '$state', '$stateParams', 'user', 'usersMessages',
+  function($scope, userResource, $state, $stateParams, user, usersMessages) {
 
     $scope.user = user;
 
@@ -67,7 +67,11 @@ define(function(require) {
       var savedResource = userResource.update(data);
       
       savedResource.$promise
-        .then(ctrl.updateList)
+        .then(function(response) {
+          ctrl.updateList(response);
+          usersMessages.updateMessage(response.username);
+          $state.transitionTo('portal.admin.users');
+        })
         .catch(function(err) {
         });
     };
@@ -81,7 +85,8 @@ define(function(require) {
         .then(function() {
           ctrl.removeFromList();
           $('#confirm-modal').modal('hide');
-          $state.transitionTo('portal.admin.users', {page:1});
+          usersMessages.deleteMessage($scope.user.username);
+          $state.transitionTo('portal.admin.users');
         })
         .catch(function() {
         });

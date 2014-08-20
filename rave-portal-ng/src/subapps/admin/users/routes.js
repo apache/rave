@@ -20,6 +20,9 @@ define(function(require) {
           templateUrl: '/subapps/admin/users/templates/users.html',
           authenticate: true,
           controller: usersCtrl,
+          onExit: ['usersMessages', function(usersMessages) {
+            usersMessages.clearMessage();
+          }],
           resolve: {
             usersList: ['usersResource', '$stateParams',
               function(usersResource, $stateParams) {
