@@ -1,8 +1,8 @@
-<div class="row-fluid" ng-controller="createAccountController">
+<div class="row-fluid">
   <div class="span10 offset1">
-    <a ui-sref="portal.login">« Return to Login</a>
-    <h1>Create New Account</h1>
-    <form class="form-horizontal well create-account-form" name="createAccountForm" ng-submit="submit(accountInfo)" ng-if="!success">
+    <a ui-sref="portal.admin.users">« Back to users</a>
+    <h1>Create New User</h1>
+    <form class="form-horizontal well create-account-form" name="createAccountForm" ng-submit="submit(accountInfo)">
       <h2>
         Account Information
       </h2>
@@ -121,15 +121,11 @@
           <button class="btn btn-primary" ng-click="submitted=true">
             Create Account
           </button>
-          <span class="help-inline" ng-show="invalid">
+          <span class="help-inline" ng-show="error">
             {{ error }}
           </span>
         </div>
       </fieldset>
     </form>
-    <div ng-if="success" class="alert alert-success">
-      Success! Your account was created, {{ username }}.
-      <br>You should receive the confirmation email that was sent to {{ email }} shortly.
-    </div>
   </div>
 </div>

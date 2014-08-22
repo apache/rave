@@ -1,8 +1,55 @@
 <article ui-view>
-  <h2>
-    Showing {{ usersMeta.start }} - {{ usersMeta.end }} of {{ usersMeta.totalUsers }} results
-  </h2>
-  <div class="searchHeading paginationHeading">
+  <form class="form-horizontal search-form" ng-controller="searchCtrl">
+    <div class="alert" ng-class="messageClassName()" ng-bind-html="messageHtml()" ng-show="showMessage()"></div>
+    <h2>
+      Showing {{ usersMeta.start }} - {{ usersMeta.end }} of {{ usersMeta.totalUsers }} results
+    </h2>
+    <div class="searchHeading paginationHeading clearfix">
+      <div class="pagination">
+        <ul>
+          <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
+            <a ng-switch-when="disabled">&lt;</a>
+            <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage-1})">&lt;</a>
+          </li>
+          <li ng-repeat="n in paginationPages(usersMeta.currentPage, usersMeta.pageCount)" ng-class="{ active: n == usersMeta.currentPage }">
+            <a ui-sref="portal.admin.users({page:n})">{{ n }}</a>
+          </li>
+          <li ng-switch on="nextPageDisabled()" ng-class="nextPageDisabled()">
+            <a ng-switch-when="disabled">&gt;</a>
+            <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage+1})">&gt;</a>
+          </li>
+        </ul>
+      </div>
+      <fieldset>
+        <div class="input-append">
+          <input class="input-medium" type="search" id="searchTerm" name="searchTerm" value="" placeholder="Search Users" ng-model="filter">
+          <button class="btn btn-primary" ng-click="search()">Search</button>
+        </div>
+      </fieldset>
+    </div>
+    <div ng-show="!showResults()" class="alert alert-warning">
+      There were no results. <a ng-click="clearSearch()" class="bold-link">Clear search.</a>
+    </div>
+    <table class="table table-striped table-bordered table-condensed" ng-show="showResults()">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Account Enabled</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in users">
+          <td>
+            <a ui-sref="portal.admin.users.detail({id: user.ID, page: null})">
+              {{ user.username }}
+            </a>
+          </td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.enabled }}</td>
+        </tr>
+      </tbody>
+    </table>
     <div class="pagination">
     <ul>
       <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
@@ -17,48 +64,11 @@
         <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage+1})">&gt;</a>
       </li>
     </ul>
-  </div>
-    <form class="form-horizontal search-form" action="/portal/app/admin/users/search" method="get">
-      <fieldset>
-        <div class="input-append">
-          <input class="input-medium" type="search" id="searchTerm" name="searchTerm" value="" placeholder="Search Users">
-          <button class="btn btn-primary" type="submit" value="Search">Search</button>
-        </div>
-      </fieldset>
-    </form>
-  </div>
-  <table class="table table-striped table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Account Enabled</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="user in users">
-        <td>
-          <a ui-sref="portal.admin.users.detail({id: user.ID, page: null})">
-            {{ user.username }}
-          </a>
-        </td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.enabled }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="pagination">
-  <ul>
-    <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
-      <a ng-switch-when="disabled">&lt;</a>
-      <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage-1})">&lt;</a>
-    </li>
-    <li ng-repeat="n in paginationPages(usersMeta.currentPage, usersMeta.pageCount)" ng-class="{ active: n == usersMeta.currentPage }">
-      <a ui-sref="portal.admin.users({page:n})">{{ n }}</a>
-    </li>
-    <li ng-switch on="nextPageDisabled()" ng-class="nextPageDisabled()">
-      <a ng-switch-when="disabled">&gt;</a>
-      <a ng-switch-default ui-sref="portal.admin.users({page:usersMeta.currentPage+1})">&gt;</a>
-    </li>
-  </ul>
+    <fieldset>
+      <legend>Add New User</legend>
+      <br>
+        <button class="btn btn-primary" ui-sref="portal.admin.users.create"><i class="icon-plus icon-white"></i> Add user</button>
+      <br>
+    </fieldset>
+  </form>
 </article>

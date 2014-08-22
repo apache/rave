@@ -16,15 +16,22 @@ define(function(require) {
       return api.db.query('users');
     },
 
-    // Get the list of all users
-    getPage: function(currentPage) {
+    // Get the list of users, optionally filtering by filter string
+    getPage: function(currentPage, filter) {
 
       // Get the page size from the database
       var pageSize = preferencesUtil.getPreference('pageSize');
 
+      // Get a naive list of users from the DB
       var allUsers = usersUtil.getAll();
 
-      // Get a naive list of users from the DB
+      // Filter them, if filter is passed
+      if (filter) {
+        allUsers = _.filter(allUsers, function(user) {
+          return user.username.indexOf(filter) > -1;
+        });
+      }
+
       var filteredUsers = [];
 
       _.each(allUsers, function(rawUser) {

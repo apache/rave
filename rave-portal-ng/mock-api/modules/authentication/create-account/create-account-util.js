@@ -44,6 +44,7 @@ define(function(require) {
         relationshipStatus: (data.hasOwnProperty('relationshipStatus') ? data.relationshipStatus: ''),
         description: (data.hasOwnProperty('description') ? data.description: ''),
         locked: false,
+        sessionToken: '',
         enabled: true,
         expired: false,
         authorities: ['ROLE_USER']
