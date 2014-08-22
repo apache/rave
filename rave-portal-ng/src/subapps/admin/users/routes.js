@@ -36,7 +36,7 @@ define(function(require) {
 
         // Show a particular user's profile
         .state('portal.admin.users.detail', {
-          url: '/users/detail-:id',
+          url: '/detail-:id',
           templateUrl: '/subapps/admin/users/templates/user.html',
           authenticate: true,
           controller: userCtrl,

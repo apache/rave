@@ -1,5 +1,5 @@
 <article ui-view>
-  <form class="form-horizontal search-form" ng-controller="searchCtrl">
+  <form class="form-horizontal search-form" ng-controller="userSearchCtrl">
     <div class="alert" ng-class="messageClassName()" ng-bind-html="messageHtml()" ng-show="showMessage()"></div>
     <h2>
       Showing {{ usersMeta.start }} - {{ usersMeta.end }} of {{ usersMeta.totalUsers }} results
