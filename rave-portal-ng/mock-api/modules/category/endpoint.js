@@ -86,7 +86,7 @@ define(function(require) {
       }
 
       // Otherwise, we delete the category and send back a success response
-      categoryUtil.deleteCategory(categoryID);
+      categoryUtil.deleteCategory({ID: categoryID});
 
       return [200, null];
     }
