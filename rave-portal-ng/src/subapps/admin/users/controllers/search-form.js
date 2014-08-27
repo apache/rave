@@ -8,8 +8,8 @@
 define(function(require) {
 
   // Return the categories resource
-  return ['$scope', 'usersResource', 'pagination',
-  function($scope, usersResource, pagination) {
+  return ['$scope', 'usersResource', 'pagination', '$state',
+  function($scope, usersResource, pagination, $state) {
 
     // Our paginationPages
     $scope.paginationPages = pagination.paginationPages;
@@ -47,47 +47,9 @@ define(function(require) {
       }
     };
 
-    $scope.clearSearch = function() {
-      var usersList = usersResource.get();
-
-      usersList.$promise
-        .then(function(response) {
-          $scope.filter = '';
-          $scope.users = response.data;
-
-          var usersMeta = usersList.metadata;
-
-          // Coerce each piece of metadata to a number.
-          _.each(usersMeta, function(val, key) {
-            usersMeta[key] = +val;
-          });
-
-          $scope.usersMeta = usersMeta;
-        })
-        .catch(function() {
-        });
-    };
-
-    $scope.search = function() {
-      var usersList = usersResource.get({
-        filter: $scope.filter
-      });
-
-      usersList.$promise
-        .then(function(response) {
-          $scope.users = response.data;
-
-          var usersMeta = usersList.metadata;
-
-          // Coerce each piece of metadata to a number.
-          _.each(usersMeta, function(val, key) {
-            usersMeta[key] = +val;
-          });
-
-          $scope.usersMeta = usersMeta;
-        })
-        .catch(function() {
-        });
+    $scope.search = function(options) {
+      options = options || {};
+      $state.transitionTo('portal.admin.users', {page:1, filter:options.filter});
     };
   }];
 });

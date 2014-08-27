@@ -17,7 +17,7 @@ define(function(require) {
 
         // The main state. Displays our list of users.
         .state('portal.admin.users', {
-          url: '/users?page',
+          url: '/users?page&filter',
           templateUrl: '/subapps/admin/users/templates/users.html',
           authenticate: true,
           controller: usersCtrl,
@@ -28,7 +28,8 @@ define(function(require) {
             usersList: ['usersResource', '$stateParams',
               function(usersResource, $stateParams) {
                 return usersResource.get({
-                  page: $stateParams.page
+                  page: $stateParams.page,
+                  filter: $stateParams.filter
                 });
               }]
           }
