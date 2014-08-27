@@ -5,26 +5,19 @@
   Activity Stream
 </h2>
 <section class="formbox">
-  <form id="updateWidget" class="form-horizontal" action="update" method="POST">
+  <form id="updateWidget" class="form-horizontal">
     <legend>
       Edit widget data
-      <div class="control-group pull-right">
-        <div class="controls">
-          <a href="#" class="btn btn-warning storeItemButton" id="fetchMetadataButton">
-            Update widget metadata
-          </a>
-        </div>
-      </div>
     </legend>
-    <p>
+    <div class="alert alert-info">
       Field marked with * are required
-    </p>
+    </div>
     <div class="control-group">
       <label for="title" class="control-label">
         Title *
       </label>
       <div class="controls">
-        <input id="title" name="title" class="long" autofocus="autofocus" required="required" type="text" value="Activity Stream">
+        <input id="title" name="title" class="long" autofocus="autofocus" required="required" type="text" ng-model="title">
       </div>
     </div>
     <div class="control-group">
@@ -32,7 +25,7 @@
         Location (URL) *
       </label>
       <div class="controls">
-        <input type="url" name="url" id="url" placeholder="http://example.com/widget.xml" required="required" class="long" value="https://raw.github.com/OpenSocial/examples/master/gadgets/activitystream/gadget.xml">
+        <input type="url" name="url" id="url" placeholder="http://example.com/widget.xml" required="required" class="long" ng-model="url">
       </div>
     </div>
     <div class="control-group">
@@ -41,11 +34,11 @@
         </label> 
         <div class="controls">
           <label for="type1" class="radio">
-            <input id="type1" name="type" type="radio" value="OpenSocial" checked="checked">
+            <input id="type1" name="type" type="radio" value="OpenSocial" ng-model="type">
             &nbsp; OpenSocial
           </label> 
           <label for="type2" class="radio">
-            <input id="type2" name="type" type="radio" value="W3C">
+            <input id="type2" name="type" type="radio" value="W3C" ng-model="type">
             &nbsp; W3C Widget
           </label>
         </div>
@@ -55,9 +48,7 @@
         Description *
       </label>
       <div class="controls">
-        <textarea id="description" name="description" class="long" required="required">
-          OpenSocial Activity Stream gadget with support for Embedded Experiences
-        </textarea>
+        <textarea id="description" name="description" class="long" required="required" ng-model="description"></textarea>
       </div>
     </div>
     <div class="control-group">
@@ -65,8 +56,7 @@
         Featured
       </label>
       <div class="controls">
-        <input id="featured" name="featured" type="checkbox" value="true" checked="checked">
-        <input type="hidden" name="_featured" value="on">
+        <input id="featured" name="featured" type="checkbox" ng-model="featured">
       </div>
     </div>
     <div class="control-group">
@@ -74,8 +64,7 @@
         Disable Widget
       </label>
       <div class="controls">
-        <input id="disableRendering" name="disableRendering" type="checkbox" value="true">
-        <input type="hidden" name="_disableRendering" value="on">
+        <input id="disableRendering" name="disableRendering" type="checkbox" ng-model="disable">
       </div>
     </div>
     <div class="control-group">
@@ -83,7 +72,7 @@
         Disable Widget Message
       </label>
       <div class="controls">
-        <input id="disableRenderingMessage" name="disableRenderingMessage" class="long" autofocus="autofocus" type="text" value="">
+        <input id="disableRenderingMessage" name="disableRenderingMessage" class="long" autofocus="autofocus" type="text" ng-model="disabledMessage">
       </div>
     </div>
     <div class="control-group">
@@ -91,8 +80,8 @@
         Status
       </label>
       <div class="controls">
-        <select id="widgetStatus" name="widgetStatus">
-          <option value="PUBLISHED" selected="selected">PUBLISHED</option>
+        <select id="widgetStatus" name="widgetStatus" ng-model="status">
+          <option value="PUBLISHED">PUBLISHED</option>
           <option value="PREVIEW">PREVIEW</option>
         </select>
       </div>
@@ -100,21 +89,15 @@
     <div class="control-group">
       <label for="categories" class="control-label">Categories:</label>
         <div class="controls">
-          <select id="categories" name="categories" multiple="multiple" size="10">
-            <option value="5">Communications</option>
-            <option value="2">News</option>
-            <option value="4">Projects</option>
-            <option value="1">Technology</option>
-            <option value="3">Travel</option>
+          <select id="categories" name="categories" multiple ng-model="selectedCategories" ng-options="category.text for category in categoriesList">
           </select>
-        <input type="hidden" name="_categories" value="1">
       </div>
     </div>
     <div class="control-group">
       <label for="thumbnailUrl" class="control-label">
         Thumbnail</label>
       <div class="controls">
-        <input type="url" name="thumbnailUrl" id="thumbnailUrl" placeholder="http://example.com/thumbnail.png" class="long" value="">
+        <input type="url" name="thumbnailUrl" id="thumbnailUrl" placeholder="http://example.com/thumbnail.png" class="long" ng-model="thumbnailUrl">
       </div>
     </div>
     <div class="control-group">
@@ -122,7 +105,7 @@
         Screenshot
       </label>
       <div class="controls">
-        <input type="url" name="screenshotUrl" id="screenshotUrl" placeholder="http://example.com/screenshot.png" class="long" value="">
+        <input type="url" name="screenshotUrl" id="screenshotUrl" placeholder="http://example.com/screenshot.png" class="long" ng-model="screenshotUrl">
       </div>
     </div>
     <div class="control-group">
@@ -130,13 +113,13 @@
         URL the widget title links to
       </label>
       <div class="controls">
-        <input type="url" name="titleUrl" id="titleUrl" class="long" value="">
+        <input type="url" name="titleUrl" id="titleUrl" class="long" ng-model="titleUrl">
       </div>
     </div>
     <div class="control-group">
       <label for="author" class="control-label">Author</label>
       <div class="controls">
-        <input id="author" name="author" class="long" type="text" value="OpenSocial Foundation">
+        <input id="author" name="author" class="long" type="text" ng-model="author">
       </div>
     </div>
     <div class="control-group">
@@ -144,11 +127,11 @@
         Author's email address
       </label>
       <div class="controls">
-        <input type="email" name="authorEmail" id="authorEmail" class="long" value="">
+        <input type="email" name="authorEmail" id="authorEmail" class="long" ng-model="authorEmail">
       </div>
     </div>
     <fieldset>
-      <button class="btn btn-primary" type="submit" value="Update widget">Update widget</button>
+      <button class="btn" type="submit" value="Update widget" ng-click="onSave()">Save Changes</button>
     </fieldset>
   </form>
 </section>
