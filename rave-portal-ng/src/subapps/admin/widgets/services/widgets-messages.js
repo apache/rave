@@ -12,18 +12,18 @@ define(function() {
     var className = '';
 
     return {
-      createMessage: function(username) {
-        html = 'Created widget "<b>' + username + '</b>"';
+      createMessage: function(widgetName) {
+        html = 'Created widget "<b>' + widgetName + '</b>"';
         className = 'alert-success';
       },
 
-      updateMessage: function(username) {
-        html = 'Updated widget "<b>' + username + '</b>"';
+      updateMessage: function(widgetName) {
+        html = 'Updated widget "<b>' + widgetName + '</b>"';
         className = 'alert-success';
       },
 
-      deleteMessage: function(username) {
-        html = 'Deleted widget "<b>' + username + '</b>"';
+      deleteMessage: function(widgetName) {
+        html = 'Deleted widget "<b>' + widgetName + '</b>"';
         className = 'alert-success';
       },
 

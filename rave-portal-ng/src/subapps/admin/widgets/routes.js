@@ -27,7 +27,10 @@ define(function(require) {
                 });
               }
             ]
-          }
+          },
+          onExit: ['widgetsMessages', function(widgetsMessages) {
+            widgetsMessages.clearMessage();
+          }]
         })
         .state('portal.admin.widgets.detail', {
           url: '/widget/:id',
@@ -39,7 +42,10 @@ define(function(require) {
               function(widgetResource, $stateParams) {
                 return widgetResource.get({id: $stateParams.id});
               }]
-          }
+          },
+          onEnter: ['widgetsMessages', function(widgetsMessages) {
+            widgetsMessages.clearMessage();
+          }],
         });
     }
   ];
