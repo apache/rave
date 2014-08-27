@@ -5,8 +5,8 @@
  */
 
 define(function(require) {
-  return ['$scope', '$stateParams', 'pagination', 'widgetsList', '$rootScope',
-  function($scope, $stateParams, pagination, widgetsList, $rootScope) {
+  return ['$scope', '$stateParams', 'pagination', 'widgetsList', '$rootScope', 'widgetsMessages',
+  function($scope, $stateParams, pagination, widgetsList, $rootScope, widgetsMessages) {
 
     $scope.currentPage = +$stateParams.page || 0;
     $scope.filter = $stateParams.filter || '';
@@ -40,5 +40,9 @@ define(function(require) {
       }
       return $scope.currentPage === $scope.widgetsMeta.pageCount ? 'disabled' : '';
     };
+
+    $scope.showMessage = widgetsMessages.showMessage;
+    $scope.messageHtml = widgetsMessages.messageHtml;
+    $scope.messageClassName = widgetsMessages.messageClassName;
   }];
 });

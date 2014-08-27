@@ -48,12 +48,14 @@ define(function(require) {
     };
 
     $scope.search = function(options) {
+      options = options || {};
+
       var widgetsList = widgetsResource.get(options);
 
       widgetsList.$promise
         .then(function(response) {
           $scope.widgets = response.data;
-          if ($scope.resetFilter) {
+          if (!options.filter) {
             $scope.filter = '';
           }
 

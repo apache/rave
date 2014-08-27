@@ -45,7 +45,10 @@ define(function(require) {
               function(userResource, $stateParams) {
                 return userResource.get({id: $stateParams.id});
               }]
-          }
+          },
+          onEnter: ['usersMessages', function(usersMessages) {
+            usersMessages.clearMessage();
+          }],
         })
 
         // Create a new account

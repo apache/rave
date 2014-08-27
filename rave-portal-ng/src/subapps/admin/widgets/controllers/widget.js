@@ -77,7 +77,7 @@ define(function(require) {
       savedResource.$promise
         .then(function(response) {
           ctrl.updateList(response);
-          widgetsMessages.updateMessage(response.widgetname);
+          widgetsMessages.updateMessage(response.title);
           $state.transitionTo('portal.admin.widgets');
         })
         .catch(function(err) {
@@ -93,7 +93,7 @@ define(function(require) {
         .then(function() {
           ctrl.removeFromList();
           $('#confirm-modal').modal('hide');
-          widgetsMessages.deleteMessage($scope.widget.widgetname);
+          widgetsMessages.deleteMessage($scope.widget.title);
           $state.transitionTo('portal.admin.widgets');
         })
         .catch(function() {
