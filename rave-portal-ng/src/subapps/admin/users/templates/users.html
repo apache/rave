@@ -23,12 +23,12 @@
       <fieldset>
         <div class="input-append">
           <input class="input-medium" type="search" id="searchTerm" name="searchTerm" value="" placeholder="Search Users" ng-model="filter">
-          <button class="btn btn-primary" ng-click="search()">Search</button>
+          <button class="btn btn-primary" ng-click="search({filter:filter})">Search</button>
         </div>
       </fieldset>
     </div>
     <div ng-show="!showResults()" class="alert alert-warning">
-      There were no results. <a ng-click="clearSearch()" class="bold-link">Clear search.</a>
+      There were no results. <a ng-click="search()" class="bold-link">Clear search.</a>
     </div>
     <table class="table table-striped table-bordered table-condensed" ng-show="showResults()">
       <thead>

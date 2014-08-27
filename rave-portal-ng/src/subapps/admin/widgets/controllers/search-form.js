@@ -49,28 +49,7 @@ define(function(require) {
 
     $scope.search = function(options) {
       options = options || {};
-
-      var widgetsList = widgetsResource.get(options);
-
-      widgetsList.$promise
-        .then(function(response) {
-          $scope.widgets = response.data;
-          if (!options.filter) {
-            $scope.filter = '';
-          }
-
-          var widgetsMeta = widgetsList.metadata;
-
-          // Coerce each piece of metadata to a number.
-          _.each(widgetsMeta, function(val, key) {
-            widgetsMeta[key] = +val;
-          });
-
-          $scope.widgetsMeta = widgetsMeta;
-          $state.transitionTo('portal.admin.widgets', {page:1, filter:$scope.filter});
-        })
-        .catch(function() {
-        });
+      $state.transitionTo('portal.admin.widgets', {page:1, filter:options.filter});
     };
   }];
 });

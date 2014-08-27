@@ -8,6 +8,7 @@ define(function(require) {
   return ['$scope', '$stateParams', 'pagination', 'usersList', 'usersResource', 'usersMessages',
   function($scope, $stateParams, pagination, usersList, usersResource, usersMessages) {
     $scope.currentPage = +$stateParams.page || 0;
+    $scope.filter = $stateParams.filter || '';
 
     usersList.$promise.then(function() {
       $scope.users = usersList.data;
