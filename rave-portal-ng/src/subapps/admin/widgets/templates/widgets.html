@@ -1,0 +1,69 @@
+<article ui-view>
+  <form class="form-horizontal search-form" ng-controller="widgetSearchCtrl">
+    <div class="alert" ng-class="messageClassName()" ng-bind-html="messageHtml()" ng-show="showMessage()"></div>
+    <h2>
+      Showing {{ widgetsMeta.start }} - {{ widgetsMeta.end }} of {{ widgetsMeta.totalUsers }} results
+    </h2>
+    <div class="searchHeading paginationHeading clearfix">
+      <div class="pagination">
+        <ul>
+          <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
+          <a ng-switch-when="disabled">&lt;</a>
+          <a ng-switch-default ui-sref="portal.admin.widgets({page:widgetsMeta.currentPage-1})">&lt;</a>
+        </li>
+        <li ng-repeat="n in paginationPages(widgetsMeta.currentPage, widgetsMeta.pageCount)" ng-class="{ active: n == widgetsMeta.currentPage }">
+          <a ui-sref="portal.admin.widgets({page:n})">{{ n }}</a>
+        </li>
+        <li ng-switch on="nextPageDisabled()" ng-class="nextPageDisabled()">
+          <a ng-switch-when="disabled">&gt;</a>
+          <a ng-switch-default ui-sref="portal.admin.widgets({page:widgetsMeta.currentPage+1})">&gt;</a>
+        </li>
+        </ul>
+      </div>
+      <fieldset>
+        <div class="input-append">
+          <input class="input-medium" type="search" id="searchTerm" name="searchTerm" value="" placeholder="Search Widgets" ng-model="filter">
+          <button class="btn btn-primary" type="submit" value="Search" ng-click="search({filter:filter})">Search</button>
+        </div>
+      </fieldset>
+    </div>
+    <div ng-show="!showResults()" class="alert alert-warning">
+      There were no results. <a ng-click="search()" class="bold-link">Clear search.</a>
+    </div>
+    <table class="table table-striped table-bordered table-condensed" ng-show="showResults()">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="widget in widgets">
+          <td>
+            <a ui-sref="portal.admin.widgets.detail({id: {{ widget.ID }}, page: null})">
+              {{ widget.title }}
+            </a>
+          </td>
+          <td>{{ widget.type }}</td>
+          <td>published</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <ul>
+        <li ng-switch on="prevPageDisabled()" ng-class="prevPageDisabled()">
+          <a ng-switch-when="disabled">&lt;</a>
+          <a ng-switch-default ui-sref="portal.admin.widgets({page:widgetsMeta.currentPage-1})">&lt;</a>
+        </li>
+        <li ng-repeat="n in paginationPages(widgetsMeta.currentPage, widgetsMeta.pageCount)" ng-class="{ active: n == widgetsMeta.currentPage }">
+          <a ui-sref="portal.admin.widgets({page:n})">{{ n }}</a>
+        </li>
+        <li ng-switch on="nextPageDisabled()" ng-class="nextPageDisabled()">
+          <a ng-switch-when="disabled">&gt;</a>
+          <a ng-switch-default ui-sref="portal.admin.widgets({page:widgetsMeta.currentPage+1})">&gt;</a>
+        </li>
+      </ul>
+    </div>
+  </form>
+</article>

@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder vagrant_dir, "/rave/", :mount_options => [ "dmode=775", "fmode=774" ]
 
   if defined? VagrantPlugins::HostsUpdater
-    config.hostsupdater.aliases = ["rave.dev"]
+    config.hostsupdater.aliases = ["rave.dev", "localhost"]
   end
 
   # Provision

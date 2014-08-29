@@ -1,0 +1,137 @@
+<a ui-sref="portal.admin.widgets">
+  « Back to widgets
+</a>
+<h2>
+  Activity Stream
+</h2>
+<section class="formbox">
+  <form id="updateWidget" class="form-horizontal">
+    <legend>
+      Edit widget data
+    </legend>
+    <div class="alert alert-info">
+      Field marked with * are required
+    </div>
+    <div class="control-group">
+      <label for="title" class="control-label">
+        Title *
+      </label>
+      <div class="controls">
+        <input id="title" name="title" class="long" autofocus="autofocus" required="required" type="text" ng-model="title">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="url" class="control-label">
+        Location (URL) *
+      </label>
+      <div class="controls">
+        <input type="url" name="url" id="url" placeholder="http://example.com/widget.xml" required="required" class="long" ng-model="url">
+      </div>
+    </div>
+    <div class="control-group">
+        <label for="type1" class="control-label">
+          Type *
+        </label> 
+        <div class="controls">
+          <label for="type1" class="radio">
+            <input id="type1" name="type" type="radio" value="OpenSocial" ng-model="type">
+            &nbsp; OpenSocial
+          </label> 
+          <label for="type2" class="radio">
+            <input id="type2" name="type" type="radio" value="W3C" ng-model="type">
+            &nbsp; W3C Widget
+          </label>
+        </div>
+    </div>
+    <div class="control-group">
+      <label for="description" class="control-label">
+        Description *
+      </label>
+      <div class="controls">
+        <textarea id="description" name="description" class="long" required="required" ng-model="description"></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="featured" class="control-label">
+        Featured
+      </label>
+      <div class="controls">
+        <input id="featured" name="featured" type="checkbox" ng-model="featured">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="disableRendering" class="control-label">
+        Disable Widget
+      </label>
+      <div class="controls">
+        <input id="disableRendering" name="disableRendering" type="checkbox" ng-model="disable">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="disableRenderingMessage" class="control-label">
+        Disable Widget Message
+      </label>
+      <div class="controls">
+        <input id="disableRenderingMessage" name="disableRenderingMessage" class="long" autofocus="autofocus" type="text" ng-model="disabledMessage">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="widgetStatus" class="control-label">
+        Status
+      </label>
+      <div class="controls">
+        <select id="widgetStatus" name="widgetStatus" ng-model="status">
+          <option value="PUBLISHED">PUBLISHED</option>
+          <option value="PREVIEW">PREVIEW</option>
+        </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="categories" class="control-label">Categories:</label>
+        <div class="controls">
+          <select id="categories" name="categories" multiple ng-model="selectedCategories" ng-options="category.text for category in categoriesList">
+          </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="thumbnailUrl" class="control-label">
+        Thumbnail</label>
+      <div class="controls">
+        <input type="url" name="thumbnailUrl" id="thumbnailUrl" placeholder="http://example.com/thumbnail.png" class="long" ng-model="thumbnailUrl">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="screenshotUrl" class="control-label">
+        Screenshot
+      </label>
+      <div class="controls">
+        <input type="url" name="screenshotUrl" id="screenshotUrl" placeholder="http://example.com/screenshot.png" class="long" ng-model="screenshotUrl">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="titleUrl" class="control-label">
+        URL the widget title links to
+      </label>
+      <div class="controls">
+        <input type="url" name="titleUrl" id="titleUrl" class="long" ng-model="titleUrl">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="author" class="control-label">Author</label>
+      <div class="controls">
+        <input id="author" name="author" class="long" type="text" ng-model="author">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="authorEmail" class="control-label">
+        Author's email address
+      </label>
+      <div class="controls">
+        <input type="email" name="authorEmail" id="authorEmail" class="long" ng-model="authorEmail">
+      </div>
+    </div>
+    <fieldset>
+      <button class="btn" type="submit" value="Update widget" ng-click="onSave()">Save Changes</button>
+    </fieldset>
+  </form>
+</section>

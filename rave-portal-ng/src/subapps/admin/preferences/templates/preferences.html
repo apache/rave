@@ -1,0 +1,70 @@
+<article ui-view>
+  <h2>Preferences</h2>
+  <div class="alert" ng-class="messages.messageClassName()" ng-show="messages.showMessage()">
+    {{ messages.messageText() }}
+  </div>
+  <form id="preferenceForm" class="form-horizontal">
+    <p>Field marked with * are required</p>
+    <div class="control-group">
+      <label for="titleSuffix.value" class="control-label">
+        Page title suffix
+      </label>
+      <div class="controls">
+        <input id="titleSuffix.value" name="titleSuffix.value" type="text" ng-model="preferences.titleSuffix" ng-trim="false">
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="pageSize" class="control-label">
+        Number of items per page (list) *
+      </label>
+      <div class="controls">
+        <input id="pageSize" name="pageSize.value" type="number" step="1" ng-model="preferences.pageSize" required>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="defaultWidgetHeight" class="control-label">
+        Default widget height *
+      </label>
+      <div class="controls">
+        <input id="defaultWidgetHeight" name="defaultWidgetHeight.value" type="number" step="1" ng-model="preferences.defaultWidgetHeight" required>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="javaScriptDebugMode.value" class="control-label">
+        JavaScript Debug Mode *
+      </label>
+      <div class="controls">
+        <select id="javaScriptDebugMode" name="javaScriptDebugMode.value" ng-model="preferences.javascriptDebugMode" required>
+          <option value="0">Disabled</option>
+          <option value="1">Enabled</option>
+        </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="initialWidgetStatus.value" class="control-label">
+        Initial status to use for new widgets *
+      </label>
+      <div class="controls">
+        <select id="initialWidgetStatus" name="initialWidgetStatus.value" ng-model="preferences.initialWidgetStatus" required>
+          <option value="preview">
+            Preview
+          </option>
+          <option value="published">
+            Published
+          </option>
+        </select>
+      </div>
+    </div>                      
+    <div class="control-group">
+      <label for="externalMarketplaceUrl.value" class="control-label">
+        Location (URL) of external widget marketplace
+      </label>
+      <div class="controls">
+        <input id="externalMarketplaceUrl.value" name="externalMarketplaceUrl.value" type="text" ng-model="preferences.externalMarketplaceUrl">
+      </div>
+    </div>
+    <fieldset>
+      <button class="btn btn-primary" ng-click="onSubmit()">Update preferences</button>
+    </fieldset>
+  </form>
+</article>

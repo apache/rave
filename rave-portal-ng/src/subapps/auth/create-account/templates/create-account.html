@@ -1,0 +1,135 @@
+<div class="row-fluid" ng-controller="createAccountController">
+  <div class="span10 offset1">
+    <a ui-sref="portal.login">« Return to Login</a>
+    <h1>Create New Account</h1>
+    <form class="form-horizontal well create-account-form" name="createAccountForm" ng-submit="submit(accountInfo)" ng-if="!success">
+      <h2>
+        Account Information
+      </h2>
+      <div class="alert">
+        Fields marked with * are required.
+      </div>
+      <fieldset>
+        <div class="control-group" ng-class="{error: submitted && createAccountForm.username.$error.required}">
+          <label class="control-label" for="username">*Username:</label>
+          <div class="controls">
+            <input id="username" name="username" autofocus="autofocus" autocorrect="off" required autocapitalize="off" type="text" class="valid" ng-model="accountInfo.username">
+            <span id="inline-help" ng-show="submitted && createAccountForm.username.$error.required">
+              A username is required.
+            </span>
+          </div>
+        </div>
+        <div class="control-group" ng-class="{error: submitted && createAccountForm.accountPassword.$error.required}">
+          <label class="control-label" for="accountPassword">*Password:</label>
+          <div class="controls">
+            <input id="accountPassword" name="accountPassword" required type="password" ng-model="accountInfo.password">
+            <span id="inline-help" ng-show="submitted && createAccountForm.accountPassword.$error.required">
+              A password is required.
+            </span>
+          </div>
+        </div>
+        <div class="control-group" ng-class="{error: submitted && createAccountForm.confirmPassword.$error.required || createAccountForm.confirmPassword.$error.pwmatch}">
+          <label class="control-label" for="confirm-password">*Confirm password:</label>
+          <div class="controls">
+            <input id="confirm-password" name="confirmPassword" required type="password" ng-model="accountInfo.confirmPassword" pw-check="accountPassword">
+            <span id="inline-help" ng-show="submitted && createAccountForm.confirmPassword.$error.required">
+              Please confirm your password.
+            </span>
+            <span id="inline-help" ng-show="createAccountForm.confirmPassword.$error.pwmatch">
+              The passwords don't match.
+            </span>
+          </div>
+        </div>
+        <div class="control-group" ng-class="{error: submitted && createAccountForm.email.$error.required}">
+          <label class="control-label" for="email">*Email address:</label>
+          <div class="controls">
+            <input type="email" id="email" name="email" required ng-model="accountInfo.email">
+            <span id="inline-help" ng-show="submitted && createAccountForm.email.$error.required">
+              An email is required.
+            </span>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="open-id">OpenID URL:</label>
+          <div class="controls">
+            <input id="open-id" name="openId" type="text" ng-model="accountInfo.openIdUrl">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="page-layout">Default page layout:</label>
+          <div class="controls">
+            <select id="page-layout" name="default-page-layout" ng-model="accountInfo.defaultPageLayout">
+              <option id="columns_1" value="columns_1">One Column</option>
+              <option id="columns_2" value="columns_2">Two Columns</option>
+              <option id="columns_2wn" value="columns_2wn">Two Columns (wide/narrow)</option>
+              <option id="columns_3" value="columns_3">Three Columns</option>
+              <option id="columns_3nwn" value="columns_3nwn">Three Columns (narrow/wide/narrow)</option>
+              <option id="columns_4" value="columns_4">Four Columns</option>
+              <option id="columns_3nwn_1_bottom" value="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="control-group">
+          <div class="controls"></div>
+        </div>
+      </fieldset>
+      <h2>Personal Information</h2>
+      <div class="alert alert-info">
+        Don't want to include personal information? Don't worry – it's all optional.
+      </div>
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label" for="first-name">First name:</label>
+          <div class="controls">
+            <input id="first-name" name="first-name" type="text" ng-model="accountInfo.firstName">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="last-name">Last name:</label>
+          <div class="controls">
+            <input id="last-name" name="last-name" type="text" ng-model="accountInfo.lastName">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="display-name">Display name:</label>
+          <div class="controls">
+            <input id="display-name" name="display-name" type="text" ng-model="accountInfo.displayName">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="status">Relationship status:</label>
+          <div class="controls">
+            <select id="status" name="status" ng-model="accountInfo.relationshipStatus">
+              <option id="single" value="Single" selected>Single</option>
+              <option id="committed" value="Committed">Committed</option>
+              <option id="married" value="Married">Married</option>
+              <option id="other" value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="about-me">Describe yourself:</label>
+          <div class="controls">
+            <textarea id="about-me" name="about-me" ng-model="accountInfo.aboutMe"></textarea>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="control-group" ng-class="{error: invalid}">
+          <button class="btn btn-primary" ng-click="submitted=true">
+            Create Account
+          </button>
+          <span class="help-inline" ng-show="invalid">
+            {{ error }}
+          </span>
+        </div>
+      </fieldset>
+    </form>
+    <div ng-if="success" class="alert alert-success">
+      Success! Your account was created, {{ username }}.
+      <br>You should receive the confirmation email that was sent to {{ email }} shortly.
+    </div>
+  </div>
+</div>

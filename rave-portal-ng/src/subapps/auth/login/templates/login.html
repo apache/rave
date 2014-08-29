@@ -1,0 +1,75 @@
+<div class="row-fluid login-page">
+  <div class="span10 offset1">
+    <div class="row-fluid">
+      <h1 class="span12">
+        Login
+      </h1>
+    </div>
+    <div class="row-fluid">
+      <div class="alert alert-info span12">
+        You can login using either your Rave credentials or with OpenID identity.
+      </div>
+    </div>
+    <div class="row-fluid">
+      <form class="form well span6" name="loginForm" ng-controller="loginController" ng-submit="submit(credentials)">
+        <div class="row-fluid">
+          <div class="control-group span12" ng-class="{error: submitted && loginForm.username.$error.required}">
+            <label for="username">Username</label>
+            <input id="username" type="text" class="input-block-level" name="username" autofocus="autofocus" autocapitalize="off" autocorrect="off" ng-model="credentials.username" required>
+            <div class="help-inline" ng-show="submitted && loginForm.username.$error.required">
+              A username is required.
+            </div>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="control-group span12" ng-class="{error: submitted && loginForm.password.$error.required}">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="input-block-level" name="password" ng-model="credentials.password" required>
+            <div class="help-inline" ng-show="submitted && loginForm.password.$error.required">
+              A password is required.
+            </div>
+          </div>
+        </div>
+        <div class="row-fluid form-horizontal">
+          <div class="control-group span12">
+            <label class="control-label" for="zip-code">Remember me:</label>
+            <div class="controls">
+              <input type="checkbox" name="remember-me" value="true" ng-model="credentials.remember">
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <div class="control-group" ng-class="{error: invalid}">
+            <button class="btn btn-primary" ng-click="submitted=true">
+              Log In
+            </button>
+            <div ng-show="invalid">
+              The username or password was incorrect.
+            </div>
+          </div>
+        </div>
+      </form>
+      <form class="form well span6" name="openIdLoginForm" ng-submit="submit(credentials)" action="j_spring_openid_security_check" method="post">
+        <div class="row-fluid">
+          <div class="control-group span12">
+            <label for="first-name">Identity</label>
+            <input id="first-name" type="text" class="input-block-level">
+          </div>
+        </div>
+        <div class="row-fluid form-horizontal">
+          <div class="control-group span12">
+            <label class="control-label" for="zip-code">Remember me:</label>
+            <div class="controls">
+              <input type="checkbox" name="remember-me" value="true" ng-model="credentials.remember">
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <div class="control-group">
+            <input class="btn btn-primary" name="commit" type="submit">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
