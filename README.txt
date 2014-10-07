@@ -44,6 +44,8 @@ To setup the vagrant development environment:
 
   - To build the virtual machine, simply run `vagrant up`.
 
+  - Run `bower install` from the root directory.
+
   - Run `npm install` from the root directory.
 
 To run the apache rave application:
