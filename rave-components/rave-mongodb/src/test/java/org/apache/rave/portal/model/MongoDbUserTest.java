@@ -34,8 +34,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 /**
@@ -72,6 +71,23 @@ public class MongoDbUserTest {
 
         assertNotNull(user.getAuthorityCodes());
         assertThat(user.getAuthorityCodes().get(0), is(sameInstance(auth.getAuthority())));
+    }
+
+    @Test
+    public void setAuthorities_Subtractive(){
+        Authority auth1 = new AuthorityImpl();
+        auth1.setAuthority("auth1");
+        Authority auth2 = new AuthorityImpl();
+        auth2.setAuthority("auth2");
+        Authority auth3 = new AuthorityImpl();
+        auth3.setAuthority("auth3");
+        user.setAuthorities(Arrays.asList(auth1, auth2, auth3));
+        user.setAuthorities(Arrays.asList(auth1, auth3));
+
+        assertNotNull(user.getAuthorityCodes());
+        assertThat(user.getAuthorityCodes(), hasItem(auth1.getAuthority()));
+        assertThat(user.getAuthorityCodes(), hasItem(auth3.getAuthority()));
+        assertThat(user.getAuthorityCodes(), not(hasItem(auth2.getAuthority())));
     }
 
     @Test
